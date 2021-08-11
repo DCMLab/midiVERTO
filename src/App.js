@@ -7,7 +7,7 @@ import Home from './Home';
 
 function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Navbar />
       <Switch>
         <Route exact path='/'>
@@ -16,6 +16,7 @@ function App() {
         <Route path='/visualization'>
           <Visualization />
         </Route>
+        <Route component={Home} status={404}></Route>
       </Switch>
     </Router>
   );
