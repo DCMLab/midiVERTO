@@ -30,12 +30,14 @@ export default function Visualization() {
   const handleSubmit = (e) => {
     //In order not to refresh the page (default behaviuor)
     e.preventDefault();
-    console.log(pitchClass);
+    console.log(
+      dft(setClasses.filter((target) => target.name === pitchClass)[0].pcv)
+    );
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor='pitchClass'>Pitch class: </label>
           <input
@@ -46,6 +48,22 @@ export default function Visualization() {
             onChange={(e) => setPitchClass(e.target.value)}
           />
         </div>
+      </form> */}
+      <form onSubmit={handleSubmit}>
+        <label htmlFor='pitchClass'>Set class: </label>
+        <select
+          name='pitchClass'
+          id='pitchClass'
+          value={pitchClass}
+          onChange={(e) => setPitchClass(e.target.value)}
+        >
+          {setClasses.map((setClass) => (
+            <option key={setClass.name} value={setClass.name}>
+              {setClass.name}
+            </option>
+          ))}
+        </select>
+        <input type='submit' value='Submit'></input>
       </form>
       <form onSubmit={handleSubmit}>
         <div>
@@ -86,7 +104,7 @@ function dft(pcv) {
 }
 
 let pcvs = setClasses.map((setClass) => setClass.pcv);
-let names = setClasses.map((setClass) => setClass.name);
+//let setClassesNames = setClasses.map((setClass) => setClass.name);
 let magn = [];
 let spect = [];
 
@@ -114,9 +132,9 @@ for (let i = 0; i < magn.length; i++) {
 }
 
 // Printing
-let printableMagn = [];
+/* let printableMagn = [];
 for (let i = 0; i < magn.length; i++) {
   printableMagn.push(magn[i].slice(1, 7));
-  console.log(names[i] + ':\n');
+  console.log(setClassesNames[i] + ':\n');
   console.log(printableMagn[i]);
-}
+} */
