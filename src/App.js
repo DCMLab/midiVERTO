@@ -1,9 +1,9 @@
 import Navbar from './Navbar';
-import Visualization from './Visualization';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 //Pages
-import Home from './Home';
+import Home from './pages/Home';
+import Visualization from './pages/Visualization';
 
 function App() {
   return (
