@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { multiply, add, pi, i, exp, abs } from 'mathjs';
+import * as d3 from 'd3';
 
 //SET CLASSES
 let setClasses = [
@@ -32,6 +33,84 @@ export default function Visualization() {
     e.preventDefault();
     console.log(
       dft(setClasses.filter((target) => target.name === pitchClass)[0].pcv)
+    );
+  };
+
+  const width = 300;
+  const height = 300;
+  const N = 500;
+
+  /* const gradient = d3
+    .scaleSequential(d3.interpolateSpectral)
+    .domain([0, 2 * Math.PI]); */
+
+  const contToDiscRGB = d3
+    .scaleQuantize()
+    .domain([0, 1])
+    .range(d3.range(0, 255, 1));
+
+  const gradient = (angle) => {
+    let r, g, b;
+
+    if (angle >= 0 && angle < pi / 3) {
+      r = 1;
+      g = (3 * angle) / pi;
+      b = 0;
+    } else if (angle >= pi / 3 && angle < (pi * 2) / 3) {
+      r = 2 - (3 * angle) / pi;
+      g = 1;
+      b = 0;
+    } else if (angle >= (pi * 2) / 3 && angle < pi) {
+      r = 0;
+      g = 1;
+      b = (3 * angle) / pi - 2;
+    } else if (angle >= pi && angle < (pi * 4) / 3) {
+      r = 0;
+      g = 4 - (3 * angle) / pi;
+      b = 1;
+    } else if (angle >= (pi * 4) / 3 && angle < (pi * 5) / 3) {
+      r = (3 * angle) / pi - 4;
+      g = 0;
+      b = 1;
+    } else if (angle >= (pi * 5) / 3 && angle < 2 * pi) {
+      r = 1;
+      g = 0;
+      b = 6 - (3 * angle) / pi;
+    }
+
+    r = contToDiscRGB(r);
+    g = contToDiscRGB(g);
+    b = contToDiscRGB(b);
+
+    return `rgb(${r}, ${g}, ${b})`;
+  };
+
+  const outerRadius = (0.9 * height) / 2;
+  const innerRadius = 0; /* (0.01 * height) / 2; */
+
+  const theta = (2 * Math.PI) / N;
+  const angles = d3.range(0, 2 * Math.PI, theta);
+
+  const arc = (angle, id, index) => {
+    const offset = -pi / 2;
+    const opacity = 1;
+
+    const d = d3
+      .arc()
+      .innerRadius(innerRadius)
+      .outerRadius(outerRadius)
+      .startAngle(-(angle + offset))
+      .endAngle(-(angle + theta + offset));
+
+    return (
+      <path
+        key={`${index}.${id}`}
+        fill={gradient(angle)}
+        fillOpacity={opacity}
+        stroke={gradient(angle)}
+        d={d()}
+        shapeRendering={'geometricPrecision'}
+      ></path>
     );
   };
 
@@ -78,8 +157,21 @@ export default function Visualization() {
           <button type='submit'>Submit</button>
         </div>
       </form>
-      <h1>The application goes here</h1>
-      <div id='chart'></div>
+
+      {d3.range(0, 6, 1).map((i) => {
+        return (
+          <>
+            <svg key={`svg${i}`} width={width} height={height}>
+              <g
+                key={`grp${i}`}
+                transform={`translate(${width / 2},${height / 2})`}
+              >
+                {angles.map((angle, id) => arc(angle, id, i))}
+              </g>
+            </svg>
+          </>
+        );
+      })}
     </>
   );
 }
