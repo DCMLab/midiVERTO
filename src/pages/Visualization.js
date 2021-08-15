@@ -25,7 +25,7 @@ let setClasses = [
 ];
 
 export default function Visualization() {
-  const [pitchClass, setPitchClass] = useState('');
+  const [pitchClass, setPitchClass] = useState();
   const [file, setFile] = useState('');
 
   const handleSubmit = (e) => {
