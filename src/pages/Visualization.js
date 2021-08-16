@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import dft from '../DFT';
-import pcvImport from '../pitchClassVector';
+import { prototypesData } from '../prototypesData';
 
 //SET CLASSES
 let setClasses = [
@@ -26,20 +26,13 @@ let setClasses = [
 ];
 
 export default function Visualization() {
-  const [pitchClass, setPitchClass] = useState();
+  const [selectedPitchClasses, setSelectedPitchClasses] =
+    useState(prototypesData);
   const [file, setFile] = useState('');
-
-  pcvImport();
 
   const handleSubmit = (e) => {
     //In order not to refresh the page (default behaviuor)
     e.preventDefault();
-    console.log(
-      dft(
-        setClasses.filter((target) => target.name === pitchClass)[0].pcv,
-        true
-      )
-    );
   };
 
   return (
@@ -61,8 +54,8 @@ export default function Visualization() {
         <select
           name='pitchClass'
           id='pitchClass'
-          value={pitchClass}
-          onChange={(e) => setPitchClass(e.target.value)}
+          /* value={pitchClass} */
+          onChange={(e) => setSelectedPitchClasses(e.target.value)}
         >
           {setClasses.map((setClass) => (
             <option key={setClass.name} value={setClass.name}>
@@ -86,7 +79,7 @@ export default function Visualization() {
         </div>
       </form>
 
-      <DrawCircles />
+      <DrawCircles printablePitchClasses={selectedPitchClasses} />
     </>
   );
 }

@@ -48,8 +48,6 @@ const setClasses = [
   y: 11, //in px
 } */
 
-let toFile = [];
-
 function pitchClassVector() {
   //Single tone: 12 shifts
   let temp = setClasses[0].pcv;

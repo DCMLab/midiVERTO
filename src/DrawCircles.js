@@ -1,10 +1,12 @@
 import * as d3 from 'd3';
 import * as math from 'mathjs';
 
-export const DrawCircles = () => {
+export const DrawCircles = ({ printablePitchClasses }) => {
   //Size and N number of subdivisions of the arches
   const width = 300;
-  const height = 300;
+  const height = width;
+  const innerWidth = 0.9 * width;
+  const innerHeight = innerWidth;
   const N = 30;
   const K = 15;
 
@@ -21,8 +23,8 @@ export const DrawCircles = () => {
 
     const d = d3
       .arc()
-      .innerRadius((0.9 * (inner * width)) / 2)
-      .outerRadius((0.9 * ((inner + 1 / K) * width)) / 2)
+      .innerRadius((inner * innerWidth) / 2)
+      .outerRadius(((inner + 1 / K) * innerWidth) / 2)
       .startAngle(-(angle + offset))
       .endAngle(-(angle + theta + offset));
 
@@ -35,6 +37,26 @@ export const DrawCircles = () => {
         strokeOpacity={inner / 10}
         d={d()}
         /* shapeRendering={'geometricPrecision'} */
+      ></path>
+    );
+  };
+
+  const circleMark = (pcvData) => {
+    const mark = d3
+      .arc()
+      .innerRadius((0.05 * width) / 2)
+      .outerRadius((0.06 * width) / 2)
+      .startAngle(0)
+      .endAngle(2 * math.pi);
+
+    return (
+      <path
+        transform={`translate(${(pcvData.x * innerWidth) / 2},${
+          (pcvData.y * innerWidth) / 2
+        })`}
+        fill={'grey'}
+        key={pcvData.id}
+        d={mark()}
       ></path>
     );
   };
@@ -89,6 +111,11 @@ export const DrawCircles = () => {
           {circularSectors.map((innerRadius) =>
             angles.map((angle, id) => arc(angle, id, i, innerRadius))
           )}
+        </g>
+        <g transform={`translate(${width / 2},${width / 2})`}>
+          {printablePitchClasses.map((pc) => {
+            if (pc.coeff.includes(i + 1)) return circleMark(pc);
+          })}
         </g>
       </svg>
     );
