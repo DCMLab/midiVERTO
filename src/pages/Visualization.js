@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import dft from '../DFT';
+import pcvImport from '../pitchClassVector';
 
 //SET CLASSES
 let setClasses = [
@@ -27,6 +28,8 @@ let setClasses = [
 export default function Visualization() {
   const [pitchClass, setPitchClass] = useState();
   const [file, setFile] = useState('');
+
+  pcvImport();
 
   const handleSubmit = (e) => {
     //In order not to refresh the page (default behaviuor)

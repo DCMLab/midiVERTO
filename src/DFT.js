@@ -34,8 +34,8 @@ export default function dft(
 
   if (round) {
     coeffs.forEach((coeff) => {
-      coeff.re = Math.round(coeff.re * 100) / 100;
-      coeff.im = Math.round(coeff.im * 100) / 100;
+      coeff.re = Math.round(coeff.re * 1000) / 1000;
+      coeff.im = Math.round(coeff.im * 1000) / 1000;
     });
   }
 

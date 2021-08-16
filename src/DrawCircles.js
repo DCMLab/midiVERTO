@@ -5,14 +5,15 @@ export const DrawCircles = () => {
   //Size and N number of subdivisions of the arches
   const width = 300;
   const height = 300;
-  const N = 50;
+  const N = 30;
+  const K = 15;
 
   /* const outerRadius = (0.9 * height) / 2;
   const innerRadius = (0.7 * height) / 2; */
 
   const theta = (2 * math.pi) / N;
   const angles = d3.range(0, 2 * math.pi, theta);
-  const circularSectors = d3.range(0, 1, 1 / N);
+  const circularSectors = d3.range(0, 1, 1 / K);
 
   //Generates all the arches that compose the circle
   const arc = (angle, id, index, inner) => {
@@ -21,7 +22,7 @@ export const DrawCircles = () => {
     const d = d3
       .arc()
       .innerRadius((0.9 * (inner * width)) / 2)
-      .outerRadius((0.9 * ((inner + 1 / N) * width)) / 2)
+      .outerRadius((0.9 * ((inner + 1 / K) * width)) / 2)
       .startAngle(-(angle + offset))
       .endAngle(-(angle + theta + offset));
 
@@ -31,7 +32,7 @@ export const DrawCircles = () => {
         fill={gradient(angle)}
         fillOpacity={inner}
         stroke={gradient(angle)}
-        strokeOpacity={inner / 5}
+        strokeOpacity={inner / 10}
         d={d()}
         /* shapeRendering={'geometricPrecision'} */
       ></path>
