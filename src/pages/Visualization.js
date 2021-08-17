@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import dft from '../DFT';
 import { prototypesData } from '../prototypesData';
@@ -28,7 +28,18 @@ let setClasses = [
 export default function Visualization() {
   const [selectedPitchClasses, setSelectedPitchClasses] =
     useState(prototypesData);
+  const [showPrototypes, setShowPrototypes] = useState(true);
   const [file, setFile] = useState('');
+
+  function handleShowPrototypes(showing) {
+    let temp = selectedPitchClasses.slice();
+
+    if (showing) temp.push(...prototypesData);
+    else temp = temp.filter((pc) => pc.isPrototype === false);
+
+    setSelectedPitchClasses(temp);
+    setShowPrototypes(showing);
+  }
 
   const handleSubmit = (e) => {
     //In order not to refresh the page (default behaviuor)
@@ -49,6 +60,17 @@ export default function Visualization() {
           />
         </div>
       </form> */}
+      <div>
+        <label htmlFor='showPrototypes'>Show prototypes: </label>
+        <input
+          type='checkbox'
+          id='showPrototypes'
+          name='showPrototypes'
+          onChange={() => handleShowPrototypes(!showPrototypes)}
+          checked={showPrototypes}
+        ></input>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <label htmlFor='pitchClass'>Set class: </label>
         <select

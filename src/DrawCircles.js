@@ -106,7 +106,7 @@ export const DrawCircles = ({ printablePitchClasses }) => {
 
   return d3.range(0, 6, 1).map((i) => {
     return (
-      <svg key={i.toString()} width={width} height={height}>
+      <svg key={`circle${i}`} width={width} height={height}>
         <g transform={`translate(${width / 2},${height / 2})`}>
           {circularSectors.map((innerRadius) =>
             angles.map((angle, id) => arc(angle, id, i, innerRadius))
@@ -114,7 +114,10 @@ export const DrawCircles = ({ printablePitchClasses }) => {
         </g>
         <g transform={`translate(${width / 2},${width / 2})`}>
           {printablePitchClasses.map((pc) => {
-            if (pc.coeff.includes(i + 1)) return circleMark(pc);
+            if (pc.coeff.includes(i + 1)) {
+              return circleMark(pc);
+            } else;
+            return null;
           })}
         </g>
       </svg>
