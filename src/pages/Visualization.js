@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import dft from '../DFT';
 import { prototypesData } from '../prototypesData';
+import MidiParser from 'midi-parser-js';
 
 //SET CLASSES
 let setClasses = [
@@ -40,6 +41,13 @@ export default function Visualization() {
     setSelectedPitchClasses(temp);
     setShowPrototypes(showing);
   }
+
+  //Initialize the MIDI parser (once)
+  useEffect(() => {
+    MidiParser.parse(document.getElementById('file'), function (obj) {
+      console.log(JSON.stringify(obj, undefined, 2));
+    });
+  }, [file]);
 
   const handleSubmit = (e) => {
     //In order not to refresh the page (default behaviuor)
