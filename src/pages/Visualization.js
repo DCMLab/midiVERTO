@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import dft from '../DFT';
 import { prototypesData } from '../prototypesData';
-import MidiParser from 'midi-parser-js';
+import { Midi } from '@tonejs/midi';
 
 //SET CLASSES
 let setClasses = [
@@ -44,9 +44,12 @@ export default function Visualization() {
 
   //Initialize the MIDI parser (once)
   useEffect(() => {
-    MidiParser.parse(document.getElementById('file'), function (obj) {
-      console.log(JSON.stringify(obj, undefined, 2));
-    });
+    let input = document.getElementById('file').files[0];
+    if (input) {
+      let fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(input);
+      fileReader.onload = (ris) => console.log(new Midi(ris.target.result));
+    }
   }, [file]);
 
   const handleSubmit = (e) => {
