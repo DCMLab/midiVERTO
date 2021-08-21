@@ -4,14 +4,14 @@ import * as math from 'mathjs';
 export default function dft(
   pcv,
   normalize = true,
-  round = false,
+  round = true,
   polar = false
 ) {
   let N = pcv.length;
 
   let coeffs = [];
 
-  for (let k = 0; k < N; k++) {
+  for (let k = 0; k < N / 2 + 1; k++) {
     let temp = 0;
     for (let n = 0; n < N; n++) {
       temp = math.add(
@@ -25,7 +25,7 @@ export default function dft(
     coeffs.push(temp);
   }
 
-  coeffs = coeffs.slice(0, 7);
+  coeffs = coeffs.slice();
 
   if (normalize) {
     const norm = coeffs[0];
@@ -34,8 +34,8 @@ export default function dft(
 
   if (round) {
     coeffs.forEach((coeff) => {
-      coeff.re = Math.round(coeff.re * 1000) / 1000;
-      coeff.im = Math.round(coeff.im * 1000) / 1000;
+      coeff.re = Math.round(coeff.re * 10000) / 10000;
+      coeff.im = Math.round(coeff.im * 10000) / 10000;
     });
   }
 

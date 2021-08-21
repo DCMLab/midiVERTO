@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DrawCircles } from '../DrawCircles';
-import dft from '../DFT';
 import { prototypesData } from '../prototypesData';
-import { Midi } from '@tonejs/midi';
+import { getDftMatricesFromMidi } from '../getDftMatrices';
 
 //SET CLASSES
 let setClasses = [
@@ -42,13 +41,14 @@ export default function Visualization() {
     setShowPrototypes(showing);
   }
 
-  //Initialize the MIDI parser (once)
+  //MIDI parsing on file change
   useEffect(() => {
     let input = document.getElementById('file').files[0];
     if (input) {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
-      fileReader.onload = (ris) => console.log(new Midi(ris.target.result));
+      fileReader.onload = (ris) =>
+        console.log(getDftMatricesFromMidi(ris.target.result, 109));
     }
   }, [file]);
 
