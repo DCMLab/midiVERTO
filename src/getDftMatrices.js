@@ -203,34 +203,32 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
     dftCoeffMatrix.push(temp);
   } */
 
-  let rbgaMatrices = [];
+  let rgbaMatrices = [];
 
   for (let i = 0; i < 6; i++) {
     let matrix = [];
     for (let j = 0; j < dftCoeffsMatrix.length; j++) {
       let subdiv = [];
       for (let k = 0; k < dftCoeffsMatrix[j].length; k++) {
-        subdiv.push({ r: 0, g: 0, b: 0, mod: 0 });
+        subdiv.push('');
       }
       matrix.push(subdiv);
     }
-    rbgaMatrices.push(matrix);
+    rgbaMatrices.push(matrix);
   }
 
   //Creating a single matrix for each coefficient with rgba values for each diamond
   for (let i = 0; i < dftCoeffsMatrix.length; i++) {
     for (let j = 0; j < dftCoeffsMatrix[i].length; j++) {
       for (let k = 1; k < dftCoeffsMatrix[i][j].length; k++) {
-        let { r, g, b, mod } = getRbgaFromComplex(dftCoeffsMatrix[i][j][k]);
-        rbgaMatrices[k - 1][i][j].r = r;
-        rbgaMatrices[k - 1][i][j].g = g;
-        rbgaMatrices[k - 1][i][j].b = b;
-        rbgaMatrices[k - 1][i][j].mod = mod;
+        rgbaMatrices[k - 1][i][j] = getRbgaFromComplex(
+          dftCoeffsMatrix[i][j][k]
+        );
       }
     }
   }
 
-  return rbgaMatrices;
+  return rgbaMatrices;
 }
 
 function getSubdivision(notes, resolution, duration) {

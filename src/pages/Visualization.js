@@ -50,7 +50,7 @@ export default function Visualization() {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) =>
-        setWavescapesData(getDftMatricesFromMidi(ris.target.result, 50));
+        setWavescapesData(getDftMatricesFromMidi(ris.target.result, 25));
     }
   }, [file]);
 
@@ -115,7 +115,12 @@ export default function Visualization() {
       </form>
 
       <DrawCircles printablePitchClasses={selectedPitchClasses} />
-      <DrawWavescapes wavescapeMatrix={wavescapesData} />
+
+      {wavescapesData.map((matrix, i) => {
+        return (
+          <DrawWavescapes key={`wavescape${i}`} wavescapeMatrix={matrix} />
+        );
+      })}
     </>
   );
 }
