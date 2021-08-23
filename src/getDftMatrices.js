@@ -1,5 +1,5 @@
 import { Midi } from '@tonejs/midi';
-import dft from './DFT';
+import dft, { sumAndNormalize } from './DFT';
 
 class Pcv {
   constructor() {
@@ -78,6 +78,21 @@ class Pcv {
 
     return temp;
   }
+
+  add(pcv) {
+    this.C = pcv.C;
+    this.Cs = pcv.Cs;
+    this.D = pcv.D;
+    this.Ds = pcv.Ds;
+    this.E = pcv.E;
+    this.F = pcv.F;
+    this.Fs = pcv.Fs;
+    this.G = pcv.G;
+    this.Gs = pcv.Gs;
+    this.A = pcv.A;
+    this.As = pcv.As;
+    this.B = pcv.B;
+  }
 }
 
 //Resolution is in seconds
@@ -86,11 +101,11 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
   let midiData = new Midi(midiFile);
   //const bpm = midiData.header.tempos[0].bpm; //For quarter-note conversion
   let duration = midiData.duration;
-  let trackMatrices = [];
+  let tracksSubdivision = [];
 
   //TODO: check and delete percussive tracks!
 
-  midiData.tracks.forEach((track) => {
+  /* midiData.tracks.forEach((track) => {
     let tempMat = [];
 
     for (let wndLen = resolution; wndLen < duration; wndLen += resolution) {
@@ -100,9 +115,61 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
     tempMat.push(getRow(track.notes, duration, duration, duration)); //manually added
 
     trackMatrices.push(tempMat);
+  }); */
+
+  midiData.tracks.forEach((track) => {
+    tracksSubdivision.push(getSubdivision(track.notes, resolution, duration));
   });
 
-  //Computing the pcvs for each subdivision
+  //pcv arrary init
+  let pcvSubdivision = [];
+
+  for (let i = 0; i < tracksSubdivision[0].length; i++) {
+    pcvSubdivision.push(new Pcv());
+  }
+
+  //populating the array for each subdiv with the durations
+  //for each track: i, for each subdiv: j, for each note of the subdiv: k
+  for (let i = 0; i < tracksSubdivision.length; i++) {
+    for (let j = 0; j < tracksSubdivision[i].length; j++) {
+      for (let k = 0; k < tracksSubdivision[i][j].length; k++) {
+        let { pitch, duration } = tracksSubdivision[i][j][k];
+        pcvSubdivision[j].addNoteDuration(pitch, duration);
+      }
+    }
+  }
+
+  //Computing the dft coeffs for of each subdiv
+  let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
+    dft(pcv.getPcvAsArray())
+  );
+
+  //Computing the dft coeffs matrix
+  let dftCoeffsMatrix = [];
+
+  //adding the first row
+  dftCoeffsMatrix.push(dftCoeffsSubdivision);
+
+  //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
+  let matrixHeight = dftCoeffsSubdivision.length;
+  let rowsWidth = dftCoeffsSubdivision.length;
+  for (let i = 1; i < matrixHeight; i++) {
+    //starting from second row, first already populated
+    let temp = [];
+    for (let cursor = 1; cursor < rowsWidth; cursor++) {
+      //starting from the second element and backward summing
+      temp.push(
+        sumAndNormalize(
+          dftCoeffsMatrix[i - 1][cursor - 1],
+          dftCoeffsMatrix[i - 1][cursor]
+        )
+      );
+    }
+    rowsWidth--;
+    dftCoeffsMatrix.push(temp);
+  }
+
+  /* //Computing the pcvs for each subdivision
   let pcvMatrix = [];
 
   for (let i = 0; i < trackMatrices[0].length; i++) {
@@ -111,9 +178,9 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
       temp.push(new Pcv());
     }
     pcvMatrix.push(temp);
-  }
+  } */
 
-  trackMatrices.forEach((track) => {
+  /* trackMatrices.forEach((track) => {
     for (let i = 0; i < track.length; i++) {
       for (let j = 0; j < track[i].length; j++) {
         for (let k = 0; k < track[i][j].length; k++) {
@@ -122,9 +189,9 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
         }
       }
     }
-  });
+  }); */
 
-  //Computing the dft coeff matrix
+  /* //Computing the dft coeff matrix
   let dftCoeffMatrix = [];
 
   for (let i = 0; i < pcvMatrix.length; i++) {
@@ -133,13 +200,15 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
       temp.push(dft(pcvMatrix[i][j].getPcvAsArray()));
     }
     dftCoeffMatrix.push(temp);
-  }
+  } */
 
-  return dftCoeffMatrix;
+  return dftCoeffsMatrix;
 }
 
-function getRow(notes, wndLen, resolution, duration) {
-  let row = [];
+function getSubdivision(notes, resolution, duration) {
+  let subdivision = [];
+  let wndLen = resolution;
+
   for (let cursor = 0; cursor < duration; cursor += resolution) {
     let temp = [];
     notes.forEach((note) => {
@@ -163,10 +232,10 @@ function getRow(notes, wndLen, resolution, duration) {
       }
     });
 
-    row.push(temp);
+    subdivision.push(temp);
   }
 
-  return row;
+  return subdivision;
 }
 
 function isValidNote(time, duration, cursor, wndLen) {

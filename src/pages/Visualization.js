@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DrawCircles } from '../DrawCircles';
+import { DrawWavescapes } from '../DrawWavescapes';
 import { prototypesData } from '../prototypesData';
 import { getDftMatricesFromMidi } from '../getDftMatrices';
 
@@ -28,6 +29,7 @@ let setClasses = [
 export default function Visualization() {
   const [selectedPitchClasses, setSelectedPitchClasses] =
     useState(prototypesData);
+  const [wavescapesData, setWavescapesData] = useState([]);
   const [showPrototypes, setShowPrototypes] = useState(true);
   const [file, setFile] = useState('');
 
@@ -48,7 +50,7 @@ export default function Visualization() {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) =>
-        console.log(getDftMatricesFromMidi(ris.target.result, 109));
+        setWavescapesData(getDftMatricesFromMidi(ris.target.result, 1));
     }
   }, [file]);
 
@@ -113,6 +115,7 @@ export default function Visualization() {
       </form>
 
       <DrawCircles printablePitchClasses={selectedPitchClasses} />
+      <DrawWavescapes wavescapeMatrix={wavescapesData} />
     </>
   );
 }

@@ -4,7 +4,7 @@ import * as math from 'mathjs';
 export default function dft(
   pcv,
   normalize = true,
-  round = true,
+  round = false,
   polar = false
 ) {
   let N = pcv.length;
@@ -44,4 +44,17 @@ export default function dft(
   }
 
   return coeffs;
+}
+
+export function sumAndNormalize(coeffs1, coeffs2) {
+  let ris = [];
+
+  for (let i = 0; i < coeffs1.length; i++) {
+    ris[i] = math.add(coeffs1[i], coeffs2[i]);
+  }
+
+  const norm = ris[0];
+  ris = ris.map((coeff) => math.divide(coeff, norm));
+
+  return ris;
 }
