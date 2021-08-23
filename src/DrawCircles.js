@@ -7,7 +7,7 @@ export const DrawCircles = ({ printablePitchClasses }) => {
   const width = 300;
   const height = width;
   const innerWidth = 0.9 * width;
-  const innerHeight = innerWidth;
+  //const innerHeight = innerWidth;
   const N = 30;
   const K = 15;
 

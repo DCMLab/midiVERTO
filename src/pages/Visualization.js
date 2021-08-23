@@ -50,7 +50,7 @@ export default function Visualization() {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) =>
-        setWavescapesData(getDftMatricesFromMidi(ris.target.result, 1));
+        setWavescapesData(getDftMatricesFromMidi(ris.target.result, 50));
     }
   }, [file]);
 
