@@ -5,8 +5,6 @@ export const DrawWavescapes = ({ wavescapeMatrix }) => {
   let width = 500;
   let height = 500;
 
-  console.log('wavescape', wavescapeMatrix);
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');

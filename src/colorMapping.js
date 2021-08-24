@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import * as math from 'mathjs';
-import { typeOf } from 'mathjs';
 
 //Convert rgb values from [0,1] to [0,255]
 const contToDiscRGB = d3

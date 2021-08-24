@@ -46,15 +46,20 @@ export default function dft(
   return coeffs;
 }
 
-export function sumAndNormalize(coeffs1, coeffs2) {
-  let ris = [];
-
-  for (let i = 0; i < coeffs1.length; i++) {
-    ris[i] = math.add(coeffs1[i], coeffs2[i]);
+export function sumAndNormalize(coeffs) {
+  let sum = coeffs[0];
+  for (let i = 1; i < coeffs.length; i++) {
+    //incremental sum for each coeff
+    let temp = [];
+    //coeff per coeff sum
+    for (let j = 0; j < coeffs[i].length; j++) {
+      temp.push(math.add(sum[j], coeffs[i][j]));
+    }
+    sum = temp.slice();
   }
 
-  const norm = ris[0];
-  ris = ris.map((coeff) => math.divide(coeff, norm));
+  const norm = sum[0];
+  sum = sum.map((coeff) => math.divide(coeff, norm));
 
-  return ris;
+  return sum;
 }

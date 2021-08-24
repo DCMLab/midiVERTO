@@ -151,7 +151,7 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
   //adding the first row
   dftCoeffsMatrix.push(dftCoeffsSubdivision);
 
-  //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
+  /* OLD   //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
   let matrixHeight = dftCoeffsSubdivision.length;
   let rowsWidth = dftCoeffsSubdivision.length;
   for (let i = 1; i < matrixHeight; i++) {
@@ -160,6 +160,7 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
     for (let cursor = 1; cursor < rowsWidth; cursor++) {
       //starting from the second element and backward summing
       temp.push(
+        //TODO change, sum subdiv only on first row
         sumAndNormalize(
           dftCoeffsMatrix[i - 1][cursor - 1],
           dftCoeffsMatrix[i - 1][cursor]
@@ -167,6 +168,21 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
       );
     }
     rowsWidth--;
+    dftCoeffsMatrix.push(temp);
+  } */
+
+  //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
+  let matrixHeight = dftCoeffsSubdivision.length;
+  let rowsWidth = dftCoeffsSubdivision.length;
+  let wndLenUnits = 2;
+  for (let i = 1; i < matrixHeight; i++) {
+    //starting from second row, first already populated
+    let temp = [];
+    for (let cursor = 0; cursor + wndLenUnits <= rowsWidth; cursor++) {
+      let windowed = dftCoeffsMatrix[0].slice(cursor, cursor + wndLenUnits);
+      temp.push(sumAndNormalize(windowed));
+    }
+    wndLenUnits++;
     dftCoeffsMatrix.push(temp);
   }
 
