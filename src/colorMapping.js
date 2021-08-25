@@ -46,8 +46,11 @@ export const gradient = (angle) => {
 
 export function getRbgaFromComplex(complex) {
   let polarComplex = complex.toPolar();
-  let angle = polarComplex.phi + math.pi;
+  let angle = polarComplex.phi; // phi from [-pi, pi], but color mapping defined in [0,2pi]
   let mod = polarComplex.r;
+
+  //negative angle mapped to their positive representation
+  if (angle < 0) angle += 2 * math.pi;
 
   let ris = gradient(angle).slice(3, -1);
 
