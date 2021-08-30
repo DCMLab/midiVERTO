@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import { DrawWavescapes } from '../DrawWavescapes';
 import { prototypesData } from '../prototypesData';
-import { getDftMatricesFromMidi } from '../getDftMatrices';
+import { getDftCoeffFromMidi, getRgbaMatrix } from '../getDftMatrices';
 
 //SET CLASSES
 let setClasses = [
@@ -31,6 +31,7 @@ export default function Visualization() {
     useState(prototypesData);
   const [wavescapesData, setWavescapesData] = useState([]);
   const [showPrototypes, setShowPrototypes] = useState(true);
+  const [traceData, setTraceData] = useState([]);
   const [file, setFile] = useState('');
 
   function handleShowPrototypes(showing) {
@@ -49,8 +50,12 @@ export default function Visualization() {
     if (input) {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
-      fileReader.onload = (ris) =>
-        setWavescapesData(getDftMatricesFromMidi(ris.target.result, 1.5));
+      fileReader.onload = (ris) => {
+        let dftCoeff = getDftCoeffFromMidi(ris.target.result, 1);
+        setTraceData(dftCoeff);
+        setWavescapesData(getRgbaMatrix(dftCoeff));
+        //console.log(wavescapesData);
+      };
     }
   }, [file]);
 
@@ -114,7 +119,10 @@ export default function Visualization() {
         </div>
       </form>
 
-      <DrawCircles printablePitchClasses={selectedPitchClasses} />
+      <DrawCircles
+        printablePitchClasses={selectedPitchClasses}
+        traceData={traceData}
+      />
 
       {wavescapesData.map((matrix, i) => {
         return (

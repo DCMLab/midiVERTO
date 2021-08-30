@@ -97,7 +97,7 @@ class Pcv {
 }
 
 //Resolution is in seconds
-export function getDftMatricesFromMidi(midiFile, resolution) {
+export function getDftCoeffFromMidi(midiFile, resolution) {
   //For now, we don't take into account tempo changes
   let midiData = new Midi(midiFile);
   //const bpm = midiData.header.tempos[0].bpm; //For quarter-note conversion
@@ -151,6 +151,8 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
   //adding the first row
   dftCoeffsMatrix.push(dftCoeffsSubdivision);
 
+  return dftCoeffsMatrix;
+
   /* OLD   //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
   let matrixHeight = dftCoeffsSubdivision.length;
   let rowsWidth = dftCoeffsSubdivision.length;
@@ -170,10 +172,12 @@ export function getDftMatricesFromMidi(midiFile, resolution) {
     rowsWidth--;
     dftCoeffsMatrix.push(temp);
   } */
+}
 
+export function getRgbaMatrix(dftCoeffsMatrix) {
   //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
-  let matrixHeight = dftCoeffsSubdivision.length;
-  let rowsWidth = dftCoeffsSubdivision.length;
+  let matrixHeight = dftCoeffsMatrix[0].length;
+  let rowsWidth = dftCoeffsMatrix[0].length;
   let wndLenUnits = 2;
   for (let i = 1; i < matrixHeight; i++) {
     //starting from second row, first already populated
