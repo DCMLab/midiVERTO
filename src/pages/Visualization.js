@@ -51,7 +51,7 @@ export default function Visualization() {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) => {
-        let dftCoeff = getDftCoeffFromMidi(ris.target.result, 1);
+        let dftCoeff = getDftCoeffFromMidi(ris.target.result, 0.5);
         setTraceData(dftCoeff);
         setWavescapesData(getRgbaMatrix(dftCoeff));
         //console.log(wavescapesData);

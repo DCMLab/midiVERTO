@@ -28,8 +28,7 @@ export const DrawCircles = ({ printablePitchClasses, traceData }) => {
     }
   }
 
-  const drawTrace = (traceDot) => {
-    console.log(traceDot.re);
+  const drawTrace = (traceDot, i, j) => {
     const dot = d3
       .arc()
       .innerRadius(0)
@@ -42,8 +41,8 @@ export const DrawCircles = ({ printablePitchClasses, traceData }) => {
         transform={`translate(${(traceDot.re * innerWidth) / 2},${
           (traceDot.im * innerWidth) / 2
         })`}
-        fill={'lightseagreen'}
-        //key={`trace${i}.${j}`}
+        fill={'black'}
+        key={`trace${i}.${j}`}
         d={dot()}
       ></path>
     );
@@ -119,7 +118,9 @@ export const DrawCircles = ({ printablePitchClasses, traceData }) => {
           })}
         </g>
         <g transform={`translate(${width / 2},${width / 2})`}>
-          {traces[i].map((dot) => drawTrace(dot))}
+          {traces.length > 1
+            ? traces[i].map((dot, j) => drawTrace(dot, i, j))
+            : null}
         </g>
       </svg>
     );
