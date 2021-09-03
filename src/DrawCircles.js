@@ -11,6 +11,8 @@ export const DrawCircles = ({ printablePitchClasses, traceData, userPcv }) => {
   const N = 30;
   const K = 15;
 
+  console.log(userPcv);
+
   let traces = [];
 
   if (traceData.length > 0) {
@@ -119,16 +121,15 @@ export const DrawCircles = ({ printablePitchClasses, traceData, userPcv }) => {
         </g>
         <g transform={`translate(${width / 2},${width / 2})`}>
           {userPcv.map((pcv, k) => {
-            console.log(pcv);
-            for (let j = 1; j < pcv.length; j++) {
-              let coeff = pcv[j];
-              return circleMark(
-                { x: coeff.re, y: coeff.im, id: `userpcv${i}.${k}.${j}` },
-                0.03,
-                'navy'
-              );
-            }
-            return null;
+            return pcv.map((coeff, j) => {
+              if (j > 0 && i + 1 === j) {
+                return circleMark(
+                  { x: coeff.re, y: coeff.im, id: `userpcv${i}.${k}.${j}` },
+                  0.03,
+                  'navy'
+                );
+              }
+            });
           })}
         </g>
         <g transform={`translate(${width / 2},${width / 2})`}>
