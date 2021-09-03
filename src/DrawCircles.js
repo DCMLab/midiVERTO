@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import * as math from 'mathjs';
 import { gradient } from './colorMapping';
 
-export const DrawCircles = ({ printablePitchClasses, traceData }) => {
+export const DrawCircles = ({ printablePitchClasses, traceData, userPcv }) => {
   //Size and N number of subdivisions of the arches
   const width = 300;
   const height = width;
@@ -81,11 +81,11 @@ export const DrawCircles = ({ printablePitchClasses, traceData }) => {
     );
   };
 
-  const circleMark = (pcvData) => {
+  const circleMark = (pcvData, radiusScaleWidth, color) => {
     const mark = d3
       .arc()
-      .innerRadius((0.05 * width) / 2)
-      .outerRadius((0.06 * width) / 2)
+      .innerRadius((radiusScaleWidth * width) / 2)
+      .outerRadius(((radiusScaleWidth + 0.01) * width) / 2)
       .startAngle(0)
       .endAngle(2 * math.pi);
 
@@ -94,7 +94,7 @@ export const DrawCircles = ({ printablePitchClasses, traceData }) => {
         transform={`translate(${(pcvData.x * innerWidth) / 2},${
           (pcvData.y * innerWidth) / 2
         })`}
-        fill={'grey'}
+        fill={color}
         key={pcvData.id}
         d={mark()}
       ></path>
@@ -112,8 +112,22 @@ export const DrawCircles = ({ printablePitchClasses, traceData }) => {
         <g transform={`translate(${width / 2},${width / 2})`}>
           {printablePitchClasses.map((pc) => {
             if (pc.coeff.includes(i + 1)) {
-              return circleMark(pc);
+              return circleMark(pc, 0.05, 'grey');
             } else;
+            return null;
+          })}
+        </g>
+        <g transform={`translate(${width / 2},${width / 2})`}>
+          {userPcv.map((pcv, k) => {
+            console.log(pcv);
+            for (let j = 1; j < pcv.length; j++) {
+              let coeff = pcv[j];
+              return circleMark(
+                { x: coeff.re, y: coeff.im, id: `userpcv${i}.${k}.${j}` },
+                0.03,
+                'navy'
+              );
+            }
             return null;
           })}
         </g>

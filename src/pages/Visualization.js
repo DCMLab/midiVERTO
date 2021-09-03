@@ -3,6 +3,7 @@ import { DrawCircles } from '../DrawCircles';
 import { DrawWavescapes } from '../DrawWavescapes';
 import { prototypesData } from '../prototypesData';
 import { getDftCoeffFromMidi, getRgbaMatrix } from '../getDftMatrices';
+import dft from '../DFT';
 
 //SET CLASSES
 let setClasses = [
@@ -33,6 +34,7 @@ export default function Visualization() {
   const [showPrototypes, setShowPrototypes] = useState(true);
   const [traceData, setTraceData] = useState([]);
   const [file, setFile] = useState('');
+  const [userPcv, setUserPcv] = useState([]);
 
   function handleShowPrototypes(showing) {
     let temp = selectedPitchClasses.slice();
@@ -51,7 +53,7 @@ export default function Visualization() {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) => {
-        let dftCoeff = getDftCoeffFromMidi(ris.target.result, 0.5);
+        let dftCoeff = getDftCoeffFromMidi(ris.target.result, 1);
         setTraceData(dftCoeff);
         setWavescapesData(getRgbaMatrix(dftCoeff));
         //console.log(wavescapesData);
@@ -64,20 +66,37 @@ export default function Visualization() {
     e.preventDefault();
   };
 
+  const handleSubmitPitchClass = (e) => {
+    //In order not to refresh the page (default behaviuor)
+    e.preventDefault();
+    let parsedInput = parse(e.target[0].value);
+    let dftCoeffsInput = [];
+    for (let i = 0; i < parsedInput.length; i++) {
+      dftCoeffsInput.push(dft(parsedInput[i], true, true, false));
+    }
+    let temp = [];
+    if (userPcv.length > 0) temp = [...userPcv.slice(), ...dftCoeffsInput];
+    else temp = dftCoeffsInput;
+    setUserPcv(temp);
+  };
+
   return (
     <>
-      {/* <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='pitchClass'>Pitch class: </label>
-          <input
-            type='text'
-            name='pitchClass'
-            id='pitchClass'
-            value={pitchClass}
-            onChange={(e) => setPitchClass(e.target.value)}
-          />
-        </div>
-      </form> */}
+      {
+        <form onSubmit={handleSubmitPitchClass}>
+          <div>
+            <label htmlFor='pitchClass'>Pitch class: </label>
+            <input
+              type='text'
+              name='pitchClass'
+              id='pitchClass'
+              autoComplete='off'
+              placeholder='Ex.(1,0,0,0,1,0,0,1,0,0,0,1)'
+            />
+            <button type='submit'>Submit</button>
+          </div>
+        </form>
+      }
       <div>
         <label htmlFor='showPrototypes'>Show prototypes: </label>
         <input
@@ -89,22 +108,6 @@ export default function Visualization() {
         ></input>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor='pitchClass'>Set class: </label>
-        <select
-          name='pitchClass'
-          id='pitchClass'
-          /* value={pitchClass} */
-          onChange={(e) => setSelectedPitchClasses(e.target.value)}
-        >
-          {setClasses.map((setClass) => (
-            <option key={setClass.name} value={setClass.name}>
-              {setClass.name}
-            </option>
-          ))}
-        </select>
-        <input type='submit' value='Submit'></input>
-      </form>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor='file'>Select a MIDI file: </label>
@@ -122,6 +125,7 @@ export default function Visualization() {
       <DrawCircles
         printablePitchClasses={selectedPitchClasses}
         traceData={traceData}
+        userPcv={userPcv}
       />
 
       {wavescapesData.map((matrix, i) => {
@@ -131,4 +135,62 @@ export default function Visualization() {
       })}
     </>
   );
+}
+
+function parse(input) {
+  let pcvs = [];
+  let isGroup = false;
+  let openDivider = '(';
+  let closeDivider = ')';
+
+  let firstIndex = 0;
+  let secondIndex = 0;
+
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === openDivider) {
+      isGroup = true;
+      firstIndex = i + 1;
+      secondIndex = firstIndex;
+    }
+
+    if (isGroup) {
+      if (input[i] === closeDivider) {
+        isGroup = false;
+        let ris = input.slice(firstIndex, secondIndex - 1);
+        pcvs.push(ris);
+      } else {
+        secondIndex++;
+      }
+    }
+  }
+
+  pcvs = pcvs.map((pcv) => {
+    let ris = pcv.replace(/,/g, '');
+    ris = ris.replace(/ /g, '');
+    return ris;
+  });
+
+  if (input.includes('0')) {
+    //Zero-one notation
+    pcvs = pcvs.map((pcv) => {
+      let array = [];
+      for (let i = 0; i < pcv.length; i++) {
+        array[i] = parseInt(pcv[i]);
+      }
+      return array;
+    });
+
+    return pcvs;
+  } else {
+    //Integer notation
+    let intToBinPcvs = pcvs.map((pcv) => {
+      let bin = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      for (let i = 0; i < pcv.length; i++) {
+        bin[pcv[i] - 1] += 1;
+      }
+      return bin;
+    });
+
+    return intToBinPcvs;
+  }
 }

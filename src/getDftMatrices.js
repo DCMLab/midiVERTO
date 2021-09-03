@@ -100,6 +100,7 @@ class Pcv {
 export function getDftCoeffFromMidi(midiFile, resolution) {
   //For now, we don't take into account tempo changes
   let midiData = new Midi(midiFile);
+  console.log(midiData);
   //const bpm = midiData.header.tempos[0].bpm; //For quarter-note conversion
   let duration = midiData.duration;
   let tracksSubdivision = [];
