@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import { DrawWavescapes } from '../DrawWavescapes';
 import { prototypesData } from '../prototypesData';
+import Player, { setPlayerMidiData } from './Player';
 import { getDftCoeffFromMidi, getRgbaMatrix } from '../getDftMatrices';
 import dft from '../DFT';
 
@@ -35,6 +36,13 @@ export default function Visualization() {
   const [traceData, setTraceData] = useState([]);
   const [file, setFile] = useState('');
   const [userPcv, setUserPcv] = useState([]);
+  const [currentSubdiv, setCurrentSubdiv] = useState(0);
+
+  function currentSubdivStateHandler(newState) {
+    setCurrentSubdiv(setCurrentSubdiv);
+  }
+
+  useEffect(() => console.log(currentSubdiv), [currentSubdiv]);
 
   function handleShowPrototypes(showing) {
     let temp = selectedPitchClasses.slice();
@@ -50,10 +58,12 @@ export default function Visualization() {
   useEffect(() => {
     let input = document.getElementById('file').files[0];
     if (input) {
+      let resolution = 1;
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) => {
-        let dftCoeff = getDftCoeffFromMidi(ris.target.result, 1);
+        setPlayerMidiData(ris.target.result, resolution);
+        let dftCoeff = getDftCoeffFromMidi(ris.target.result, resolution);
         setTraceData(dftCoeff);
         setWavescapesData(getRgbaMatrix(dftCoeff));
         //console.log(wavescapesData);
@@ -82,21 +92,24 @@ export default function Visualization() {
 
   return (
     <>
-      {
-        <form onSubmit={handleSubmitPitchClass}>
-          <div>
-            <label htmlFor='pitchClass'>Pitch class: </label>
-            <input
-              type='text'
-              name='pitchClass'
-              id='pitchClass'
-              autoComplete='off'
-              placeholder='Ex.(1,0,0,0,1,0,0,1,0,0,0,1)'
-            />
-            <button type='submit'>Submit</button>
-          </div>
-        </form>
-      }
+      <Player
+        resolution={1}
+        currentSubdivStateHandler={currentSubdivStateHandler}
+      />
+      <form onSubmit={handleSubmitPitchClass}>
+        <div>
+          <label htmlFor='pitchClass'>Pitch class: </label>
+          <input
+            type='text'
+            name='pitchClass'
+            id='pitchClass'
+            autoComplete='off'
+            placeholder='Ex.(1,0,0,0,1,0,0,1,0,0,0,1)'
+          />
+          <button type='submit'>Submit</button>
+        </div>
+      </form>
+
       <div>
         <label htmlFor='showPrototypes'>Show prototypes: </label>
         <input
@@ -126,6 +139,7 @@ export default function Visualization() {
         printablePitchClasses={selectedPitchClasses}
         traceData={traceData}
         userPcv={userPcv}
+        //currentSubdiv={currentSubdiv}
       />
 
       {wavescapesData.map((matrix, i) => {

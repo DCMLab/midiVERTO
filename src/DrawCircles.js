@@ -2,16 +2,21 @@ import * as d3 from 'd3';
 import * as math from 'mathjs';
 import { gradient } from './colorMapping';
 
-export const DrawCircles = ({ printablePitchClasses, traceData, userPcv }) => {
+export const DrawCircles = ({
+  printablePitchClasses,
+  traceData,
+  userPcv,
+  currentSubdiv,
+}) => {
   //Size and N number of subdivisions of the arches
   const width = 300;
   const height = width;
   const innerWidth = 0.9 * width;
   //const innerHeight = innerWidth;
-  const N = 30;
-  const K = 15;
+  const N = 50;
+  const K = 25;
 
-  console.log(userPcv);
+  //console.log(currentSubdiv);
 
   let traces = [];
 
@@ -41,7 +46,7 @@ export const DrawCircles = ({ printablePitchClasses, traceData, userPcv }) => {
     return (
       <path
         transform={`translate(${(traceDot.re * innerWidth) / 2},${
-          (traceDot.im * innerWidth) / 2
+          -(traceDot.im * innerWidth) / 2
         })`}
         fill={'black'}
         key={`trace${i}.${j}`}
@@ -94,7 +99,7 @@ export const DrawCircles = ({ printablePitchClasses, traceData, userPcv }) => {
     return (
       <path
         transform={`translate(${(pcvData.x * innerWidth) / 2},${
-          (pcvData.y * innerWidth) / 2
+          -(pcvData.y * innerWidth) / 2
         })`}
         fill={color}
         key={pcvData.id}
@@ -128,7 +133,7 @@ export const DrawCircles = ({ printablePitchClasses, traceData, userPcv }) => {
                   0.03,
                   'navy'
                 );
-              }
+              } else return null;
             });
           })}
         </g>
