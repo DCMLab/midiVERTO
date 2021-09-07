@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import { DrawWavescapes } from '../DrawWavescapes';
 import { prototypesData } from '../prototypesData';
@@ -37,6 +37,8 @@ export default function Visualization() {
   const [file, setFile] = useState('');
   const [userPcv, setUserPcv] = useState([]);
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
+  const [resolution, setResolution] = useState(1);
+  const resolutionSliderRef = useRef(null);
 
   function handleShowPrototypes(showing) {
     let temp = selectedPitchClasses.slice();
@@ -52,7 +54,8 @@ export default function Visualization() {
   useEffect(() => {
     let input = document.getElementById('file').files[0];
     if (input) {
-      let resolution = 10;
+      let resolution = +resolutionSliderRef.current.value;
+      console.log(typeof resolution);
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) => {
@@ -126,6 +129,21 @@ export default function Visualization() {
         </div>
       </form>
 
+      <div>
+        <input
+          type='range'
+          id='resolutin'
+          name='resolution'
+          defaultValue='1'
+          min='1'
+          max='10'
+          //step='0.1'
+          onChange={() => setResolution(resolutionSliderRef.current.value)}
+          ref={resolutionSliderRef}
+        />
+        <label htmlFor='resolution'>Resolution: {resolution}</label>
+      </div>
+
       <DrawCircles
         printablePitchClasses={selectedPitchClasses}
         traceData={traceData}
@@ -144,58 +162,74 @@ export default function Visualization() {
 
 function parse(input) {
   let pcvs = [];
-  let isGroup = false;
-  let openDivider = '(';
-  let closeDivider = ')';
+  //Vectorial notation, distribution -> real numbers
+  const openVect = '(';
+  const closeVect = ')';
+  //Set notation, integers
+  const openSet = '{';
+  const closeSet = '}';
+  //Number divider
+  const divider = ',';
 
-  let firstIndex = 0;
-  let secondIndex = 0;
+  let isGroup = false;
+  let isSet = false;
 
   for (let i = 0; i < input.length; i++) {
-    if (input[i] === openDivider) {
+    if (input[i] === openSet || input[i] === openVect) {
       isGroup = true;
-      firstIndex = i + 1;
-      secondIndex = firstIndex;
+      if (input[i] === openSet) isSet = true;
     }
 
     if (isGroup) {
-      if (input[i] === closeDivider) {
-        isGroup = false;
-        let ris = input.slice(firstIndex, secondIndex - 1);
-        pcvs.push(ris);
-      } else {
-        secondIndex++;
+      let stringGroup = [];
+      let count = 1;
+      //Slice the current group
+      for (
+        let j = i + 1;
+        input[j] !== closeSet && input[j] !== closeVect;
+        j++
+      ) {
+        stringGroup.push(input[j]);
+        count++;
       }
+
+      stringGroup = stringGroup.join('');
+
+      let numeralInput = [];
+      let isNum = true;
+      count = 0;
+      for (let j = 0; j < stringGroup.length; j++) {
+        if (stringGroup[j] === divider) {
+          let num = stringGroup.slice(j - count, j);
+          numeralInput.push(+num);
+          count = -1;
+        }
+        count++;
+      }
+      //Last element not cover by the for cycle
+      let num = stringGroup.slice(
+        stringGroup.length - count,
+        stringGroup.length
+      );
+      numeralInput.push(+num);
+
+      if (isSet) {
+        let bin = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        for (let i = 0; i < numeralInput.length; i++) {
+          bin[numeralInput[i]] += 1;
+        }
+        pcvs.push(bin);
+      } else {
+        pcvs.push(numeralInput);
+      }
+
+      isGroup = false;
+      isSet = false;
+      i += count;
     }
   }
 
-  pcvs = pcvs.map((pcv) => {
-    let ris = pcv.replace(/,/g, '');
-    ris = ris.replace(/ /g, '');
-    return ris;
-  });
+  console.log(pcvs);
 
-  if (input.includes('0')) {
-    //Zero-one notation
-    pcvs = pcvs.map((pcv) => {
-      let array = [];
-      for (let i = 0; i < pcv.length; i++) {
-        array[i] = parseInt(pcv[i]);
-      }
-      return array;
-    });
-
-    return pcvs;
-  } else {
-    //Integer notation
-    let intToBinPcvs = pcvs.map((pcv) => {
-      let bin = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      for (let i = 0; i < pcv.length; i++) {
-        bin[pcv[i] - 1] += 1;
-      }
-      return bin;
-    });
-
-    return intToBinPcvs;
-  }
+  return pcvs;
 }

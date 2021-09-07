@@ -89,7 +89,7 @@ export default function Player({ resolution }) {
         id='play'
         className='btn fas fa-play fa-4x'
         onClick={() => {
-          console.log('click');
+          console.log('play');
           if (Tone.context.state !== 'running') {
             console.log('state running');
             Tone.context.resume();
@@ -105,8 +105,8 @@ export default function Player({ resolution }) {
         id='pause'
         className='btn fas fa-pause fa-4x'
         onClick={() => {
-          console.log('tone ok');
-          Tone.start();
+          console.log('pause');
+          Tone.Transport.pause();
         }}
       ></div>
     </div>
