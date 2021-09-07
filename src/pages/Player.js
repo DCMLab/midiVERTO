@@ -4,7 +4,7 @@ import { Midi } from '@tonejs/midi';
 let currentSubdiv = 0;
 let intervalId;
 
-export function setPlayerMidiData(toneMidi, resolution) {
+export function setPlayerMidiData(toneMidi, resolution, setCurrentSubdiv) {
   let midiData = new Midi(toneMidi);
 
   let nonPercussiveTracks = midiData.tracks.filter(
@@ -30,7 +30,7 @@ export function setPlayerMidiData(toneMidi, resolution) {
         time,
         note.velocity
       );
-      //console.log(note.subdiv);
+      setCurrentSubdiv(note.subdiv);
     },
     [...partNotes]
   ).start(0);
@@ -73,7 +73,7 @@ const sampler = new Tone.Sampler({
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
 }).toDestination();
 
-export default function Player({ resolution, currentSubdivStateHandler }) {
+export default function Player({ resolution }) {
   return (
     <div id='playStopButtons'>
       <div
@@ -82,7 +82,7 @@ export default function Player({ resolution, currentSubdivStateHandler }) {
         onClick={() => {
           console.log('stop');
           Tone.Transport.stop();
-          clearInterval(intervalId);
+          //clearInterval(intervalId);
         }}
       ></div>
       <div
@@ -95,10 +95,10 @@ export default function Player({ resolution, currentSubdivStateHandler }) {
             Tone.context.resume();
           }
           Tone.Transport.start();
-          intervalId = setInterval(() => {
-            //currentSubdivStateHandler(currentSubdiv);
+          /* intervalId = setInterval(() => {
+            currentSubdivStateHandler(currentSubdiv);
             currentSubdiv++;
-          }, resolution);
+          }, resolution); */
         }}
       ></div>
       <div

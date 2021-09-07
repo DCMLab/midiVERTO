@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import * as math from 'mathjs';
 import { gradient } from './colorMapping';
+import { useEffect, useRef } from 'react';
 
 export const DrawCircles = ({
   printablePitchClasses,
@@ -13,10 +14,19 @@ export const DrawCircles = ({
   const height = width;
   const innerWidth = 0.9 * width;
   //const innerHeight = innerWidth;
-  const N = 50;
-  const K = 25;
+  const N = 20;
+  const K = 10;
 
-  //console.log(currentSubdiv);
+  /* const canvasRef = useRef(null);
+
+   useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    //ctx.setTransform(1, 0, 0, -1, 0, ctx.canvas.height);
+
+    let margins = [100, 100];
+    let innerSize = [canvas.width - margins[0], canvas.height - margins[1]];
+  }, []); */
 
   let traces = [];
 
@@ -55,7 +65,7 @@ export const DrawCircles = ({
     );
   };
 
-  //console.log(traces);
+  console.log(currentSubdiv);
 
   /* const outerRadius = (0.9 * height) / 2;
   const innerRadius = (0.7 * height) / 2; */
@@ -108,6 +118,24 @@ export const DrawCircles = ({
     );
   };
 
+  const highlightSubdiv = (i) => {
+    return (
+      <path
+        transform={`translate(${
+          (traces[i][currentSubdiv].re * innerWidth) / 2
+        },${-(traces[i][currentSubdiv].im * innerWidth) / 2})`}
+        fill={'white'}
+        key={`currentSubdiv${currentSubdiv}`}
+        d={d3
+          .arc()
+          .innerRadius((0.03 * width) / 2)
+          .outerRadius(((0.05 + 0.01) * width) / 2)
+          .startAngle(0)
+          .endAngle(2 * math.pi)()}
+      ></path>
+    );
+  };
+
   return d3.range(0, 6, 1).map((i) => {
     return (
       <svg key={`circle${i}`} width={width} height={height}>
@@ -116,6 +144,7 @@ export const DrawCircles = ({
             angles.map((angle, id) => arc(angle, id, i, innerRadius))
           )}
         </g>
+        {/* <canvas width={width} height={height} ref={canvasRef}></canvas> */}
         <g transform={`translate(${width / 2},${width / 2})`}>
           {printablePitchClasses.map((pc) => {
             if (pc.coeff.includes(i + 1)) {
@@ -141,6 +170,9 @@ export const DrawCircles = ({
           {traces.length > 1
             ? traces[i].map((dot, j) => drawTrace(dot, i, j))
             : null}
+        </g>
+        <g transform={`translate(${width / 2},${width / 2})`}>
+          {traces.length > 1 ? highlightSubdiv(i) : null}
         </g>
       </svg>
     );

@@ -38,12 +38,6 @@ export default function Visualization() {
   const [userPcv, setUserPcv] = useState([]);
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
 
-  function currentSubdivStateHandler(newState) {
-    setCurrentSubdiv(setCurrentSubdiv);
-  }
-
-  useEffect(() => console.log(currentSubdiv), [currentSubdiv]);
-
   function handleShowPrototypes(showing) {
     let temp = selectedPitchClasses.slice();
 
@@ -58,11 +52,11 @@ export default function Visualization() {
   useEffect(() => {
     let input = document.getElementById('file').files[0];
     if (input) {
-      let resolution = 1;
+      let resolution = 10;
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) => {
-        setPlayerMidiData(ris.target.result, resolution);
+        setPlayerMidiData(ris.target.result, resolution, setCurrentSubdiv);
         let dftCoeff = getDftCoeffFromMidi(ris.target.result, resolution);
         setTraceData(dftCoeff);
         setWavescapesData(getRgbaMatrix(dftCoeff));
@@ -92,10 +86,7 @@ export default function Visualization() {
 
   return (
     <>
-      <Player
-        resolution={1}
-        currentSubdivStateHandler={currentSubdivStateHandler}
-      />
+      <Player resolution={1000} />
       <form onSubmit={handleSubmitPitchClass}>
         <div>
           <label htmlFor='pitchClass'>Pitch class: </label>
@@ -139,7 +130,7 @@ export default function Visualization() {
         printablePitchClasses={selectedPitchClasses}
         traceData={traceData}
         userPcv={userPcv}
-        //currentSubdiv={currentSubdiv}
+        currentSubdiv={currentSubdiv}
       />
 
       {wavescapesData.map((matrix, i) => {
