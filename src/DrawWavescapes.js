@@ -2,18 +2,30 @@ import { useRef, useEffect } from 'react';
 
 export const DrawWavescapes = ({ wavescapeMatrix }) => {
   const canvasRef = useRef(null);
-  let width = 500;
-  let height = 500;
+  let width = 400;
+  let height = 400;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    let margins = [100, 100];
-    let innerSize = [canvas.width - margins[0], canvas.height - margins[1]];
-    let baseSubdivision = wavescapeMatrix[0].length;
+    // increase the actual size of our canvas
+    canvas.width = width * devicePixelRatio;
+    canvas.height = height * devicePixelRatio;
 
-    if (wavescapeMatrix.length > 0) {
+    // ensure all drawing operations are scaled
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+
+    // scale everything down using CSS
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+
+    let margins = [0, 0];
+    let innerSize = [canvas.width - margins[0], canvas.height - margins[1]];
+    let baseSubdivision;
+
+    if (wavescapeMatrix) {
+      baseSubdivision = wavescapeMatrix[0].length;
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.setTransform(1, 0, 0, -1, 0, ctx.canvas.height);
       let ticks = computeTicks(

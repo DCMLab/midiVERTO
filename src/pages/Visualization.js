@@ -162,42 +162,42 @@ export default function Visualization() {
         userPcvsCoeff={userPcvs[0]}
         currentSubdiv={currentSubdiv}
       />
+      <DrawWavescapes wavescapeMatrix={wavescapesData[0]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[1]}
         traceDataCoeff={tracesData[1]}
         userPcvsCoeff={userPcvs[1]}
         currentSubdiv={currentSubdiv}
       />
+      <DrawWavescapes wavescapeMatrix={wavescapesData[1]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[2]}
         traceDataCoeff={tracesData[2]}
         userPcvsCoeff={userPcvs[2]}
         currentSubdiv={currentSubdiv}
       />
+      <DrawWavescapes wavescapeMatrix={wavescapesData[2]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[3]}
         traceDataCoeff={tracesData[3]}
         userPcvsCoeff={userPcvs[3]}
         currentSubdiv={currentSubdiv}
       />
+      <DrawWavescapes wavescapeMatrix={wavescapesData[3]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[4]}
         traceDataCoeff={tracesData[4]}
         userPcvsCoeff={userPcvs[4]}
         currentSubdiv={currentSubdiv}
       />
+      <DrawWavescapes wavescapeMatrix={wavescapesData[4]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[5]}
         traceDataCoeff={tracesData[5]}
         userPcvsCoeff={userPcvs[5]}
         currentSubdiv={currentSubdiv}
       />
-
-      {wavescapesData.map((matrix, i) => {
-        return (
-          <DrawWavescapes key={`wavescape${i}`} wavescapeMatrix={matrix} />
-        );
-      })}
+      <DrawWavescapes wavescapeMatrix={wavescapesData[5]} />
     </>
   );
 }
