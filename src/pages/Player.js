@@ -1,9 +1,6 @@
 import * as Tone from 'tone';
 import { Midi } from '@tonejs/midi';
 
-let currentSubdiv = 0;
-let intervalId;
-
 export function setPlayerMidiData(toneMidi, resolution, setCurrentSubdiv) {
   let midiData = new Midi(toneMidi);
 
@@ -82,7 +79,6 @@ export default function Player({ resolution }) {
         onClick={() => {
           console.log('stop');
           Tone.Transport.stop();
-          //clearInterval(intervalId);
         }}
       ></div>
       <div
@@ -95,10 +91,6 @@ export default function Player({ resolution }) {
             Tone.context.resume();
           }
           Tone.Transport.start();
-          /* intervalId = setInterval(() => {
-            currentSubdivStateHandler(currentSubdiv);
-            currentSubdiv++;
-          }, resolution); */
         }}
       ></div>
       <div

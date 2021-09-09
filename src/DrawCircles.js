@@ -1,7 +1,10 @@
 import * as d3 from 'd3';
 import * as math from 'mathjs';
 import { gradient } from './colorMapping';
-import { useEffect, useRef } from 'react';
+//import { useEffect, useRef } from 'react';
+
+//Minus before every y coordinate due to the fact that svg has positive y
+//downward, meanwhile cartesian plane has positive y upward
 
 export const DrawCircles = ({
   printablePitchClasses,
@@ -16,6 +19,8 @@ export const DrawCircles = ({
   //const innerHeight = innerWidth;
   const N = 20;
   const K = 10;
+
+  //console.log(traceData);
 
   /* const canvasRef = useRef(null);
 

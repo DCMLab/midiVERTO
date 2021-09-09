@@ -2,51 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DrawCircles } from '../DrawCircles';
 import { DrawWavescapes } from '../DrawWavescapes';
 import { prototypesData } from '../prototypesData';
+import Circle from '../Circle';
 import Player, { setPlayerMidiData } from './Player';
 import { getDftCoeffFromMidi, getRgbaMatrix } from '../getDftMatrices';
 import dft from '../DFT';
 
-//SET CLASSES
-let setClasses = [
-  // C  C# D  D# E  F  F# G  G# A  Bb B
-  { name: 'Single Tone', pcv: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }, //Single tone
-  { name: 'Tritone', pcv: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0] }, //Tritone
-  { name: 'Major Triad', pcv: [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0] }, //Major triad
-  { name: 'Aug Triad', pcv: [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0] }, //Aug triad
-  { name: 'Maj7', pcv: [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1] }, //Maj7
-  { name: 'Min7', pcv: [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0] }, //min7
-  { name: 'Half-Dim7', pcv: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0] }, //Half-dim 7
-  { name: 'Dim7', pcv: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0] }, //dim 7
-  { name: 'Pentatonic', pcv: [1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0] }, //Pentatonic
-  { name: "Guido's Hexachord", pcv: [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0] }, //Guido's hexachord
-  { name: 'Whole-Tone Scale', pcv: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0] }, //Whole-tone scale
-  { name: '6 chromatic Tones6', pcv: [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0] }, //6 chromatic tones
-  { name: 'Diatonic Scale', pcv: [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1] }, //Diatonic scale
-  { name: '3 chromatic tritones', pcv: [1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0] }, //3 chromatic tritones
-  { name: 'Hexatonic Scale', pcv: [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1] }, //Hexatonic scale
-  { name: 'Octatonic Scale', pcv: [1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1] }, //Octatonic scale
-  { name: 'All Tones', pcv: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }, //All tones
-];
-
 export default function Visualization() {
-  const [selectedPitchClasses, setSelectedPitchClasses] =
+  const [selectedProtoPitchClasses, setSelectedProtoPitchClasses] =
     useState(prototypesData);
-  const [wavescapesData, setWavescapesData] = useState([]);
   const [showPrototypes, setShowPrototypes] = useState(true);
-  const [traceData, setTraceData] = useState([]);
+
+  const [wavescapesData, setWavescapesData] = useState([]);
+  const [tracesData, setTracesData] = useState([]);
   const [file, setFile] = useState('');
-  const [userPcv, setUserPcv] = useState([]);
+  const [userPcvs, setUserPcvs] = useState([]);
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
   const [resolution, setResolution] = useState(1);
   const resolutionSliderRef = useRef(null);
 
   function handleShowPrototypes(showing) {
-    let temp = selectedPitchClasses.slice();
+    let temp = selectedProtoPitchClasses.slice();
 
     if (showing) temp.push(...prototypesData);
     else temp = temp.filter((pc) => pc.isPrototype === false);
 
-    setSelectedPitchClasses(temp);
+    setSelectedProtoPitchClasses(temp);
     setShowPrototypes(showing);
   }
 
@@ -55,18 +35,29 @@ export default function Visualization() {
     let input = document.getElementById('file').files[0];
     if (input) {
       let resolution = +resolutionSliderRef.current.value;
-      console.log(typeof resolution);
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (ris) => {
         setPlayerMidiData(ris.target.result, resolution, setCurrentSubdiv);
         let dftCoeff = getDftCoeffFromMidi(ris.target.result, resolution);
-        setTraceData(dftCoeff);
+        //Subdividing the first row of the dft coeff matrix to get the trace for each coeff
+        let traces = [];
+        let firstRow = dftCoeff[0];
+        for (let i = 1; i < 7; i++) {
+          let temp = [];
+          for (let j = 0; j < firstRow.length; j++) {
+            temp.push({ x: firstRow[j][i].re, y: firstRow[j][i].im });
+          }
+          traces.push(temp);
+        }
+        setTracesData(traces);
         setWavescapesData(getRgbaMatrix(dftCoeff));
         //console.log(wavescapesData);
       };
     }
   }, [file]);
+
+  console.log(userPcvs);
 
   const handleSubmit = (e) => {
     //In order not to refresh the page (default behaviuor)
@@ -81,10 +72,26 @@ export default function Visualization() {
     for (let i = 0; i < parsedInput.length; i++) {
       dftCoeffsInput.push(dft(parsedInput[i], true, true, false));
     }
-    let temp = [];
-    if (userPcv.length > 0) temp = [...userPcv.slice(), ...dftCoeffsInput];
-    else temp = dftCoeffsInput;
-    setUserPcv(temp);
+
+    //Subdividing the coeffs for their coeff number
+    let subdivUserPcvs = [];
+    for (let i = 1; i < 7; i++) {
+      let temp = [];
+      for (let j = 0; j < dftCoeffsInput.length; j++) {
+        temp.push({ x: dftCoeffsInput[j][i].re, y: dftCoeffsInput[j][i].im });
+      }
+      subdivUserPcvs.push(temp);
+    }
+
+    if (userPcvs.length === 0) setUserPcvs(subdivUserPcvs);
+    else {
+      let temp = userPcvs.slice();
+      for (let i = 0; i < userPcvs.length; i++) {
+        temp[i].push(...subdivUserPcvs[i]);
+      }
+
+      setUserPcvs(temp);
+    }
   };
 
   return (
@@ -144,11 +151,42 @@ export default function Visualization() {
         <label htmlFor='resolution'>Resolution: {resolution}</label>
       </div>
 
-      <DrawCircles
+      {/* <DrawCircles
         printablePitchClasses={selectedPitchClasses}
         traceData={traceData}
         userPcv={userPcv}
         currentSubdiv={currentSubdiv}
+      /> */}
+
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[0]}
+        traceDataCoeff={tracesData[0]}
+        userPcvsCoeff={userPcvs[0]}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[1]}
+        traceDataCoeff={tracesData[1]}
+        userPcvsCoeff={userPcvs[1]}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[2]}
+        traceDataCoeff={tracesData[2]}
+        userPcvsCoeff={userPcvs[2]}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[3]}
+        traceDataCoeff={tracesData[3]}
+        userPcvsCoeff={userPcvs[3]}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[4]}
+        traceDataCoeff={tracesData[4]}
+        userPcvsCoeff={userPcvs[4]}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[5]}
+        traceDataCoeff={tracesData[5]}
+        userPcvsCoeff={userPcvs[5]}
       />
 
       {wavescapesData.map((matrix, i) => {
@@ -196,7 +234,6 @@ function parse(input) {
       stringGroup = stringGroup.join('');
 
       let numeralInput = [];
-      let isNum = true;
       count = 0;
       for (let j = 0; j < stringGroup.length; j++) {
         if (stringGroup[j] === divider) {
@@ -228,8 +265,6 @@ function parse(input) {
       i += count;
     }
   }
-
-  console.log(pcvs);
 
   return pcvs;
 }
