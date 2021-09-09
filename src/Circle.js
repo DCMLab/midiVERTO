@@ -98,14 +98,25 @@ function Circle({
       .endAngle(2 * Math.PI);
 
     return (
-      <path
-        transform={`translate(${pcvData.x * circleRadius},${
-          -pcvData.y * circleRadius
-        })`}
-        fill={'grey'}
-        key={id}
-        d={mark()}
-      ></path>
+      <g key={`p.${id}`}>
+        <path
+          transform={`translate(${pcvData.x * circleRadius},${
+            -pcvData.y * circleRadius
+          })`}
+          fill={'grey'}
+          key={id}
+          d={mark()}
+        ></path>
+        <text
+          textAnchor='middle'
+          x={pcvData.x * (circleRadius * (1 - 0.2))}
+          y={pcvData.y * (circleRadius * (1 - 0.2))}
+          dy={6}
+          fontSize='20px'
+        >
+          {pcvData.label}
+        </text>
+      </g>
     );
   };
 
