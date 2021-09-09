@@ -105,6 +105,9 @@ export function getDftCoeffFromMidi(midiFile, resolution) {
   let tracksSubdivision = [];
 
   //TODO: check and delete percussive tracks!
+  let nonPercussiveTracks = midiData.tracks.filter(
+    (track) => track.instrument.percussion === false
+  );
 
   /* midiData.tracks.forEach((track) => {
     let tempMat = [];
@@ -118,7 +121,7 @@ export function getDftCoeffFromMidi(midiFile, resolution) {
     trackMatrices.push(tempMat);
   }); */
 
-  midiData.tracks.forEach((track) => {
+  nonPercussiveTracks.forEach((track) => {
     tracksSubdivision.push(getSubdivision(track.notes, resolution, duration));
   });
 

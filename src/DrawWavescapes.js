@@ -38,7 +38,7 @@ export const DrawWavescapes = ({ wavescapeMatrix }) => {
 
       drawWavescape(ticks, ctx, wavescapeMatrix);
     }
-  }, [wavescapeMatrix]);
+  }, [wavescapeMatrix, width, height]);
 
   return <canvas width={width} height={height} ref={canvasRef}></canvas>;
 };

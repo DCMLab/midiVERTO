@@ -29,7 +29,7 @@ export default function dft(
 
   if (normalize) {
     const norm = coeffs[0];
-    if (norm !== 0) coeffs = coeffs.map((coeff) => math.divide(coeff, norm));
+    if (norm != 0) coeffs = coeffs.map((coeff) => math.divide(coeff, norm));
   }
 
   if (round) {
