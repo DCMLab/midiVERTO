@@ -19,6 +19,8 @@ function Circle({
   const innerWidth = width - margin;
   const circleRadius = width / 2 - margin;
 
+  let marksRadiusRatio = 0.04;
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -66,11 +68,11 @@ function Circle({
     canvasRef.current.getContext('2d').getImageData(0, 0, 1, 1);
   }, []);
 
-  const circleMark = (pcvData, radiusScaleWidth, color, id) => {
+  const circleMark = (pcvData, radiusScaleWidth, color, id, opacity = 1) => {
     const mark = d3
       .arc()
-      .innerRadius((radiusScaleWidth * width) / 2)
-      .outerRadius(((radiusScaleWidth + 0.01) * width) / 2)
+      .innerRadius(0)
+      .outerRadius((radiusScaleWidth * width) / 2)
       .startAngle(0)
       .endAngle(2 * Math.PI);
 
@@ -80,6 +82,27 @@ function Circle({
           -pcvData.y * circleRadius
         })`}
         fill={color}
+        fillOpacity={opacity}
+        key={id}
+        d={mark()}
+      ></path>
+    );
+  };
+
+  const protoCircleMark = (pcvData, id) => {
+    const mark = d3
+      .arc()
+      .innerRadius((0.05 * width) / 2)
+      .outerRadius(((0.05 + 0.01) * width) / 2)
+      .startAngle(0)
+      .endAngle(2 * Math.PI);
+
+    return (
+      <path
+        transform={`translate(${pcvData.x * circleRadius},${
+          -pcvData.y * circleRadius
+        })`}
+        fill={'grey'}
         key={id}
         d={mark()}
       ></path>
@@ -89,15 +112,75 @@ function Circle({
   const drawBorder = () => {
     return (
       <path
-        fill={'black'}
+        fill={'azure'}
         d={d3
           .arc()
-          .innerRadius(innerWidth / 2 - 8)
+          .innerRadius(innerWidth / 2 - 9)
           .outerRadius(innerWidth / 2 - 11)
           .startAngle(0)
           .endAngle(2 * Math.PI)()}
       ></path>
     );
+  };
+
+  const highlightSubdiv = (radiusScaleWidth) => {
+    const mark = d3
+      .arc()
+      .innerRadius(0)
+      .outerRadius((radiusScaleWidth * width) / 2)
+      .startAngle(0)
+      .endAngle(2 * Math.PI);
+
+    const highlight = d3
+      .arc()
+      .innerRadius((radiusScaleWidth * width) / 2)
+      .outerRadius(((radiusScaleWidth + 0.01) * width) / 2)
+      .startAngle(0)
+      .endAngle(2 * Math.PI);
+
+    let highlightedTrace = [];
+    let length = 10;
+    let opacityArray = [];
+
+    opacityArray.push(1);
+    for (let i = 1; i < 10; i++) {
+      opacityArray.push(opacityArray[i - 1] * 0.6);
+    }
+
+    if (currentSubdiv < length)
+      highlightedTrace = traceDataCoeff.slice(0, currentSubdiv);
+    else
+      highlightedTrace = traceDataCoeff.slice(
+        currentSubdiv - length,
+        currentSubdiv
+      );
+
+    highlightedTrace = highlightedTrace.reverse();
+
+    return highlightedTrace.map((coeff, i) => {
+      return (
+        <g key={`g.${i}`}>
+          <path
+            transform={`translate(${coeff.x * circleRadius},${
+              -coeff.y * circleRadius
+            })`}
+            fill={'black'}
+            key={i}
+            fillOpacity={opacityArray[i]}
+            d={mark()}
+          ></path>
+          <path
+            transform={`translate(${coeff.x * circleRadius},${
+              -coeff.y * circleRadius
+            })`}
+            fill={'white'}
+            fillOpacity={opacityArray[i]}
+            key={`t.${i}`}
+            d={highlight()}
+          ></path>
+        </g>
+      );
+    });
   };
 
   return (
@@ -113,12 +196,19 @@ function Circle({
         </foreignObject>
         <g transform={`translate(${width / 2},${width / 2})`}>
           {drawBorder()}
-          {protoDataCoeff.map((pcv, i) => circleMark(pcv, 0.05, 'grey', i))}
-          {traceDataCoeff
-            ? traceDataCoeff.map((pcv, i) => circleMark(pcv, 0.01, 'black', i))
+          {protoDataCoeff
+            ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
             : null}
+          {traceDataCoeff
+            ? traceDataCoeff.map((pcv, i) =>
+                circleMark(pcv, marksRadiusRatio, 'black', i, 0.05)
+              )
+            : null}
+          {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
           {userPcvsCoeff
-            ? userPcvsCoeff.map((pcv, i) => circleMark(pcv, 0.03, 'teal', i))
+            ? userPcvsCoeff.map((pcv, i) =>
+                circleMark(pcv, marksRadiusRatio, 'teal', i)
+              )
             : null}
         </g>
       </svg>

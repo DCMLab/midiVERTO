@@ -24,7 +24,7 @@ export default function Visualization() {
     let temp = selectedProtoPitchClasses.slice();
 
     if (showing) temp.push(...prototypesData);
-    else temp = temp.filter((pc) => pc.isPrototype === false);
+    else temp = [];
 
     setSelectedProtoPitchClasses(temp);
     setShowPrototypes(showing);
@@ -52,12 +52,10 @@ export default function Visualization() {
         }
         setTracesData(traces);
         setWavescapesData(getRgbaMatrix(dftCoeff));
-        //console.log(wavescapesData);
+        console.log(traces[0].length);
       };
     }
   }, [file]);
-
-  console.log(userPcvs);
 
   const handleSubmit = (e) => {
     //In order not to refresh the page (default behaviuor)
@@ -162,31 +160,37 @@ export default function Visualization() {
         protoDataCoeff={selectedProtoPitchClasses[0]}
         traceDataCoeff={tracesData[0]}
         userPcvsCoeff={userPcvs[0]}
+        currentSubdiv={currentSubdiv}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[1]}
         traceDataCoeff={tracesData[1]}
         userPcvsCoeff={userPcvs[1]}
+        currentSubdiv={currentSubdiv}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[2]}
         traceDataCoeff={tracesData[2]}
         userPcvsCoeff={userPcvs[2]}
+        currentSubdiv={currentSubdiv}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[3]}
         traceDataCoeff={tracesData[3]}
         userPcvsCoeff={userPcvs[3]}
+        currentSubdiv={currentSubdiv}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[4]}
         traceDataCoeff={tracesData[4]}
         userPcvsCoeff={userPcvs[4]}
+        currentSubdiv={currentSubdiv}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[5]}
         traceDataCoeff={tracesData[5]}
         userPcvsCoeff={userPcvs[5]}
+        currentSubdiv={currentSubdiv}
       />
 
       {wavescapesData.map((matrix, i) => {
