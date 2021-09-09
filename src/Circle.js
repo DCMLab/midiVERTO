@@ -110,7 +110,7 @@ function Circle({
         <text
           textAnchor='middle'
           x={pcvData.x * (circleRadius * (1 - 0.2))}
-          y={pcvData.y * (circleRadius * (1 - 0.2))}
+          y={-pcvData.y * (circleRadius * (1 - 0.2))}
           dy={6}
           fontSize='20px'
         >
