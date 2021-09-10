@@ -118,8 +118,6 @@ function Circle({
       labelName = pcvData.label;
     }
 
-    subSup.length > 0 ? console.log(labelName, subSup) : console.log(labelName);
-
     return (
       <g
         transform={`translate(${pcvData.x * circleRadius},${
@@ -136,11 +134,11 @@ function Circle({
         >
           {labelName}
           {isSub ? (
-            <tspan fontSize={15} baseline-shift='sub'>
+            <tspan fontSize={15} baselineShift='sub'>
               {subSup}
             </tspan>
           ) : (
-            <tspan fontSize={15} baseline-shift='super'>
+            <tspan fontSize={15} baselineShift='super'>
               {subSup}
             </tspan>
           )}

@@ -6,7 +6,6 @@ import Home from './pages/Home';
 import Visualization from './pages/Visualization';
 
 function App() {
-  console.log(process.env.PUBLIC_URL);
   return (
     <HashRouter basename={process.env.PUBLIC_URL}>
       <Navbar />
