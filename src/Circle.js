@@ -90,31 +90,60 @@ function Circle({
   };
 
   const protoCircleMark = (pcvData, id) => {
+    let scaleRatio = 0.02;
     const mark = d3
       .arc()
-      .innerRadius((0.05 * width) / 2)
-      .outerRadius(((0.05 + 0.01) * width) / 2)
+      .innerRadius((scaleRatio * width) / 2)
+      .outerRadius(((scaleRatio + 0.01) * width) / 2)
       .startAngle(0)
       .endAngle(2 * Math.PI);
 
+    //Check for sub/superscript
+    let labelName = '';
+    let subSup = '';
+    let isSub = false;
+    if (pcvData.label.includes('_') || pcvData.label.includes('^')) {
+      for (let i = 0; i < pcvData.label.length; i++) {
+        if (pcvData.label[i] === '_') {
+          labelName = pcvData.label.slice(0, i);
+          subSup = pcvData.label.slice(i + 1, pcvData.label.length);
+          isSub = true;
+        }
+        if (pcvData.label[i] === '^') {
+          labelName = pcvData.label.slice(0, i);
+          subSup = pcvData.label.slice(i + 1, pcvData.label.length);
+        }
+      }
+    } else {
+      labelName = pcvData.label;
+    }
+
+    subSup.length > 0 ? console.log(labelName, subSup) : console.log(labelName);
+
     return (
-      <g key={`p.${id}`}>
-        <path
-          transform={`translate(${pcvData.x * circleRadius},${
-            -pcvData.y * circleRadius
-          })`}
-          fill={'grey'}
-          key={id}
-          d={mark()}
-        ></path>
+      <g
+        transform={`translate(${pcvData.x * circleRadius},${
+          -pcvData.y * circleRadius
+        })`}
+        key={`p.${id}`}
+      >
+        <path fill={'grey'} key={id} d={mark()}></path>
         <text
           textAnchor='middle'
-          x={pcvData.x * (circleRadius * (1 - 0.2))}
-          y={-pcvData.y * (circleRadius * (1 - 0.2))}
-          dy={6}
+          dx={-Math.sign(pcvData.x) * 20}
+          dy={-Math.sign(-pcvData.y) * 20}
           fontSize='20px'
         >
-          {pcvData.label}
+          {labelName}
+          {isSub ? (
+            <tspan fontSize={15} baseline-shift='sub'>
+              {subSup}
+            </tspan>
+          ) : (
+            <tspan fontSize={15} baseline-shift='super'>
+              {subSup}
+            </tspan>
+          )}
         </text>
       </g>
     );
