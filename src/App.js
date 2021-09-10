@@ -10,8 +10,8 @@ function App() {
     <Router basename={process.env.PUBLIC_URL}>
       <Navbar />
       <Switch>
-        <Route path='/' component={Home} exact></Route>
-        <Route path='/visualization' component={Visualization} exact></Route>
+        <Route exact path={`/`} component={Home}></Route>
+        <Route exact path={`/visualization`} component={Visualization}></Route>
       </Switch>
     </Router>
   );
