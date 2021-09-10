@@ -7,15 +7,22 @@ import { getDftCoeffFromMidi, getRgbaMatrix } from '../getDftMatrices';
 import dft from '../DFT';
 
 export default function Visualization() {
+  //State: show or hide on the circles pitch class of the prototypes
   const [selectedProtoPitchClasses, setSelectedProtoPitchClasses] =
     useState(prototypesData);
   const [showPrototypes, setShowPrototypes] = useState(true);
 
+  //State: contains the color data of the wavescape of a given coeff (Array(6) one for coeff)
   const [wavescapesData, setWavescapesData] = useState([]);
+
+  //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [tracesData, setTracesData] = useState([]);
-  const [file, setFile] = useState('');
-  const [userPcvs, setUserPcvs] = useState([]);
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
+
+  const [file, setFile] = useState('');
+
+  const [userPcvs, setUserPcvs] = useState([]);
+
   const [resolution, setResolution] = useState(1);
   const resolutionSliderRef = useRef(null);
 
@@ -37,8 +44,20 @@ export default function Visualization() {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (res) => {
+        //Once the file is loaded
+
+        //Computation of the minimum resolution give time-precision trade off
+        let mode = {
+          userFriendly: 150,
+          precise: 250,
+          scientific: 400,
+          stillBearable: 600,
+          goodLuck: 1000,
+        };
+
         setPlayerMidiData(res.target.result, resolution, setCurrentSubdiv);
         let dftCoeff = getDftCoeffFromMidi(res.target.result, resolution);
+
         //Subdividing the first row of the dft coeff matrix to get the trace for each coeff
         let traces = [];
         let firstRow = dftCoeff[0];
