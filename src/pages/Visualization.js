@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DrawCircles } from '../DrawCircles';
-import { DrawWavescapes } from '../DrawWavescapes';
+import { Wavescape } from '../Wavescape';
 import { prototypesData } from '../prototypesData';
 import Circle from '../Circle';
 import Player, { setPlayerMidiData } from './Player';
@@ -37,9 +36,9 @@ export default function Visualization() {
       let resolution = +resolutionSliderRef.current.value;
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
-      fileReader.onload = (ris) => {
-        setPlayerMidiData(ris.target.result, resolution, setCurrentSubdiv);
-        let dftCoeff = getDftCoeffFromMidi(ris.target.result, resolution);
+      fileReader.onload = (res) => {
+        setPlayerMidiData(res.target.result, resolution, setCurrentSubdiv);
+        let dftCoeff = getDftCoeffFromMidi(res.target.result, resolution);
         //Subdividing the first row of the dft coeff matrix to get the trace for each coeff
         let traces = [];
         let firstRow = dftCoeff[0];
@@ -94,7 +93,7 @@ export default function Visualization() {
 
   return (
     <>
-      <Player resolution={1000} />
+      <Player />
       <form onSubmit={handleSubmitPitchClass}>
         <div>
           <label htmlFor='pitchClass'>Pitch class: </label>
@@ -130,7 +129,6 @@ export default function Visualization() {
             value={file}
             onChange={(e) => setFile(e.target.value)}
           />
-          <button type='submit'>Submit</button>
         </div>
       </form>
 
@@ -162,42 +160,42 @@ export default function Visualization() {
         userPcvsCoeff={userPcvs[0]}
         currentSubdiv={currentSubdiv}
       />
-      <DrawWavescapes wavescapeMatrix={wavescapesData[0]} />
+      <Wavescape wavescapeMatrix={wavescapesData[0]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[1]}
         traceDataCoeff={tracesData[1]}
         userPcvsCoeff={userPcvs[1]}
         currentSubdiv={currentSubdiv}
       />
-      <DrawWavescapes wavescapeMatrix={wavescapesData[1]} />
+      <Wavescape wavescapeMatrix={wavescapesData[1]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[2]}
         traceDataCoeff={tracesData[2]}
         userPcvsCoeff={userPcvs[2]}
         currentSubdiv={currentSubdiv}
       />
-      <DrawWavescapes wavescapeMatrix={wavescapesData[2]} />
+      <Wavescape wavescapeMatrix={wavescapesData[2]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[3]}
         traceDataCoeff={tracesData[3]}
         userPcvsCoeff={userPcvs[3]}
         currentSubdiv={currentSubdiv}
       />
-      <DrawWavescapes wavescapeMatrix={wavescapesData[3]} />
+      <Wavescape wavescapeMatrix={wavescapesData[3]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[4]}
         traceDataCoeff={tracesData[4]}
         userPcvsCoeff={userPcvs[4]}
         currentSubdiv={currentSubdiv}
       />
-      <DrawWavescapes wavescapeMatrix={wavescapesData[4]} />
+      <Wavescape wavescapeMatrix={wavescapesData[4]} />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[5]}
         traceDataCoeff={tracesData[5]}
         userPcvsCoeff={userPcvs[5]}
         currentSubdiv={currentSubdiv}
       />
-      <DrawWavescapes wavescapeMatrix={wavescapesData[5]} />
+      <Wavescape wavescapeMatrix={wavescapesData[5]} />
     </>
   );
 }

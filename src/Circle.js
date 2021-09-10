@@ -155,11 +155,11 @@ function Circle({
 
     opacityArray.push(1);
     for (let i = 1; i < 10; i++) {
-      opacityArray.push(opacityArray[i - 1] * 0.6);
+      opacityArray.push(opacityArray[i - 1] * 0.8);
     }
 
     if (currentSubdiv < length)
-      highlightedTrace = traceDataCoeff.slice(0, currentSubdiv);
+      highlightedTrace = traceDataCoeff.slice(0, currentSubdiv + 1);
     else
       highlightedTrace = traceDataCoeff.slice(
         currentSubdiv - length,
@@ -175,7 +175,7 @@ function Circle({
             transform={`translate(${coeff.x * circleRadius},${
               -coeff.y * circleRadius
             })`}
-            fill={'black'}
+            fill={'white'}
             key={i}
             fillOpacity={opacityArray[i]}
             d={mark()}
@@ -184,7 +184,7 @@ function Circle({
             transform={`translate(${coeff.x * circleRadius},${
               -coeff.y * circleRadius
             })`}
-            fill={'white'}
+            fill={'black'}
             fillOpacity={opacityArray[i]}
             key={`t.${i}`}
             d={highlight()}

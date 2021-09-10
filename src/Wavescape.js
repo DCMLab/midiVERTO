@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 
-export const DrawWavescapes = ({ wavescapeMatrix }) => {
+export const Wavescape = ({ wavescapeMatrix }) => {
   const canvasRef = useRef(null);
   let width = 400;
   let height = 400;

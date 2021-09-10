@@ -4,6 +4,11 @@ import { Midi } from '@tonejs/midi';
 export function setPlayerMidiData(toneMidi, resolution, setCurrentSubdiv) {
   let midiData = new Midi(toneMidi);
 
+  //Remove the scheduled previous song
+  Tone.Transport.cancel(0);
+  setCurrentSubdiv(0);
+  Tone.Transport.stop();
+
   let nonPercussiveTracks = midiData.tracks.filter(
     (track) => track.instrument.percussion === false
   );
@@ -70,7 +75,7 @@ const sampler = new Tone.Sampler({
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
 }).toDestination();
 
-export default function Player({ resolution }) {
+export default function Player() {
   return (
     <div id='playStopButtons'>
       <div

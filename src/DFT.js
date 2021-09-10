@@ -29,6 +29,7 @@ export default function dft(
 
   if (normalize) {
     const norm = coeffs[0];
+    //'!=' gives a warning but '!==' doesn't compute correctly the if statement
     if (norm != 0) coeffs = coeffs.map((coeff) => math.divide(coeff, norm));
   }
 
