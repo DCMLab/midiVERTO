@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Wavescape } from '../Wavescape';
 import { prototypesData } from '../prototypesData';
 import Circle from '../Circle';
-import Player, { setPlayerMidiData } from './Player';
+import Player, { setPlayerMidiData } from '../Player';
 import { getDftCoeffFromMidi, getRgbaMatrix } from '../getDftMatrices';
 import dft from '../DFT';
 
@@ -46,7 +46,7 @@ export default function Visualization() {
       fileReader.onload = (res) => {
         //Once the file is loaded
 
-        //Computation of the minimum resolution give time-precision trade off
+        //Computation of the minimum resolution given time-precision trade off
         let mode = {
           userFriendly: 150,
           precise: 250,
@@ -157,9 +157,9 @@ export default function Visualization() {
           id='resolutin'
           name='resolution'
           defaultValue='1'
-          min='1'
+          min='0.1'
           max='10'
-          //step='0.1'
+          step='0.1'
           onChange={() => setResolution(resolutionSliderRef.current.value)}
           ref={resolutionSliderRef}
         />

@@ -1,16 +1,21 @@
 import * as d3 from 'd3';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { pixelColor } from './colorMapping';
 
 //Minus before every y coordinate due to the fact that svg has positive y
 //downward, meanwhile cartesian plane has positive y upward
 
-function Circle({
+function LiveCircle({
   protoDataCoeff,
   traceDataCoeff,
-  userPcvsCoeff,
   currentSubdiv,
+  deltaTime,
 }) {
+  const [frameStamps, setFrameStamps] = useState([]);
+  const [circleImageData, setCircleImageData] = useState();
+  let currentFrame = 0;
+  const frameCap = 50;
+
   const canvasRef = useRef(null);
   const width = 400;
   const height = width;
@@ -26,7 +31,7 @@ function Circle({
     const ctx = canvas.getContext('2d');
     let radius = Math.floor(circleRadius * devicePixelRatio);
     let image = ctx.createImageData(2 * radius, 2 * radius);
-    let data = image.data;
+    let imageData = image.data;
 
     // increase the actual size of our canvas
     canvas.width = width * devicePixelRatio;
@@ -54,19 +59,106 @@ function Circle({
         let pixelWidth = 4; // each pixel requires 4 slots in the data array
         let index = (adjustedX + adjustedY * rowLength) * pixelWidth;
         let rgba = pixelColor(x, y, distance / radius);
-        data[index] = rgba.r;
-        data[index + 1] = rgba.g;
-        data[index + 2] = rgba.b;
-        data[index + 3] = rgba.a;
+        imageData[index] = rgba.r;
+        imageData[index + 1] = rgba.g;
+        imageData[index + 2] = rgba.b;
+        imageData[index + 3] = rgba.a;
       }
     }
     ctx.putImageData(image, 0, 0);
+    setCircleImageData(
+      ctx.getImageData(
+        0,
+        0,
+        width * devicePixelRatio,
+        height * devicePixelRatio
+      )
+    );
+    console.log(circleImageData);
   }, [width, height, circleRadius]);
 
   useEffect(() => {
     //Workaround for chrome bug on canvas overlay in foreignObj SVG
     canvasRef.current.getContext('2d').getImageData(0, 0, 1, 1);
   }, []);
+
+  let intervalID = 0;
+
+  useEffect(() => {
+    if (currentSubdiv > 0) {
+      //setCurrentFrame(0);
+      if (intervalID != 0) clearInterval(intervalID);
+      //intervalID = setInterval(draw, (deltaTime * 1000) / frameCap);
+    }
+  }, [currentSubdiv]);
+
+  useEffect(() => {
+    if (deltaTime > 0) {
+      let temp = [0];
+      for (let i = 1; i < frameCap + 1; i++) {
+        temp.push(temp[i - 1] + 1 / frameCap);
+      }
+      setFrameStamps(temp);
+    }
+  }, [deltaTime]);
+
+  const segment = (p1, p2, t) => {
+    if (t > 1) t = 1;
+    return { x: p1.x + (p2.x - p1.x) * t, y: p1.y + (p2.y - p1.y) * t };
+  };
+
+  function draw() {
+    let ctx = canvasRef.current.getContext('2d');
+    //console.log(circleImageData);
+
+    //Spread operation for shallow copy
+    let nextPoint = { ...traceDataCoeff[currentSubdiv + 1] };
+    let currentPoint = { ...traceDataCoeff[currentSubdiv] };
+    //Coordinates conversion in pixels
+    nextPoint.x = nextPoint.x * circleRadius - margin;
+    nextPoint.y = -nextPoint.y * circleRadius - margin;
+    currentPoint.x = currentPoint.x * circleRadius - margin;
+    currentPoint.y = -currentPoint.y * circleRadius - margin;
+
+    let middlePoint = segment(
+      currentPoint,
+      nextPoint,
+      frameStamps[currentFrame]
+    );
+
+    //console.log(currentPoint, nextPoint, middlePoint);
+
+    //To draw over current canvas content
+    ctx.globalCompositeOperation = 'destination-over';
+    let imageData = ctx.getImageData(
+      0,
+      0,
+      width * devicePixelRatio,
+      height * devicePixelRatio
+    );
+
+    ctx.clearRect(0, 0, width, height); // clear canvas
+
+    ctx.strokeStyle = 'rgba(0, 153, 255, 1)';
+    ctx.lineWidth = 2;
+    ctx.save();
+
+    ctx.translate(width / 2, height / 2);
+    ctx.putImageData(imageData, 0, 0);
+    ctx.beginPath();
+    ctx.moveTo(currentPoint.x, currentPoint.y);
+    ctx.lineTo(middlePoint.x, middlePoint.y);
+    ctx.stroke();
+
+    ctx.restore();
+
+    currentFrame++;
+    if (currentFrame > frameCap) currentFrame = 0;
+
+    //console.log(frameStamps[currentFrame]);
+
+    //console.log(segment({ x: 0, y: 0 }, { x: 1, y: 1 }, t));
+  }
 
   const circleMark = (pcvData, radiusScaleWidth, color, id, opacity = 1) => {
     const mark = d3
@@ -237,21 +329,11 @@ function Circle({
           {protoDataCoeff
             ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
             : null}
-          {traceDataCoeff
-            ? traceDataCoeff.map((pcv, i) =>
-                circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
-              )
-            : null}
           {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
-          {userPcvsCoeff
-            ? userPcvsCoeff.map((pcv, i) =>
-                circleMark(pcv, marksRadiusRatio, 'teal', i)
-              )
-            : null}
         </g>
       </svg>
     </>
   );
 }
 
-export default Circle;
+export default LiveCircle;

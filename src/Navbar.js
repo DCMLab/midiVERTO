@@ -7,7 +7,8 @@ export default function Navbar() {
       <h1>MIDFT</h1>
       <div className='container'>
         <Link to='/'>Home</Link>
-        <Link to='/visualization'>App</Link>
+        <Link to='/visualization'>Wavescape</Link>
+        <Link to='/live'>Live</Link>
       </div>
     </nav>
   );
