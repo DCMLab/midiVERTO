@@ -47,13 +47,13 @@ export default function Visualization() {
         //Once the file is loaded
 
         //Computation of the minimum resolution given time-precision trade off
-        let mode = {
+        /* let mode = {
           userFriendly: 150,
           precise: 250,
           scientific: 400,
           stillBearable: 600,
           goodLuck: 1000,
-        };
+        }; */
 
         setPlayerMidiData(res.target.result, resolution, setCurrentSubdiv);
         let dftCoeff = getDftCoeffFromMidi(res.target.result, resolution);

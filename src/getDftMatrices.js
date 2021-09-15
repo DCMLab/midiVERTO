@@ -97,13 +97,28 @@ class Pcv {
 }
 
 //Resolution is in seconds
-export function getDftCoeffFromMidiLinear(midiFile, multiRes) {
+export function getDftCoeffFromMidiLinear(
+  midiFile,
+  multiRes = 1,
+  seconds = 1,
+  useSeconds
+) {
   //For now, we don't take into account tempo changes
   let midiData = new Midi(midiFile);
   console.log(midiData);
-  let tempos = midiData.header.tempos.map((tempo) => Math.round(tempo.bpm));
-  let bpm = Math.max(...tempos); //For quarter-note conversion
-  let resolution = multiRes * (60 / bpm);
+
+  let resolution;
+  if (useSeconds) {
+    resolution = seconds;
+  } else {
+    //Use bpm
+    let tempos = midiData.header.tempos.map((tempo) => Math.round(tempo.bpm));
+    let bpm = Math.max(...tempos); //For quarter-note conversion
+    resolution = multiRes * (60 / bpm);
+  }
+
+  console.log(resolution);
+
   let duration = midiData.duration;
   let tracksSubdivision = [];
 

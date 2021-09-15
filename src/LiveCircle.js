@@ -12,9 +12,14 @@ function LiveCircle({
   deltaTime,
 }) {
   const [frameStamps, setFrameStamps] = useState([]);
+  //const [currentFrame, setCurrentFrame] = useState(1);
+  const [currentPoint, setCurrentPoint] = useState({ x: 0, y: 0 });
+  const [nextPoint, setNextPoint] = useState({ x: 0, y: 0 });
   const [circleImageData, setCircleImageData] = useState();
-  let currentFrame = 0;
-  const frameCap = 50;
+  const [intervalID, setIntervalID] = useState(0);
+  const frameCap = 30;
+
+  let currentFrame = 1;
 
   const canvasRef = useRef(null);
   const width = 400;
@@ -82,13 +87,16 @@ function LiveCircle({
     canvasRef.current.getContext('2d').getImageData(0, 0, 1, 1);
   }, []);
 
-  let intervalID = 0;
-
   useEffect(() => {
+    console.log('current subdiv: ', currentSubdiv);
     if (currentSubdiv > 0) {
+      //console.log(intervalID);
       //setCurrentFrame(0);
-      if (intervalID != 0) clearInterval(intervalID);
-      //intervalID = setInterval(draw, (deltaTime * 1000) / frameCap);
+      setCurrentPoint({ ...traceDataCoeff[currentSubdiv] });
+      setNextPoint({ ...traceDataCoeff[currentSubdiv + 1] });
+      clearInterval(intervalID);
+      draw();
+      //setIntervalID(setInterval(draw, (deltaTime * 1000) / frameCap));
     }
   }, [currentSubdiv]);
 
@@ -112,74 +120,49 @@ function LiveCircle({
     //console.log(circleImageData);
 
     //Spread operation for shallow copy
-    let nextPoint = { ...traceDataCoeff[currentSubdiv + 1] };
-    let currentPoint = { ...traceDataCoeff[currentSubdiv] };
+    let tempNextPoint = { ...nextPoint };
+    let tempCurrentPoint = { ...currentPoint };
     //Coordinates conversion in pixels
-    nextPoint.x = nextPoint.x * circleRadius - margin;
-    nextPoint.y = -nextPoint.y * circleRadius - margin;
-    currentPoint.x = currentPoint.x * circleRadius - margin;
-    currentPoint.y = -currentPoint.y * circleRadius - margin;
+    tempNextPoint.x = tempNextPoint.x * circleRadius - margin;
+    tempNextPoint.y = -tempNextPoint.y * circleRadius - margin;
+    tempCurrentPoint.x = tempCurrentPoint.x * circleRadius - margin;
+    tempCurrentPoint.y = -tempCurrentPoint.y * circleRadius - margin;
 
     let middlePoint = segment(
-      currentPoint,
-      nextPoint,
+      tempCurrentPoint,
+      tempNextPoint,
       frameStamps[currentFrame]
     );
 
-    //console.log(currentPoint, nextPoint, middlePoint);
-
     //To draw over current canvas content
     ctx.globalCompositeOperation = 'destination-over';
-    let imageData = ctx.getImageData(
+    /* let imageData = ctx.getImageData(
       0,
       0,
       width * devicePixelRatio,
       height * devicePixelRatio
-    );
+    ); */
 
     ctx.clearRect(0, 0, width, height); // clear canvas
 
     ctx.strokeStyle = 'rgba(0, 153, 255, 1)';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1;
     ctx.save();
 
     ctx.translate(width / 2, height / 2);
-    ctx.putImageData(imageData, 0, 0);
+    ctx.putImageData(circleImageData, 0, 0);
     ctx.beginPath();
-    ctx.moveTo(currentPoint.x, currentPoint.y);
+    ctx.moveTo(tempCurrentPoint.x, tempCurrentPoint.y);
     ctx.lineTo(middlePoint.x, middlePoint.y);
     ctx.stroke();
 
     ctx.restore();
 
-    currentFrame++;
-    if (currentFrame > frameCap) currentFrame = 0;
+    let nextFrame = currentFrame + 1;
+    nextFrame > frameCap ? (currentFrame = 1) : (currentFrame = nextFrame);
 
     //console.log(frameStamps[currentFrame]);
-
-    //console.log(segment({ x: 0, y: 0 }, { x: 1, y: 1 }, t));
   }
-
-  const circleMark = (pcvData, radiusScaleWidth, color, id, opacity = 1) => {
-    const mark = d3
-      .arc()
-      .innerRadius(0)
-      .outerRadius((radiusScaleWidth * width) / 2)
-      .startAngle(0)
-      .endAngle(2 * Math.PI);
-
-    return (
-      <path
-        transform={`translate(${pcvData.x * circleRadius},${
-          -pcvData.y * circleRadius
-        })`}
-        fill={color}
-        fillOpacity={opacity}
-        key={id}
-        d={mark()}
-      ></path>
-    );
-  };
 
   const protoCircleMark = (pcvData, id) => {
     let scaleRatio = 0.02;

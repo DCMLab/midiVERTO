@@ -33,7 +33,7 @@ export function setPlayerMidiData(toneMidi, resolution, setCurrentSubdiv) {
         note.velocity
       );
       setCurrentSubdiv(note.subdiv);
-      console.log(note.subdiv);
+      //console.log(note.subdiv);
     },
     [...partNotes]
   ).start(0);
