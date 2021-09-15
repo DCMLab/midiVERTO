@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { prototypesData } from '../prototypesData';
 import LiveCircle from '../LiveCircle';
 import Player, { setPlayerMidiData } from '../Player';
-import { getDftCoeffFromMidiLinear, getRgbaMatrix } from '../getDftMatrices';
-import dft from '../DFT';
+import { getDftCoeffFromMidiLinear } from '../getDftMatrices';
 
 export default function Live() {
   //State: show or hide on the circles pitch class of the prototypes
@@ -11,10 +10,10 @@ export default function Live() {
     useState(prototypesData);
   const [showPrototypes, setShowPrototypes] = useState(true);
 
-  //State: contains the color data of the wavescape of a given coeff (Array(6) one for coeff)
-  const [wavescapesData, setWavescapesData] = useState([]);
-
   const [multiRes, setMultiRes] = useState(1);
+  const [seconds, setSeconds] = useState(1);
+  const [useSeconds, setUseSeconds] = useState(false);
+  const resolutionTextRef = useRef(null);
 
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [tracesData, setTracesData] = useState([]);
@@ -22,11 +21,6 @@ export default function Live() {
   const [deltaTime, setDeltaTime] = useState(0);
 
   const [file, setFile] = useState('');
-
-  const [userPcvs, setUserPcvs] = useState([]);
-
-  const [resolution, setResolution] = useState(1);
-  const resolutionSliderRef = useRef(null);
 
   function handleShowPrototypes(showing) {
     let temp = selectedProtoPitchClasses.slice();
@@ -49,9 +43,10 @@ export default function Live() {
         //Once the file is loaded
         let { dftCoeffsLinear, resolution } = getDftCoeffFromMidiLinear(
           res.target.result,
-          multiRes
+          multiRes,
+          seconds,
+          useSeconds
         );
-        console.log(resolution);
         setDeltaTime(resolution);
         setPlayerMidiData(res.target.result, resolution, setCurrentSubdiv);
 
@@ -79,18 +74,27 @@ export default function Live() {
     switch (event.target.value) {
       case 'sixteenth':
         setMultiRes(0.25);
+        setUseSeconds(false);
         break;
       case 'eighth':
         setMultiRes(0.5);
+        setUseSeconds(false);
         break;
       case 'quarter':
         setMultiRes(1);
+        setUseSeconds(false);
         break;
       case 'half':
         setMultiRes(2);
+        setUseSeconds(false);
         break;
       case 'whole':
         setMultiRes(4);
+        setUseSeconds(false);
+        break;
+      case 'seconds':
+        setUseSeconds(true);
+        let sec = setSeconds(parseFloat(resolutionTextRef.current.value));
         break;
       default:
         setMultiRes(1);
@@ -146,6 +150,26 @@ export default function Live() {
 
         <input type='radio' id='resChoice5' name='multiRes' value='whole' />
         <label htmlFor='resChoice5'>&#119133;</label>
+
+        <input type='radio' id='resChoice6' name='multiRes' value='seconds' />
+        <label htmlFor='resChoice5' style={{ fontSize: '15px' }}>
+          in seconds
+        </label>
+      </div>
+
+      <div>
+        <label htmlFor='resolutionSeconds'>Resolution (seconds): </label>
+        <input
+          type='text'
+          name='resolutionSeconds'
+          id='resolutionSeconds'
+          autoComplete='off'
+          placeholder='Ex. 1.5'
+          onChange={() => {
+            setSeconds(parseFloat(resolutionTextRef.current.value));
+          }}
+          ref={resolutionTextRef}
+        />
       </div>
 
       <LiveCircle
