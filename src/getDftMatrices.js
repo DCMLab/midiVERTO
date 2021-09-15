@@ -107,9 +107,11 @@ export function getDftCoeffFromMidiLinear(
   let midiData = new Midi(midiFile);
   console.log(midiData);
 
+  console.log(seconds, useSeconds);
+
   let resolution;
   if (useSeconds) {
-    resolution = seconds;
+    isNaN(seconds) ? (resolution = 1) : (resolution = seconds);
   } else {
     //Use bpm
     let tempos = midiData.header.tempos.map((tempo) => Math.round(tempo.bpm));
