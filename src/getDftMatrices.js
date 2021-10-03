@@ -107,8 +107,6 @@ export function getDftCoeffFromMidiLinear(
   let midiData = new Midi(midiFile);
   console.log(midiData);
 
-  console.log(seconds, useSeconds);
-
   let resolution;
   if (useSeconds) {
     isNaN(seconds) ? (resolution = 1) : (resolution = seconds);

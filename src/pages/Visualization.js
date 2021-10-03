@@ -5,6 +5,7 @@ import Circle from '../Circle';
 import Player, { setPlayerMidiData } from '../Player';
 import { getDftCoeffFromMidi, getRgbaMatrix } from '../getDftMatrices';
 import dft from '../DFT';
+import parse from '../parser';
 
 export default function Visualization() {
   //State: show or hide on the circles pitch class of the prototypes
@@ -83,7 +84,15 @@ export default function Visualization() {
   const handleSubmitPitchClass = (e) => {
     //In order not to refresh the page (default behaviuor)
     e.preventDefault();
-    let parsedInput = parse(e.target[0].value);
+    let parsedInput;
+
+    try {
+      parsedInput = parse(e.target[0].value);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
     let dftCoeffsInput = [];
     for (let i = 0; i < parsedInput.length; i++) {
       dftCoeffsInput.push(dft(parsedInput[i], true, true, false));
@@ -217,75 +226,4 @@ export default function Visualization() {
       <Wavescape wavescapeMatrix={wavescapesData[5]} />
     </>
   );
-}
-
-function parse(input) {
-  let pcvs = [];
-  //Vectorial notation, distribution -> real numbers
-  const openVect = '(';
-  const closeVect = ')';
-  //Set notation, integers
-  const openSet = '{';
-  const closeSet = '}';
-  //Number divider
-  const divider = ',';
-
-  let isGroup = false;
-  let isSet = false;
-
-  for (let i = 0; i < input.length; i++) {
-    if (input[i] === openSet || input[i] === openVect) {
-      isGroup = true;
-      if (input[i] === openSet) isSet = true;
-    }
-
-    if (isGroup) {
-      let stringGroup = [];
-      let count = 1;
-      //Slice the current group
-      for (
-        let j = i + 1;
-        input[j] !== closeSet && input[j] !== closeVect;
-        j++
-      ) {
-        stringGroup.push(input[j]);
-        count++;
-      }
-
-      stringGroup = stringGroup.join('');
-
-      let numeralInput = [];
-      count = 0;
-      for (let j = 0; j < stringGroup.length; j++) {
-        if (stringGroup[j] === divider) {
-          let num = stringGroup.slice(j - count, j);
-          numeralInput.push(+num);
-          count = -1;
-        }
-        count++;
-      }
-      //Last element not cover by the for cycle
-      let num = stringGroup.slice(
-        stringGroup.length - count,
-        stringGroup.length
-      );
-      numeralInput.push(+num);
-
-      if (isSet) {
-        let bin = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        for (let i = 0; i < numeralInput.length; i++) {
-          bin[numeralInput[i]] += 1;
-        }
-        pcvs.push(bin);
-      } else {
-        pcvs.push(numeralInput);
-      }
-
-      isGroup = false;
-      isSet = false;
-      i += count;
-    }
-  }
-
-  return pcvs;
 }
