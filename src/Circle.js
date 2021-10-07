@@ -10,6 +10,7 @@ function Circle({
   traceDataCoeff,
   userPcvsCoeff,
   currentSubdiv,
+  performanceCoeff,
 }) {
   const canvasRef = useRef(null);
   const width = 400;
@@ -248,6 +249,7 @@ function Circle({
                 circleMark(pcv, marksRadiusRatio, 'teal', i)
               )
             : null}
+          {circleMark(performanceCoeff, marksRadiusRatio * 3, 'teal')}
         </g>
       </svg>
     </>

@@ -44,7 +44,7 @@ class Pcv {
       case 'G':
         this.G += duration;
         break;
-      case 'Gs':
+      case 'G#':
         this.Gs += duration;
         break;
       case 'A':

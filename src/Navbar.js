@@ -9,6 +9,7 @@ export default function Navbar() {
         <Link to='/'>Home</Link>
         <Link to='/visualization'>Wavescape</Link>
         <Link to='/live'>Live</Link>
+        <Link to='/keyboard'>Keyboard</Link>
       </div>
     </nav>
   );
