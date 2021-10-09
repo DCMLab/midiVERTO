@@ -187,6 +187,7 @@ export default function Visualization() {
         traceDataCoeff={tracesData[0]}
         userPcvsCoeff={userPcvs[0]}
         currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
       />
       <Wavescape wavescapeMatrix={wavescapesData[0]} />
       <Circle
@@ -194,6 +195,7 @@ export default function Visualization() {
         traceDataCoeff={tracesData[1]}
         userPcvsCoeff={userPcvs[1]}
         currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
       />
       <Wavescape wavescapeMatrix={wavescapesData[1]} />
       <Circle
@@ -201,6 +203,7 @@ export default function Visualization() {
         traceDataCoeff={tracesData[2]}
         userPcvsCoeff={userPcvs[2]}
         currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
       />
       <Wavescape wavescapeMatrix={wavescapesData[2]} />
       <Circle
@@ -208,6 +211,7 @@ export default function Visualization() {
         traceDataCoeff={tracesData[3]}
         userPcvsCoeff={userPcvs[3]}
         currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
       />
       <Wavescape wavescapeMatrix={wavescapesData[3]} />
       <Circle
@@ -215,6 +219,7 @@ export default function Visualization() {
         traceDataCoeff={tracesData[4]}
         userPcvsCoeff={userPcvs[4]}
         currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
       />
       <Wavescape wavescapeMatrix={wavescapesData[4]} />
       <Circle
@@ -222,6 +227,7 @@ export default function Visualization() {
         traceDataCoeff={tracesData[5]}
         userPcvsCoeff={userPcvs[5]}
         currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
       />
       <Wavescape wavescapeMatrix={wavescapesData[5]} />
     </>
