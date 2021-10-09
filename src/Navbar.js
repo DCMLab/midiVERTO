@@ -10,6 +10,7 @@ export default function Navbar() {
         <Link to='/visualization'>Wavescape</Link>
         <Link to='/live'>Live</Link>
         <Link to='/keyboard'>Keyboard</Link>
+        <Link to='/application'>Application</Link>
       </div>
     </nav>
   );
