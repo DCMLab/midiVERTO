@@ -1,6 +1,12 @@
 import * as Tone from 'tone';
 import { Midi } from '@tonejs/midi';
 
+import Box from '@mui/material/Box';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
+import StopRoundedIcon from '@mui/icons-material/StopRounded';
+import IconButton from '@mui/material/IconButton';
+
 export function setPlayerMidiData(toneMidi, resolution, setCurrentSubdiv) {
   let midiData = new Midi(toneMidi);
 
@@ -78,18 +84,24 @@ const sampler = new Tone.Sampler({
 
 export default function Player() {
   return (
-    <div id='playStopButtons'>
-      <div
-        id='stop'
-        className='btn fas fa-stop fa-4x'
+    <Box>
+      <IconButton
         onClick={() => {
           console.log('stop');
           Tone.Transport.stop();
         }}
-      ></div>
-      <div
-        id='play'
-        className='btn fas fa-play fa-4x'
+        size='large'
+        children={<StopRoundedIcon fontSize='large' />}
+      />
+      <IconButton
+        onClick={() => {
+          console.log('pause');
+          Tone.Transport.pause();
+        }}
+        size='large'
+        children={<PauseRoundedIcon fontSize='large' />}
+      />
+      <IconButton
         onClick={() => {
           console.log('play');
           if (Tone.context.state !== 'running') {
@@ -98,15 +110,9 @@ export default function Player() {
           }
           Tone.Transport.start();
         }}
-      ></div>
-      <div
-        id='pause'
-        className='btn fas fa-pause fa-4x'
-        onClick={() => {
-          console.log('pause');
-          Tone.Transport.pause();
-        }}
-      ></div>
-    </div>
+        size='large'
+        children={<PlayArrowRoundedIcon fontSize='large' />}
+      />
+    </Box>
   );
 }
