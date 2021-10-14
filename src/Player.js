@@ -7,20 +7,14 @@ import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import IconButton from '@mui/material/IconButton';
 
-export function setPlayerMidiData(toneMidi, resolution, setCurrentSubdiv) {
-  let midiData = new Midi(toneMidi);
-
+export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
   //Remove the scheduled previous song
   Tone.Transport.cancel(0);
   setCurrentSubdiv(0);
   Tone.Transport.stop();
 
-  let nonPercussiveTracks = midiData.tracks.filter(
-    (track) => track.instrument.percussion === false
-  );
-
   let partNotes = [];
-  nonPercussiveTracks.forEach((track) =>
+  midiData.tracks.forEach((track) =>
     track.notes.forEach((note) => {
       partNotes.push(note);
     })

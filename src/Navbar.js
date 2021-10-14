@@ -13,7 +13,7 @@ export default function Navbar() {
       <AppBar position='static'>
         <Toolbar>
           <Typography variant='h3' component='div' sx={{ flexGrow: 1 }}>
-            MIDFT
+            Mi_DFT
           </Typography>
           <ButtonGroup variant='outlined' aria-label='outlined button group'>
             <Button component={Link} to='/' variant='contained' color='primary'>
