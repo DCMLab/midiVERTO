@@ -37,7 +37,7 @@ function Application() {
   const [wavescapesData, setWavescapesData] = useState([]);
 
   const [resolutionMode, setResolutionMode] = useState({
-    noteValue: 0.25,
+    noteResolutionValue: 1,
     seconds: 1,
     useSeconds: false,
   });
@@ -58,8 +58,6 @@ function Application() {
         currentSongBPM = midiBpm;
         currentSongMidiData = midiData;
 
-        //setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
-
         //Wavescapes static analysis
         let subdivsNumberStatic = 50;
         let staticResolution =
@@ -72,9 +70,14 @@ function Application() {
         );
 
         //Circles dynamic analysis
+        //setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
       };
     }
   }, [file]);
+
+  useEffect(() => {
+    console.log(resolutionMode);
+  }, [resolutionMode]);
 
   return (
     <Container>
@@ -122,7 +125,13 @@ function Application() {
         </label>
       </div>
 
-      <ResolutionSelector />
+      <ResolutionSelector
+        setResolutionMode={setResolutionMode}
+        resolutionMode={resolutionMode}
+      />
+      <Button variant='contained' color='primary'>
+        Change resolution
+      </Button>
 
       <Container>
         <Divider />
