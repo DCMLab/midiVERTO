@@ -186,40 +186,40 @@ function Application() {
 
         switch (pitch) {
           case 'C':
-            pcv[0] = 1;
+            pcv[0] += 1;
             break;
           case 'C#':
-            pcv[1] = 1;
+            pcv[1] += 1;
             break;
           case 'D':
-            pcv[2] = 1;
+            pcv[2] += 1;
             break;
           case 'D#':
-            pcv[3] = 1;
+            pcv[3] += 1;
             break;
           case 'E':
-            pcv[4] = 1;
+            pcv[4] += 1;
             break;
           case 'F':
-            pcv[5] = 1;
+            pcv[5] += 1;
             break;
           case 'F#':
-            pcv[6] = 1;
+            pcv[6] += 1;
             break;
           case 'G':
-            pcv[7] = 1;
+            pcv[7] += 1;
             break;
           case 'G#':
-            pcv[8] = 1;
+            pcv[8] += 1;
             break;
           case 'A':
-            pcv[9] = 1;
+            pcv[9] += 1;
             break;
           case 'A#':
-            pcv[10] = 1;
+            pcv[10] += 1;
             break;
           case 'B':
-            pcv[11] = 1;
+            pcv[11] += 1;
             break;
           default:
             break;
