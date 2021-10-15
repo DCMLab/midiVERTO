@@ -294,6 +294,17 @@ function Application() {
     setShowPrototypes(!showPrototypes);
   }
 
+  function retriggerAnalysis() {
+    //Circles dynamic analysis
+    let { tracesData, resolution } = getDftCoeffDynamic(
+      currentSongMidiData,
+      resolutionMode,
+      currentSongBPM
+    );
+    setCoeffTracesData(tracesData);
+    setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
+  }
+
   return (
     <Container>
       <Player />
@@ -350,7 +361,7 @@ function Application() {
         setResolutionMode={setResolutionMode}
         resolutionMode={resolutionMode}
       />
-      <Button variant='contained' color='primary'>
+      <Button variant='contained' color='primary' onClick={retriggerAnalysis}>
         Change resolution
       </Button>
 
