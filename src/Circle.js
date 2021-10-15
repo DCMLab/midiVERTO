@@ -129,8 +129,8 @@ function Circle({
         <path fill={'grey'} key={id} d={mark()}></path>
         <text
           textAnchor='middle'
-          dx={Math.sign(pcvData.x) * 10}
-          dy={Math.sign(-pcvData.y) * 10 + 10}
+          dx={-Math.sign(pcvData.x) * 20}
+          dy={-Math.sign(-pcvData.y) * 20}
           fontSize='20px'
         >
           {labelName}
@@ -178,11 +178,11 @@ function Circle({
       .endAngle(2 * Math.PI);
 
     let highlightedTrace = [];
-    let length = 10;
+    let length = 50;
     let opacityArray = [];
 
     opacityArray.push(1);
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i < length; i++) {
       opacityArray.push(opacityArray[i - 1] * 0.8);
     }
 
@@ -238,11 +238,11 @@ function Circle({
           {protoDataCoeff
             ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
             : null}
-          {traceDataCoeff
+          {/* {traceDataCoeff
             ? traceDataCoeff.map((pcv, i) =>
                 circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
               )
-            : null}
+            : null} */}
           {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
           {userPcvsCoeff
             ? userPcvsCoeff.map((pcv, i) =>

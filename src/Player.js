@@ -1,5 +1,4 @@
 import * as Tone from 'tone';
-import { Midi } from '@tonejs/midi';
 
 import Box from '@mui/material/Box';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -75,6 +74,7 @@ const sampler = new Tone.Sampler({
   release: 1,
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
 }).toDestination();
+sampler.volume.value = -20;
 
 export default function Player() {
   return (
