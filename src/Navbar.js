@@ -45,11 +45,11 @@ export default function Navbar() {
             </Button>
             <Button
               component={Link}
-              to='/application'
+              to='/analysis'
               variant='contained'
               color='primary'
             >
-              Application
+              Analysis
             </Button>
           </ButtonGroup>
         </Toolbar>

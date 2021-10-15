@@ -1,65 +1,72 @@
 import Circle from './Circle';
+import { useEffect, useState } from 'react';
+import { prototypesData } from './prototypesData';
 
 function CoefficientsModule({
-  selectedProtoPitchClasses,
-  tracesData,
+  coeffTracesData,
+  showPrototypes,
   userPcvs,
   currentSubdiv,
-  performanceCoeff,
 }) {
-  if (selectedProtoPitchClasses !== undefined) {
-    return (
-      <div>
-        <Circle
-          protoDataCoeff={selectedProtoPitchClasses[0]}
-          traceDataCoeff={tracesData[0]}
-          userPcvsCoeff={userPcvs[0]}
-          currentSubdiv={currentSubdiv}
-          performanceCoeff={{ x: 0, y: 0 }}
-        />
+  const [selectedProtoPitchClasses, setSelectedProtoPitchClasses] =
+    useState(prototypesData);
 
-        <Circle
-          protoDataCoeff={selectedProtoPitchClasses[1]}
-          traceDataCoeff={tracesData[1]}
-          userPcvsCoeff={userPcvs[1]}
-          currentSubdiv={currentSubdiv}
-          performanceCoeff={{ x: 0, y: 0 }}
-        />
+  useEffect(() => {
+    if (showPrototypes) {
+      setSelectedProtoPitchClasses(prototypesData);
+    } else setSelectedProtoPitchClasses([]);
+  }, [showPrototypes]);
 
-        <Circle
-          protoDataCoeff={selectedProtoPitchClasses[2]}
-          traceDataCoeff={tracesData[2]}
-          userPcvsCoeff={userPcvs[2]}
-          currentSubdiv={currentSubdiv}
-          performanceCoeff={{ x: 0, y: 0 }}
-        />
+  useEffect(() => {
+    console.log(selectedProtoPitchClasses);
+  }, [selectedProtoPitchClasses]);
 
-        <Circle
-          protoDataCoeff={selectedProtoPitchClasses[3]}
-          traceDataCoeff={tracesData[3]}
-          userPcvsCoeff={userPcvs[3]}
-          currentSubdiv={currentSubdiv}
-          performanceCoeff={{ x: 0, y: 0 }}
-        />
-
-        <Circle
-          protoDataCoeff={selectedProtoPitchClasses[4]}
-          traceDataCoeff={tracesData[4]}
-          userPcvsCoeff={userPcvs[4]}
-          currentSubdiv={currentSubdiv}
-          performanceCoeff={{ x: 0, y: 0 }}
-        />
-
-        <Circle
-          protoDataCoeff={selectedProtoPitchClasses[5]}
-          traceDataCoeff={tracesData[5]}
-          userPcvsCoeff={userPcvs[5]}
-          currentSubdiv={currentSubdiv}
-          performanceCoeff={{ x: 0, y: 0 }}
-        />
-      </div>
-    );
-  } else return null;
+  return (
+    <>
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[0]}
+        traceDataCoeff={coeffTracesData[0]}
+        userPcvsCoeff={userPcvs[0]}
+        currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[1]}
+        traceDataCoeff={coeffTracesData[1]}
+        userPcvsCoeff={userPcvs[1]}
+        currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[2]}
+        traceDataCoeff={coeffTracesData[2]}
+        userPcvsCoeff={userPcvs[2]}
+        currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[3]}
+        traceDataCoeff={coeffTracesData[3]}
+        userPcvsCoeff={userPcvs[3]}
+        currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[4]}
+        traceDataCoeff={coeffTracesData[4]}
+        userPcvsCoeff={userPcvs[4]}
+        currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
+      />
+      <Circle
+        protoDataCoeff={selectedProtoPitchClasses[5]}
+        traceDataCoeff={coeffTracesData[5]}
+        userPcvsCoeff={userPcvs[5]}
+        currentSubdiv={currentSubdiv}
+        performanceCoeff={{ x: 0, y: 0 }}
+      />
+    </>
+  );
 }
 
 export default CoefficientsModule;

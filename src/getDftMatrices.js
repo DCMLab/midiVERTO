@@ -154,6 +154,75 @@ export function getDftCoeffStatic(midiFile, resolution) {
   return dftCoeffsMatrix;
 }
 
+export function getDftCoeffDynamic(midiData, resolutionMode, currentSongBPM) {
+  let { noteResolutionValue, seconds, useSeconds } = resolutionMode;
+
+  let resolution;
+  if (useSeconds) {
+    isNaN(seconds) ? (resolution = 1) : (resolution = seconds);
+  } else {
+    //Use bpm
+    resolution = noteResolutionValue * (60 / currentSongBPM);
+  }
+
+  console.log(currentSongBPM);
+  console.log(resolution);
+
+  let duration = midiData.duration;
+  let tracksSubdivision = [];
+
+  //TODO: check and delete percussive tracks!
+  let nonPercussiveTracks = midiData.tracks.filter(
+    (track) => track.instrument.percussion === false
+  );
+
+  nonPercussiveTracks.forEach((track) => {
+    tracksSubdivision.push(getSubdivision(track.notes, resolution, duration));
+  });
+
+  //pcv arrary init
+  let pcvSubdivision = [];
+
+  for (let i = 0; i < tracksSubdivision[0].length; i++) {
+    pcvSubdivision.push(new Pcv());
+  }
+
+  //populating the array for each subdiv with the durations
+  //for each track: i, for each subdiv: j, for each note of the subdiv: k
+  for (let i = 0; i < tracksSubdivision.length; i++) {
+    for (let j = 0; j < tracksSubdivision[i].length; j++) {
+      for (let k = 0; k < tracksSubdivision[i][j].length; k++) {
+        let { pitch, duration } = tracksSubdivision[i][j][k];
+        pcvSubdivision[j].addNoteDuration(pitch, duration);
+      }
+    }
+  }
+
+  //Computing the dft coeffs for of each subdiv
+  let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
+    dft(pcv.getPcvAsArray())
+  );
+
+  //Computing the dft coeffs matrix
+  let dftCoeffsMatrix = [];
+
+  //adding the first row
+  dftCoeffsMatrix.push(dftCoeffsSubdivision);
+
+  //Subdividing the first row of the dft coeff matrix to get the trace for each coeff
+  let traces = [];
+  let firstRow = dftCoeffsMatrix[0];
+  for (let i = 1; i < 7; i++) {
+    let temp = [];
+    for (let j = 0; j < firstRow.length; j++) {
+      temp.push({ x: firstRow[j][i].re, y: firstRow[j][i].im });
+    }
+    traces.push(temp);
+  }
+
+  return { tracesData: traces, resolution: resolution };
+}
+
 //Resolution is in seconds
 export function getDftCoeffFromMidiLinear(
   midiFile,

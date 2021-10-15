@@ -9,6 +9,7 @@ import {
   getRgbaMatrix,
   getMidiFileDataObject,
   getDftCoeffStatic,
+  getDftCoeffDynamic,
 } from '../getDftMatrices';
 import dft from '../DFT';
 import parse from '../parser';
@@ -29,18 +30,22 @@ let currentSongBPM = 80;
 let currentSongMidiData;
 
 function Application() {
-  //State: represents the selected row on the wavescape (by default the first row) for each coeff
-  const [tracesData, setTracesData] = useState([]);
-  const [currentSubdiv, setCurrentSubdiv] = useState(0);
-
   //State: contains the color data of the wavescape of a given coeff (Array(6) one for coeff)
   const [wavescapesData, setWavescapesData] = useState([]);
 
+  //State: represents the selected row on the wavescape (by default the first row) for each coeff
+  const [coeffTracesData, setCoeffTracesData] = useState([]);
+  const [showPrototypes, setShowPrototypes] = useState(true);
+  const [currentSubdiv, setCurrentSubdiv] = useState(0);
+
+  //State: inputs
   const [resolutionMode, setResolutionMode] = useState({
     noteResolutionValue: 1,
-    seconds: 1,
+    seconds: 1.5,
     useSeconds: false,
   });
+
+  const [userPcvs, setUserPcvs] = useState([]);
 
   const [file, setFile] = useState('');
 
@@ -70,14 +75,24 @@ function Application() {
         );
 
         //Circles dynamic analysis
-        //setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
+        let { tracesData, resolution } = getDftCoeffDynamic(
+          midiData,
+          resolutionMode,
+          currentSongBPM
+        );
+        setCoeffTracesData(tracesData);
+        setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
       };
     }
   }, [file]);
 
   useEffect(() => {
-    console.log(resolutionMode);
-  }, [resolutionMode]);
+    console.log(showPrototypes);
+  }, [showPrototypes]);
+
+  function toggleShowPrototypes() {
+    setShowPrototypes(!showPrototypes);
+  }
 
   return (
     <Container>
@@ -87,8 +102,8 @@ function Application() {
         <FormControlLabel
           control={
             <Switch
-            /* onChange={() => handleShowPrototypes(!showPrototypes)} */
-            /* checked={showPrototypes} */
+              onChange={() => toggleShowPrototypes()}
+              checked={showPrototypes}
             />
           }
           label='Show Prototypes'
@@ -137,7 +152,12 @@ function Application() {
         <Divider />
         <WavescapeModule wavescapesData={wavescapesData} />
         <Divider />
-        <CoefficientsModule />
+        <CoefficientsModule
+          coeffTracesData={coeffTracesData}
+          currentSubdiv={currentSubdiv}
+          showPrototypes={showPrototypes}
+          userPcvs={userPcvs}
+        />
       </Container>
     </Container>
   );

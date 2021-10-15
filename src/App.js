@@ -20,7 +20,7 @@ function App() {
           <Route exact path='/visualization' component={Visualization}></Route>
           <Route exact path='/live' component={Live}></Route>
           <Route exact path='/keyboard' component={Keyboard}></Route>
-          <Route exact path='/application' component={Application}></Route>
+          <Route exact path='/analysis' component={Application}></Route>
         </Switch>
       </HashRouter>
     </>

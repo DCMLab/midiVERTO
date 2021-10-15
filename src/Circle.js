@@ -129,8 +129,8 @@ function Circle({
         <path fill={'grey'} key={id} d={mark()}></path>
         <text
           textAnchor='middle'
-          dx={-Math.sign(pcvData.x) * 20}
-          dy={-Math.sign(-pcvData.y) * 20}
+          dx={Math.sign(pcvData.x) * 10}
+          dy={Math.sign(-pcvData.y) * 10 + 10}
           fontSize='20px'
         >
           {labelName}
