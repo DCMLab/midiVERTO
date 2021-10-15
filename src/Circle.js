@@ -13,10 +13,10 @@ function Circle({
   performanceCoeff,
 }) {
   const canvasRef = useRef(null);
-  const width = 400;
+  const width = 440;
   const height = width;
 
-  const margin = 20;
+  const margin = 40;
   const innerWidth = width - margin;
   const circleRadius = width / 2 - margin;
 
@@ -119,6 +119,21 @@ function Circle({
       labelName = pcvData.label;
     }
 
+    //Computation of label offset
+    let dxOffset = 0,
+      dyOffset = 5;
+
+    if (Math.sign(pcvData.x) === 1) dxOffset = 20;
+    else if (Math.sign(pcvData.x) === -1) dxOffset = -20;
+
+    if (Math.sign(-pcvData.y) === 1) dyOffset = 25;
+    else if (Math.sign(-pcvData.y) === -1) dyOffset = -8;
+
+    if (pcvData.x === 0 && pcvData.y === 0) {
+      dxOffset = 15;
+      dyOffset = 5;
+    }
+
     return (
       <g
         transform={`translate(${pcvData.x * circleRadius},${
@@ -127,12 +142,7 @@ function Circle({
         key={`p.${id}`}
       >
         <path fill={'grey'} key={id} d={mark()}></path>
-        <text
-          textAnchor='middle'
-          dx={-Math.sign(pcvData.x) * 20}
-          dy={-Math.sign(-pcvData.y) * 20}
-          fontSize='20px'
-        >
+        <text textAnchor='middle' dx={dxOffset} dy={dyOffset} fontSize='20px'>
           {labelName}
           {isSub ? (
             <tspan fontSize={15} baselineShift='sub'>
@@ -154,8 +164,8 @@ function Circle({
         fill={'azure'}
         d={d3
           .arc()
-          .innerRadius(innerWidth / 2 - 9)
-          .outerRadius(innerWidth / 2 - 11)
+          .innerRadius(circleRadius - 1)
+          .outerRadius(circleRadius + 1)
           .startAngle(0)
           .endAngle(2 * Math.PI)()}
       ></path>

@@ -286,10 +286,6 @@ function Application() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(showPrototypes);
-  }, [showPrototypes]);
-
   function toggleShowPrototypes() {
     setShowPrototypes(!showPrototypes);
   }
