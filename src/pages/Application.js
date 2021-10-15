@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
 import ResolutionSelector from '../ResolutionSelector';
@@ -44,6 +44,7 @@ function Application() {
   });
 
   const [userPcvs, setUserPcvs] = useState([]);
+  const pcvTextRef = useRef(null);
 
   const [file, setFile] = useState('');
 
@@ -90,6 +91,43 @@ function Application() {
       };
     }
   }, [file]);
+
+  function handleSubmitPitchClass(input) {
+    //In order not to refresh the page (default behaviuor)
+    let parsedInput;
+
+    try {
+      parsedInput = parse(input);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
+    let dftCoeffsInput = [];
+    for (let i = 0; i < parsedInput.length; i++) {
+      dftCoeffsInput.push(dft(parsedInput[i], true, true, false));
+    }
+
+    //Subdividing the coeffs for their coeff number
+    let subdivUserPcvs = [];
+    for (let i = 1; i < 7; i++) {
+      let temp = [];
+      for (let j = 0; j < dftCoeffsInput.length; j++) {
+        temp.push({ x: dftCoeffsInput[j][i].re, y: dftCoeffsInput[j][i].im });
+      }
+      subdivUserPcvs.push(temp);
+    }
+
+    if (userPcvs.length === 0) setUserPcvs(subdivUserPcvs);
+    else {
+      let temp = userPcvs.slice();
+      for (let i = 0; i < userPcvs.length; i++) {
+        temp[i].push(...subdivUserPcvs[i]);
+      }
+
+      setUserPcvs(temp);
+    }
+  }
 
   //MIDI devices init
   useEffect(() => {
@@ -271,6 +309,7 @@ function Application() {
           label='Show Prototypes'
         />
       </FormGroup>
+
       <Box
         component='form'
         sx={{
@@ -283,6 +322,11 @@ function Application() {
           id='outlined-basic'
           label='Pitch class vector'
           variant='outlined'
+          onKeyPress={(event) => {
+            if (event.key === 'Enter')
+              handleSubmitPitchClass(pcvTextRef.current.value);
+          }}
+          inputRef={pcvTextRef}
         />
       </Box>
 
