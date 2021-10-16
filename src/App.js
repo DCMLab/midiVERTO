@@ -4,9 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 //Pages
 import Home from './pages/Home';
-import Visualization from './pages/Visualization';
-import Live from './pages/Live';
-import Keyboard from './pages/Keyboard';
+import Theory from './pages/Theory';
 import Application from './pages/Application';
 
 function App() {
@@ -17,9 +15,7 @@ function App() {
         <Navbar />
         <Switch>
           <Route exact path='/' component={Home}></Route>
-          <Route exact path='/visualization' component={Visualization}></Route>
-          <Route exact path='/live' component={Live}></Route>
-          <Route exact path='/keyboard' component={Keyboard}></Route>
+          <Route exact path='/theory' component={Theory}></Route>
           <Route exact path='/analysis' component={Application}></Route>
         </Switch>
       </HashRouter>

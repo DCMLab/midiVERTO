@@ -21,27 +21,11 @@ export default function Navbar() {
             </Button>
             <Button
               component={Link}
-              to='/visualization'
+              to='/theory'
               variant='contained'
               color='primary'
             >
-              Wavescape
-            </Button>
-            <Button
-              component={Link}
-              to='/live'
-              variant='contained'
-              color='primary'
-            >
-              Live
-            </Button>
-            <Button
-              component={Link}
-              to='/keyboard'
-              variant='contained'
-              color='primary'
-            >
-              Keyboard
+              Theory
             </Button>
             <Button
               component={Link}

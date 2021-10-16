@@ -6,7 +6,6 @@ import CoefficientsModule from '../CoefficientsModule';
 
 import Player, { setPlayerMidiData } from '../Player';
 import {
-  getDftCoeffFromMidi,
   getRgbaMatrix,
   getMidiFileDataObject,
   getDftCoeffStatic,
