@@ -102,6 +102,7 @@ function Application() {
     try {
       parsedInput = parse(input);
     } catch (error) {
+      console.log(error.message);
       setIsInputPcvInvalid(true);
       return;
     }
