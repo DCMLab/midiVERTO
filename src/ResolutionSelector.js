@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -8,6 +8,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 
 function ResolutionSelector({ resolutionMode, setResolutionMode }) {
+  //State: input error
+  const [isInputSecondsInvalid, setIsInputSecondsInvalid] = useState(false);
   const resolutionTextRef = useRef(null);
 
   function onChangeResolutionSelection(event) {
@@ -86,6 +88,8 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
             control={<Radio />}
             label={
               <TextField
+                error={isInputSecondsInvalid}
+                helperText={isInputSecondsInvalid && 'Invalid input'}
                 label='in seconds'
                 id='standard-size-small'
                 defaultValue='1.5'
@@ -96,7 +100,12 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
                   newResolutionMode.seconds = parseFloat(
                     resolutionTextRef.current.value
                   );
-                  setResolutionMode(newResolutionMode);
+                  if (isNaN(newResolutionMode.seconds))
+                    setIsInputSecondsInvalid(true);
+                  else {
+                    setResolutionMode(newResolutionMode);
+                    setIsInputSecondsInvalid(false);
+                  }
                 }}
                 inputRef={resolutionTextRef}
               />

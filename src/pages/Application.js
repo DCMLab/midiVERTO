@@ -55,6 +55,9 @@ function Application() {
     })
   );
 
+  //State: error states in input
+  const [isInputPcvInvalid, setIsInputPcvInvalid] = useState(false);
+
   //MIDI parsing on file change
   useEffect(() => {
     let input = document.getElementById('file').files[0];
@@ -99,7 +102,7 @@ function Application() {
     try {
       parsedInput = parse(input);
     } catch (error) {
-      console.log(error);
+      setIsInputPcvInvalid(true);
       return;
     }
 
@@ -291,6 +294,11 @@ function Application() {
   }
 
   function retriggerAnalysis() {
+    //Only if there is midi data, retrigger analysis
+    if (currentSongMidiData == null) {
+      return;
+    }
+
     //Circles dynamic analysis
     let { tracesData, resolution } = getDftCoeffDynamic(
       currentSongMidiData,
@@ -326,12 +334,19 @@ function Application() {
         autoComplete='off'
       >
         <TextField
+          error={isInputPcvInvalid}
+          helperText={isInputPcvInvalid && 'Invalid input'}
           id='outlined-basic'
           label='Pitch class vector'
           variant='outlined'
           onKeyPress={(event) => {
-            if (event.key === 'Enter')
+            if (event.key === 'Enter') {
               handleSubmitPitchClass(pcvTextRef.current.value);
+              pcvTextRef.current.value = '';
+            }
+          }}
+          onChange={() => {
+            setIsInputPcvInvalid(false);
           }}
           inputRef={pcvTextRef}
         />

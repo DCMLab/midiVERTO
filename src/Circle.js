@@ -188,7 +188,7 @@ function Circle({
       .endAngle(2 * Math.PI);
 
     let highlightedTrace = [];
-    let length = 50;
+    let length = 10;
     let opacityArray = [];
 
     opacityArray.push(1);
