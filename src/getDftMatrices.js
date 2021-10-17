@@ -1,6 +1,6 @@
 import { Midi } from '@tonejs/midi';
 import dft, { sumAndNormalize } from './DFT';
-import { getRbgaFromComplex } from './colorMapping';
+import { getRgbaFromComplex, pixelColor } from './colorMapping';
 
 class Pcv {
   constructor() {
@@ -439,7 +439,7 @@ export function getRgbaMatrix(dftCoeffsMatrix) {
   for (let i = 0; i < dftCoeffsMatrix.length; i++) {
     for (let j = 0; j < dftCoeffsMatrix[i].length; j++) {
       for (let k = 1; k < dftCoeffsMatrix[i][j].length; k++) {
-        rgbaMatrices[k - 1][i][j] = getRbgaFromComplex(
+        rgbaMatrices[k - 1][i][j] = getRgbaFromComplex(
           dftCoeffsMatrix[i][j][k]
         );
       }
@@ -491,4 +491,33 @@ function isValidNote(time, duration, cursor, wndLen) {
     return true;
   }
   return false;
+}
+
+export function getComplementaryColours(coeffs) {
+  let colours = [];
+
+  //Opposite of re and im to get the complementary colour
+  coeffs.forEach((coeff) => {
+    let rho = Math.sqrt(Math.pow(coeff.re, 2) + Math.pow(coeff.im, 2));
+    let rgba = pixelColor(coeff.re, -coeff.im, rho);
+
+    //RGB complementary
+    rgba.r = 255 - rgba.r;
+    rgba.g = 255 - rgba.g;
+    rgba.b = 255 - rgba.b;
+
+    colours.push(rgbaToHexa(rgba));
+  });
+
+  return colours;
+}
+
+function rgbaToHexa(rgba) {
+  let hexa = Object.keys(rgba).map((key) => colorToHex(rgba[key]));
+  return `#${hexa.join('')}`;
+}
+
+function colorToHex(color) {
+  let hexadecimal = color.toString(16);
+  return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal;
 }

@@ -12,6 +12,8 @@ function CoefficientsModule({
   const [selectedProtoPitchClasses, setSelectedProtoPitchClasses] =
     useState(prototypesData);
 
+  const [subdivUserPcvs, setSubdivUserPcvs] = useState([]);
+
   useEffect(() => {
     if (showPrototypes) {
       setSelectedProtoPitchClasses(prototypesData);
@@ -19,50 +21,69 @@ function CoefficientsModule({
   }, [showPrototypes]);
 
   useEffect(() => {
-    console.log(selectedProtoPitchClasses);
-  }, [selectedProtoPitchClasses]);
+    //Subdividing the coeffs for each circle
+    let tempSubdivUserPcvs = [];
+    for (let i = 1; i < 7; i++) {
+      let temp = [];
+      for (let j = 0; j < userPcvs.length; j++) {
+        temp.push({
+          x: userPcvs[j].coeffs[i].re,
+          y: userPcvs[j].coeffs[i].im,
+          color: userPcvs[j].colours[i],
+          isDisabled: userPcvs[j].isDisabled,
+        });
+      }
+      tempSubdivUserPcvs.push(temp);
+    }
+
+    setSubdivUserPcvs(tempSubdivUserPcvs);
+  }, [userPcvs]);
+
+  useEffect(() => {
+    console.log(userPcvs);
+  }, [userPcvs]);
 
   return (
     <>
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[0]}
         traceDataCoeff={coeffTracesData[0]}
-        userPcvsCoeff={userPcvs[0]}
+        userPcvsCoeff={subdivUserPcvs[0]}
         currentSubdiv={currentSubdiv}
         performanceCoeff={midiDevNotesDftCoeffs[1]}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[1]}
         traceDataCoeff={coeffTracesData[1]}
-        userPcvsCoeff={userPcvs[1]}
+        userPcvsCoeff={subdivUserPcvs[1]}
         currentSubdiv={currentSubdiv}
         performanceCoeff={midiDevNotesDftCoeffs[2]}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[2]}
         traceDataCoeff={coeffTracesData[2]}
-        userPcvsCoeff={userPcvs[2]}
+        userPcvsCoeff={subdivUserPcvs[2]}
         currentSubdiv={currentSubdiv}
         performanceCoeff={midiDevNotesDftCoeffs[3]}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[3]}
         traceDataCoeff={coeffTracesData[3]}
-        userPcvsCoeff={userPcvs[3]}
+        userPcvsCoeff={subdivUserPcvs[3]}
         currentSubdiv={currentSubdiv}
         performanceCoeff={midiDevNotesDftCoeffs[4]}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[4]}
         traceDataCoeff={coeffTracesData[4]}
-        userPcvsCoeff={userPcvs[4]}
+        userPcvsCoeff={subdivUserPcvs[4]}
         currentSubdiv={currentSubdiv}
         performanceCoeff={midiDevNotesDftCoeffs[5]}
       />
       <Circle
         protoDataCoeff={selectedProtoPitchClasses[5]}
         traceDataCoeff={coeffTracesData[5]}
-        userPcvsCoeff={userPcvs[5]}
+        userPcvsCoeff={subdivUserPcvs[5]}
         currentSubdiv={currentSubdiv}
         performanceCoeff={midiDevNotesDftCoeffs[6]}
       />

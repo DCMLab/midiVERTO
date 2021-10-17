@@ -256,7 +256,7 @@ function Circle({
           {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
           {userPcvsCoeff
             ? userPcvsCoeff.map((pcv, i) =>
-                circleMark(pcv, marksRadiusRatio, 'teal', i)
+                circleMark(pcv, marksRadiusRatio + 0.015, pcv.color, i)
               )
             : null}
           {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}

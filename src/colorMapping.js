@@ -87,7 +87,7 @@ export const pixelColor = (x, y, distance) => {
   return { r, g, b, a };
 };
 
-export function getRbgaFromComplex(complex) {
+export function getRgbaFromComplex(complex) {
   let polarComplex = complex.toPolar();
   let angle = polarComplex.phi; // phi from [-pi, pi], but color mapping defined in [0,2pi]
   let mod = polarComplex.r;

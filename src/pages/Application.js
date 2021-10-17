@@ -3,9 +3,11 @@ import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
 import ResolutionSelector from '../ResolutionSelector';
 import CoefficientsModule from '../CoefficientsModule';
+import PcvChipsBox from '../PcvChipsBox';
 
 import Player, { setPlayerMidiData } from '../Player';
 import {
+  getComplementaryColours,
   getRgbaMatrix,
   getMidiFileDataObject,
   getDftCoeffStatic,
@@ -97,6 +99,7 @@ function Application() {
   function handleSubmitPitchClass(input) {
     //In order not to refresh the page (default behaviuor)
     let parsedInput;
+    let userPcvObjects = [];
 
     try {
       parsedInput = parse(input);
@@ -106,30 +109,33 @@ function Application() {
       return;
     }
 
-    let dftCoeffsInput = [];
+    parsedInput.forEach((input) =>
+      userPcvObjects.push({
+        label: `(${input})`,
+        isDisabled: false,
+        coeffs: dft(input, true, true, false),
+      })
+    );
+
+    /* let dftCoeffsInput = [];
     for (let i = 0; i < parsedInput.length; i++) {
       dftCoeffsInput.push(dft(parsedInput[i], true, true, false));
-    }
+      userPcvObjects[i].coeffs = dft(parsedInput[i], true, true, false);
+    } */
 
-    //Subdividing the coeffs for their coeff number
-    let subdivUserPcvs = [];
-    for (let i = 1; i < 7; i++) {
-      let temp = [];
-      for (let j = 0; j < dftCoeffsInput.length; j++) {
-        temp.push({ x: dftCoeffsInput[j][i].re, y: dftCoeffsInput[j][i].im });
-      }
-      subdivUserPcvs.push(temp);
-    }
+    userPcvObjects.forEach((pcvData) => {
+      pcvData.colours = getComplementaryColours(pcvData.coeffs);
+    });
 
-    if (userPcvs.length === 0) setUserPcvs(subdivUserPcvs);
-    else {
-      let temp = userPcvs.slice();
-      for (let i = 0; i < userPcvs.length; i++) {
-        temp[i].push(...subdivUserPcvs[i]);
-      }
+    //Check if we are adding an input already inserted
+    let labels = userPcvs.map((pcvData) => pcvData.label);
+    labels.forEach((label) => {
+      userPcvObjects = userPcvObjects.filter(
+        (pcvObj) => pcvObj.label !== label
+      );
+    });
 
-      setUserPcvs(temp);
-    }
+    setUserPcvs([...userPcvs, ...userPcvObjects]);
   }
 
   //MIDI devices init
@@ -312,6 +318,7 @@ function Application() {
   return (
     <Container>
       <Player />
+      <PcvChipsBox userPcvs={userPcvs} setUserPcvs={setUserPcvs} />
 
       <FormGroup>
         <FormControlLabel
