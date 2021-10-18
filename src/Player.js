@@ -1,16 +1,24 @@
 import * as Tone from 'tone';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import IconButton from '@mui/material/IconButton';
+import Slider from '@mui/material/Slider';
+
+let part;
+let currentSongDuration; // seconds
 
 export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
   //Remove the scheduled previous song
   Tone.Transport.cancel(0);
   setCurrentSubdiv(0);
   Tone.Transport.stop();
+
+  currentSongDuration = midiData.duration;
+  console.log(currentSongDuration);
 
   let partNotes = [];
   midiData.tracks.forEach((track) =>
@@ -23,7 +31,7 @@ export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
     (note) => (note.subdiv = Math.floor(note.time / resolution))
   );
 
-  const part = new Tone.Part(
+  part = new Tone.Part(
     (time, note) => {
       sampler.triggerAttackRelease(
         note.name,
@@ -32,10 +40,12 @@ export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
         note.velocity
       );
       setCurrentSubdiv(note.subdiv);
-      //console.log(note.subdiv);
     },
     [...partNotes]
   ).start(0);
+
+  part.loop = true;
+  part.loopEnd = currentSongDuration;
 }
 
 const sampler = new Tone.Sampler({
@@ -76,7 +86,13 @@ const sampler = new Tone.Sampler({
 }).toDestination();
 sampler.volume.value = -20;
 
-export default function Player() {
+export default function Player({ songLen, currentSubdiv }) {
+  useEffect(() => {
+    //console.log(songLen, currentSubdiv);
+  }, [songLen, currentSubdiv]);
+
+  const [playbackSliderProgress, setPlaybackSliderProgress] = useState(30);
+
   return (
     <Box>
       <IconButton
@@ -106,6 +122,16 @@ export default function Player() {
         }}
         size='large'
         children={<PlayArrowRoundedIcon fontSize='large' />}
+      />
+      <Slider
+        aria-label='Playback'
+        size='small'
+        value={part ? part.progress * 100 : 0}
+        onChange={(event, newValue) => {
+          setPlaybackSliderProgress(newValue);
+          Tone.Transport.seconds = (newValue / 100) * currentSongDuration;
+        }}
+        sx={{ width: 300 }}
       />
     </Box>
   );

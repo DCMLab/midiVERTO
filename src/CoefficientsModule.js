@@ -39,10 +39,6 @@ function CoefficientsModule({
     setSubdivUserPcvs(tempSubdivUserPcvs);
   }, [userPcvs]);
 
-  useEffect(() => {
-    console.log(userPcvs);
-  }, [userPcvs]);
-
   return (
     <>
       <Circle

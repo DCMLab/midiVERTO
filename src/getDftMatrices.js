@@ -120,7 +120,7 @@ export function getDftCoeffStatic(midiFile, resolution) {
       getSubdivision(track.notes, resolution, midiFile.duration)
     )
   );
-  console.log(tracksSubdivision);
+  //console.log(tracksSubdivision);
 
   //pcv arrary init
   let pcvSubdivision = [];
@@ -165,8 +165,8 @@ export function getDftCoeffDynamic(midiData, resolutionMode, currentSongBPM) {
     resolution = noteResolutionValue * (60 / currentSongBPM);
   }
 
-  console.log(currentSongBPM);
-  console.log(resolution);
+  //console.log(currentSongBPM);
+  //console.log(resolution);
 
   let duration = midiData.duration;
   let tracksSubdivision = [];

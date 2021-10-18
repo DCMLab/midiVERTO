@@ -292,9 +292,9 @@ function Application() {
   //Init user pcv examples
   useEffect(() => {
     let examplePcvs = [
-      [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0], // C
-      [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0], // Cmin
-      [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], // Cdim
+      [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0], // C
+      [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0], // Cmin
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0], // Cdim
     ];
 
     let exPcvObjects = examplePcvs.map((pcv) => {
@@ -336,7 +336,10 @@ function Application() {
 
   return (
     <Container>
-      <Player />
+      <Player
+        songLen={coeffTracesData.length !== 0 ? coeffTracesData[0].length : 0}
+        currentSubdiv={currentSubdiv}
+      />
       <PcvChipsBox userPcvs={userPcvs} setUserPcvs={setUserPcvs} />
 
       <FormGroup>
