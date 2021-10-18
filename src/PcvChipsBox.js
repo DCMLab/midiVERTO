@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
@@ -9,16 +8,8 @@ const ListItem = styled('li')(({ theme }) => ({
 }));
 
 export default function PcvChipsBox({ userPcvs, setUserPcvs }) {
-  const [chipData, setChipData] = useState([
-    { key: 0, label: 'Angular', isDisabled: false },
-    { key: 1, label: 'jQuery', isDisabled: true },
-    { key: 2, label: 'Polymer', isDisabled: true },
-    { key: 3, label: 'React', isDisabled: true },
-    { key: 4, label: 'Vue.js', isDisabled: true },
-  ]);
-
   const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) =>
+    setUserPcvs((chips) =>
       chips.filter((chip) => chip.label !== chipToDelete.label)
     );
   };
@@ -43,9 +34,10 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs }) {
               variant={data.isDisabled ? 'outlined' : 'filled'}
               icon={<CircleIcon style={{ color: data.colours[1] }} />}
               label={data.label}
-              onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+              onDelete={handleDelete(data)}
               onClick={() => {
-                console.log('disabled');
+                data.isDisabled = !data.isDisabled;
+                setUserPcvs([...userPcvs]);
               }}
             />
           </ListItem>

@@ -255,9 +255,15 @@ function Circle({
             : null} */}
           {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
           {userPcvsCoeff
-            ? userPcvsCoeff.map((pcv, i) =>
-                circleMark(pcv, marksRadiusRatio + 0.015, pcv.color, i)
-              )
+            ? userPcvsCoeff.map((pcv, i) => {
+                if (!pcv.isDisabled)
+                  return circleMark(
+                    pcv,
+                    marksRadiusRatio + 0.015,
+                    pcv.color,
+                    i
+                  );
+              })
             : null}
           {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
         </g>
