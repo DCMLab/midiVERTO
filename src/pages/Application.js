@@ -291,10 +291,27 @@ function Application() {
 
   //Init user pcv examples
   useEffect(() => {
-    handleSubmitPitchClass('{0,4,7}{0,3,7}{0,3,6}'); // C Cmin Cdim
-    userPcvs[1].isDisabled = true;
-    userPcvs[2].isDisabled = true;
-    setUserPcvs([...userPcvs]);
+    let examplePcvs = [
+      [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0], // C
+      [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0], // Cmin
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], // Cdim
+    ];
+
+    let exPcvObjects = examplePcvs.map((pcv) => {
+      return {
+        label: `(${pcv.toString()})`,
+        isDisabled: false,
+        coeffs: dft(pcv, true, true, false),
+      };
+    });
+
+    exPcvObjects.forEach((pcvData) => {
+      pcvData.colours = getComplementaryColours(pcvData.coeffs);
+    });
+
+    exPcvObjects[1].isDisabled = true;
+    exPcvObjects[2].isDisabled = true;
+    setUserPcvs(exPcvObjects);
   }, []);
 
   function toggleShowPrototypes() {
