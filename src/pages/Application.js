@@ -117,12 +117,6 @@ function Application() {
       })
     );
 
-    /* let dftCoeffsInput = [];
-    for (let i = 0; i < parsedInput.length; i++) {
-      dftCoeffsInput.push(dft(parsedInput[i], true, true, false));
-      userPcvObjects[i].coeffs = dft(parsedInput[i], true, true, false);
-    } */
-
     userPcvObjects.forEach((pcvData) => {
       pcvData.colours = getComplementaryColours(pcvData.coeffs);
     });
@@ -293,6 +287,14 @@ function Application() {
         `Name: ${event.port.name}, Brand: ${event.port.manufacturer}, State: ${event.port.state}, Type: ${event.port.type}`
       );
     }
+  }, []);
+
+  //Init user pcv examples
+  useEffect(() => {
+    handleSubmitPitchClass('{0,4,7}{0,3,7}{0,3,6}'); // C Cmin Cdim
+    userPcvs[1].isDisabled = true;
+    userPcvs[2].isDisabled = true;
+    setUserPcvs([...userPcvs]);
   }, []);
 
   function toggleShowPrototypes() {
