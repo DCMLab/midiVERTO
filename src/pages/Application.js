@@ -5,6 +5,9 @@ import ResolutionSelector from '../ResolutionSelector';
 import CoefficientsModule from '../CoefficientsModule';
 import PcvChipsBox from '../PcvChipsBox';
 
+//TO BE REMOVED
+import Navbar from '../Navbar';
+
 import Player, { setPlayerMidiData } from '../Player';
 import {
   getComplementaryColours,
@@ -25,10 +28,82 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 
+//Drawer components
+import { styled, useTheme } from '@mui/material/styles';
+import Drawer from '@mui/material/Drawer';
+import CssBaseline from '@mui/material/CssBaseline';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
+//Accordion components
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+const drawerWidth = 400;
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(1),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+  })
+);
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  transition: theme.transitions.create(['margin', 'width'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: 'flex-end',
+}));
+
+//Song variables
 let currentSongBPM = 80;
 let currentSongMidiData;
+let fileName;
 
 function Application() {
+  //Show/hide controls drawer
+  const theme = useTheme();
+  const [open, setOpen] = useState(true);
+
   //State: contains the color data of the wavescape of a given coeff (Array(6) one for coeff)
   const [wavescapesData, setWavescapesData] = useState([]);
 
@@ -59,9 +134,19 @@ function Application() {
   //State: error states in input
   const [isInputPcvInvalid, setIsInputPcvInvalid] = useState(false);
 
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
   //MIDI parsing on file change
   useEffect(() => {
     let input = document.getElementById('file').files[0];
+
+    input ? (fileName = input.name) : (fileName = '');
 
     if (input) {
       let fileReader = new FileReader();
@@ -335,89 +420,167 @@ function Application() {
   }
 
   return (
-    <Container>
-      <Player
-        songLen={coeffTracesData.length !== 0 ? coeffTracesData[0].length : 0}
-        currentSubdiv={currentSubdiv}
-      />
-      <PcvChipsBox userPcvs={userPcvs} setUserPcvs={setUserPcvs} />
-
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              onChange={() => toggleShowPrototypes()}
-              checked={showPrototypes}
-            />
-          }
-          label='Show Prototypes'
-        />
-      </FormGroup>
-
-      <Box
-        component='form'
+    <Box sx={{ display: 'flex' }}>
+      {/*  <AppBar position='fixed' open={open}>
+        <Toolbar>
+          <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            onClick={handleDrawerOpen}
+            edge='start'
+            sx={{ mr: 2, ...(open && { display: 'none' }) }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant='h6' noWrap component='div'>
+            Persistent drawer
+          </Typography>
+        </Toolbar>
+      </AppBar> */}
+      <Drawer
         sx={{
-          '& > :not(style)': { m: 1, width: '25ch' },
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
         }}
-        noValidate
-        autoComplete='off'
+        variant='persistent'
+        anchor='left'
+        open={open}
       >
-        <TextField
-          error={isInputPcvInvalid}
-          helperText={isInputPcvInvalid && 'Invalid input'}
-          id='outlined-basic'
-          label='Pitch class vector'
-          variant='outlined'
-          onKeyPress={(event) => {
-            if (event.key === 'Enter') {
-              handleSubmitPitchClass(pcvTextRef.current.value);
-              pcvTextRef.current.value = '';
-            }
-          }}
-          onChange={() => {
-            setIsInputPcvInvalid(false);
-          }}
-          inputRef={pcvTextRef}
-        />
-      </Box>
-
-      <div>
-        <label htmlFor='file'>
-          <input
-            style={{ display: 'none' }}
-            type='file'
-            id='file'
-            name='file'
-            value={file}
-            onChange={(e) => setFile(e.target.value)}
-          />
-          <Button variant='contained' color='primary' component='span'>
-            Upload MIDI
-          </Button>
-        </label>
-      </div>
-
-      <ResolutionSelector
-        setResolutionMode={setResolutionMode}
-        resolutionMode={resolutionMode}
-      />
-      <Button variant='contained' color='primary' onClick={retriggerAnalysis}>
-        Change resolution
-      </Button>
-
-      <Container>
+        <DrawerHeader>
+          <Box
+            component='div'
+            sx={{
+              display: 'flex',
+              flexGrow: 1,
+              alignItems: 'baseline',
+            }}
+          >
+            <Typography noWrap={true} sx={{ flexGrow: 2 }}>
+              {file ? fileName : 'input file'}
+            </Typography>
+            <label htmlFor='file'>
+              <input
+                style={{ display: 'none' }}
+                type='file'
+                id='file'
+                name='file'
+                value={file}
+                onChange={(e) => setFile(e.target.value)}
+              />
+              <Button variant='contained' color='primary' component='span'>
+                Upload
+              </Button>
+            </label>
+          </Box>
+          {/* <Typography variant='h3' component='div' sx={{ flexGrow: 1 }}>
+            Mi_DFT
+          </Typography> */}
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </DrawerHeader>
         <Divider />
-        <WavescapeModule wavescapesData={wavescapesData} />
-        <Divider />
-        <CoefficientsModule
-          coeffTracesData={coeffTracesData}
+        <Player
+          songLen={coeffTracesData.length !== 0 ? coeffTracesData[0].length : 0}
           currentSubdiv={currentSubdiv}
-          showPrototypes={showPrototypes}
-          userPcvs={userPcvs}
-          midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
         />
-      </Container>
-    </Container>
+        <PcvChipsBox userPcvs={userPcvs} setUserPcvs={setUserPcvs} />
+
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={() => toggleShowPrototypes()}
+                checked={showPrototypes}
+              />
+            }
+            label='Show Prototypes'
+          />
+        </FormGroup>
+
+        <Box component='form' noValidate autoComplete='off'>
+          <TextField
+            error={isInputPcvInvalid}
+            helperText={isInputPcvInvalid && 'Invalid input'}
+            id='outlined-basic'
+            label='Pitch class vector'
+            variant='outlined'
+            onKeyPress={(event) => {
+              if (event.key === 'Enter') {
+                handleSubmitPitchClass(pcvTextRef.current.value);
+                pcvTextRef.current.value = '';
+              }
+            }}
+            onChange={() => {
+              setIsInputPcvInvalid(false);
+            }}
+            inputRef={pcvTextRef}
+          />
+        </Box>
+
+        <ResolutionSelector
+          setResolutionMode={setResolutionMode}
+          resolutionMode={resolutionMode}
+        />
+        <Button variant='contained' color='primary' onClick={retriggerAnalysis}>
+          Change resolution
+        </Button>
+      </Drawer>
+      <Main open={open}>
+        <DrawerHeader />
+        <IconButton
+          color='inherit'
+          aria-label='open drawer'
+          onClick={handleDrawerOpen}
+          edge='start'
+          sx={{ margin: 0, padding: 0, ...(open && { display: 'none' }) }}
+        >
+          <ChevronRightIcon />
+        </IconButton>
+        <Container sx={{ margin: 0, padding: 0 }}>
+          <div>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls='panel1a-content'
+                id='panel1a-header'
+              >
+                <Typography variant='h6'>Wavescape</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <WavescapeModule wavescapesData={wavescapesData} />
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls='panel2a-content'
+                id='panel2a-header'
+              >
+                <Typography variant='h6'>Fourier Coefficients</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <CoefficientsModule
+                  coeffTracesData={coeffTracesData}
+                  currentSubdiv={currentSubdiv}
+                  showPrototypes={showPrototypes}
+                  userPcvs={userPcvs}
+                  midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
+                />
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        </Container>
+      </Main>
+    </Box>
   );
 }
 
