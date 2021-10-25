@@ -492,47 +492,74 @@ function Application() {
           songLen={coeffTracesData.length !== 0 ? coeffTracesData[0].length : 0}
           currentSubdiv={currentSubdiv}
         />
-        <PcvChipsBox userPcvs={userPcvs} setUserPcvs={setUserPcvs} />
 
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={() => toggleShowPrototypes()}
-                checked={showPrototypes}
-              />
-            }
-            label='Show Prototypes'
-          />
-        </FormGroup>
-
-        <Box component='form' noValidate autoComplete='off'>
-          <TextField
-            error={isInputPcvInvalid}
-            helperText={isInputPcvInvalid && 'Invalid input'}
-            id='outlined-basic'
-            label='Pitch class vector'
-            variant='outlined'
-            onKeyPress={(event) => {
-              if (event.key === 'Enter') {
-                handleSubmitPitchClass(pcvTextRef.current.value);
-                pcvTextRef.current.value = '';
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            margin: '2% 5%',
+            width: '90%',
+            justifyContent: 'space-evenly',
+            gap: '20px',
+          }}
+        >
+          <Box component='form' noValidate autoComplete='off'>
+            <TextField
+              error={isInputPcvInvalid}
+              helperText={isInputPcvInvalid && 'Invalid input'}
+              id='outlined-basic'
+              label='Pitch class vector'
+              variant='outlined'
+              onKeyPress={(event) => {
+                if (event.key === 'Enter') {
+                  handleSubmitPitchClass(pcvTextRef.current.value);
+                  pcvTextRef.current.value = '';
+                }
+              }}
+              onChange={() => {
+                setIsInputPcvInvalid(false);
+              }}
+              inputRef={pcvTextRef}
+            />
+          </Box>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={() => toggleShowPrototypes()}
+                  checked={showPrototypes}
+                  size='small'
+                />
               }
-            }}
-            onChange={() => {
-              setIsInputPcvInvalid(false);
-            }}
-            inputRef={pcvTextRef}
-          />
+              label='Show Prototypes'
+            />
+          </FormGroup>
         </Box>
 
-        <ResolutionSelector
-          setResolutionMode={setResolutionMode}
-          resolutionMode={resolutionMode}
-        />
-        <Button variant='contained' color='primary' onClick={retriggerAnalysis}>
-          Change resolution
-        </Button>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            margin: '2% 5%',
+            width: '90%',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <ResolutionSelector
+            setResolutionMode={setResolutionMode}
+            resolutionMode={resolutionMode}
+          />
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={retriggerAnalysis}
+            sx={{ width: '10%' }}
+          >
+            Change
+          </Button>
+        </Box>
+
+        <PcvChipsBox userPcvs={userPcvs} setUserPcvs={setUserPcvs} />
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
@@ -545,40 +572,37 @@ function Application() {
         >
           <ChevronRightIcon />
         </IconButton>
-        <Container sx={{ margin: 0, padding: 0 }}>
-          <div>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls='panel1a-content'
-                id='panel1a-header'
-              >
-                <Typography variant='h6'>Wavescape</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <WavescapeModule wavescapesData={wavescapesData} />
-              </AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls='panel2a-content'
-                id='panel2a-header'
-              >
-                <Typography variant='h6'>Fourier Coefficients</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <CoefficientsModule
-                  coeffTracesData={coeffTracesData}
-                  currentSubdiv={currentSubdiv}
-                  showPrototypes={showPrototypes}
-                  userPcvs={userPcvs}
-                  midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
-                />
-              </AccordionDetails>
-            </Accordion>
-          </div>
-        </Container>
+
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <Typography variant='h6'>Wavescape</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <WavescapeModule wavescapesData={wavescapesData} />
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel2a-content'
+            id='panel2a-header'
+          >
+            <Typography variant='h6'>Fourier Coefficients</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <CoefficientsModule
+              coeffTracesData={coeffTracesData}
+              currentSubdiv={currentSubdiv}
+              showPrototypes={showPrototypes}
+              userPcvs={userPcvs}
+              midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
+            />
+          </AccordionDetails>
+        </Accordion>
       </Main>
     </Box>
   );

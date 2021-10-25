@@ -6,6 +6,8 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 function ResolutionSelector({ resolutionMode, setResolutionMode }) {
   //State: input error
@@ -48,7 +50,7 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
   }
 
   return (
-    <>
+    <Box>
       <FormControl component='fieldset'>
         <FormLabel component='legend'>Resolution</FormLabel>
         <RadioGroup
@@ -59,33 +61,34 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
           name='row-radio-buttons-group'
         >
           <FormControlLabel
+            sx={{ fontSize: '20px' }}
             value='sixteenth'
-            control={<Radio />}
-            label=' &#119137;'
+            control={<Radio size='small' />}
+            label={<Typography sx={{ fontSize: '2rem' }}>&#119137;</Typography>}
           />
           <FormControlLabel
             value='eighth'
-            control={<Radio />}
-            label=' &#119136;'
+            control={<Radio size='small' />}
+            label={<Typography sx={{ fontSize: '2rem' }}>&#119136;</Typography>}
           />
           <FormControlLabel
             value='quarter'
-            control={<Radio />}
-            label='&#9833;'
+            control={<Radio size='small' />}
+            label={<Typography sx={{ fontSize: '2rem' }}>&#9833;</Typography>}
           />
           <FormControlLabel
             value='half'
-            control={<Radio />}
-            label='&#119134;'
+            control={<Radio size='small' />}
+            label={<Typography sx={{ fontSize: '2rem' }}>&#119134;</Typography>}
           />
           <FormControlLabel
             value='whole'
-            control={<Radio />}
-            label='&#119133;'
+            control={<Radio size='small' />}
+            label={<Typography sx={{ fontSize: '2rem' }}>&#119133;</Typography>}
           />
           <FormControlLabel
             value='seconds'
-            control={<Radio />}
+            control={<Radio size='small' />}
             label={
               <TextField
                 error={isInputSecondsInvalid}
@@ -113,7 +116,7 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
           />
         </RadioGroup>
       </FormControl>
-    </>
+    </Box>
   );
 }
 

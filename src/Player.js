@@ -2,6 +2,7 @@ import * as Tone from 'tone';
 import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
@@ -94,35 +95,43 @@ export default function Player({ songLen, currentSubdiv }) {
   const [playbackSliderProgress, setPlaybackSliderProgress] = useState(30);
 
   return (
-    <Box>
-      <IconButton
-        onClick={() => {
-          console.log('stop');
-          Tone.Transport.stop();
-        }}
-        size='large'
-        children={<StopRoundedIcon fontSize='large' />}
-      />
-      <IconButton
-        onClick={() => {
-          console.log('pause');
-          Tone.Transport.pause();
-        }}
-        size='large'
-        children={<PauseRoundedIcon fontSize='large' />}
-      />
-      <IconButton
-        onClick={() => {
-          console.log('play');
-          if (Tone.context.state !== 'running') {
-            console.log('state running');
-            Tone.context.resume();
-          }
-          Tone.Transport.start();
-        }}
-        size='large'
-        children={<PlayArrowRoundedIcon fontSize='large' />}
-      />
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <Stack direction='row'>
+        <IconButton
+          onClick={() => {
+            console.log('stop');
+            Tone.Transport.stop();
+          }}
+          size='large'
+          children={<StopRoundedIcon fontSize='large' />}
+        />
+        <IconButton
+          onClick={() => {
+            console.log('pause');
+            Tone.Transport.pause();
+          }}
+          size='large'
+          children={<PauseRoundedIcon fontSize='large' />}
+        />
+        <IconButton
+          onClick={() => {
+            console.log('play');
+            if (Tone.context.state !== 'running') {
+              console.log('state running');
+              Tone.context.resume();
+            }
+            Tone.Transport.start();
+          }}
+          size='large'
+          children={<PlayArrowRoundedIcon fontSize='large' />}
+        />
+      </Stack>
       <Slider
         aria-label='Playback'
         size='small'
@@ -131,7 +140,7 @@ export default function Player({ songLen, currentSubdiv }) {
           setPlaybackSliderProgress(newValue);
           Tone.Transport.seconds = (newValue / 100) * currentSongDuration;
         }}
-        sx={{ width: 300 }}
+        sx={{ margin: '0 5%', width: '90%' }}
       />
     </Box>
   );

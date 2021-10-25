@@ -21,9 +21,11 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs }) {
         justifyContent: 'center',
         flexWrap: 'wrap',
         listStyle: 'none',
-        p: 0.5,
-        m: 0,
-        width: 0.5,
+        p: '5px',
+        m: '5% 5%',
+        width: '90%',
+        maxHeight: '100%',
+        overflow: 'auto',
       }}
       component='ul'
     >
