@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/MIDFT/static/js/main.c57f87af.chunk.js",
-    "main.js.map": "/MIDFT/static/js/main.c57f87af.chunk.js.map",
+    "main.js": "/MIDFT/static/js/main.fe472f76.chunk.js",
+    "main.js.map": "/MIDFT/static/js/main.fe472f76.chunk.js.map",
     "runtime-main.js": "/MIDFT/static/js/runtime-main.b7db8c69.js",
     "runtime-main.js.map": "/MIDFT/static/js/runtime-main.b7db8c69.js.map",
-    "static/js/2.d1bd5203.chunk.js": "/MIDFT/static/js/2.d1bd5203.chunk.js",
-    "static/js/2.d1bd5203.chunk.js.map": "/MIDFT/static/js/2.d1bd5203.chunk.js.map",
+    "static/js/2.4c1b5b98.chunk.js": "/MIDFT/static/js/2.4c1b5b98.chunk.js",
+    "static/js/2.4c1b5b98.chunk.js.map": "/MIDFT/static/js/2.4c1b5b98.chunk.js.map",
     "index.html": "/MIDFT/index.html",
-    "static/js/2.d1bd5203.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.d1bd5203.chunk.js.LICENSE.txt"
+    "static/js/2.4c1b5b98.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.4c1b5b98.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.b7db8c69.js",
-    "static/js/2.d1bd5203.chunk.js",
-    "static/js/main.c57f87af.chunk.js"
+    "static/js/2.4c1b5b98.chunk.js",
+    "static/js/main.fe472f76.chunk.js"
   ]
 }
