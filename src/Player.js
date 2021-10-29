@@ -100,10 +100,12 @@ export default function Player({ songLen, currentSubdiv }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        width: '60%',
       }}
     >
       <Stack direction='row'>
         <IconButton
+          sx={{ padding: '0' }}
           onClick={() => {
             console.log('stop');
             Tone.Transport.stop();
@@ -112,6 +114,7 @@ export default function Player({ songLen, currentSubdiv }) {
           children={<StopRoundedIcon fontSize='large' />}
         />
         <IconButton
+          sx={{ padding: '0' }}
           onClick={() => {
             console.log('pause');
             Tone.Transport.pause();
@@ -120,6 +123,7 @@ export default function Player({ songLen, currentSubdiv }) {
           children={<PauseRoundedIcon fontSize='large' />}
         />
         <IconButton
+          sx={{ padding: '0' }}
           onClick={() => {
             console.log('play');
             if (Tone.context.state !== 'running') {
@@ -140,7 +144,7 @@ export default function Player({ songLen, currentSubdiv }) {
           setPlaybackSliderProgress(newValue);
           Tone.Transport.seconds = (newValue / 100) * currentSongDuration;
         }}
-        sx={{ margin: '0 5%', width: '90%' }}
+        sx={{ width: '90%' }}
       />
     </Box>
   );

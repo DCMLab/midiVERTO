@@ -1,14 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
-import ResolutionSelector from '../ResolutionSelector';
 import CoefficientsModule from '../CoefficientsModule';
-import PcvChipsBox from '../PcvChipsBox';
 
 import Player from '../Player';
 
 import dft from '../DFT';
-import parse from '../parser';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -20,11 +17,7 @@ import Divider from '@mui/material/Divider';
 
 //Drawer mui components
 import { styled, useTheme } from '@mui/material/styles';
-import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 //Accordion mui components
 import Accordion from '@mui/material/Accordion';
@@ -293,9 +286,8 @@ function Application({
               display: 'flex',
               alignItems: 'center',
               margin: '2% 5%',
-              width: '90%',
+              width: '30%',
               justifyContent: 'space-evenly',
-              gap: '20px',
             }}
           >
             <FormGroup>
