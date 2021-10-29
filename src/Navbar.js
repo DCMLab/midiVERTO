@@ -50,15 +50,20 @@ export default function Navbar({ open, setOpen }) {
           <Typography variant='h3' component='div' sx={{ flexGrow: 1 }}>
             Mi_DFT
           </Typography>
-          <ButtonGroup variant='outlined' aria-label='outlined button group'>
-            <Button component={Link} to='/' variant='contained' color='primary'>
+          <ButtonGroup aria-label='outlined button group'>
+            <Button
+              component={Link}
+              to='/'
+              variant='contained'
+              disableElevation={true}
+            >
               Home
             </Button>
             <Button
               component={Link}
               to='/theory'
               variant='contained'
-              color='primary'
+              disableElevation={true}
             >
               Theory
             </Button>
@@ -66,7 +71,7 @@ export default function Navbar({ open, setOpen }) {
               component={Link}
               to='/analysis'
               variant='contained'
-              color='primary'
+              disableElevation={true}
             >
               Analysis
             </Button>

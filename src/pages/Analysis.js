@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
 import CoefficientsModule from '../CoefficientsModule';
@@ -8,15 +8,12 @@ import Player from '../Player';
 import dft from '../DFT';
 
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import Divider from '@mui/material/Divider';
 
 //Drawer mui components
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 //Accordion mui components
@@ -28,9 +25,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 //Bottom appbar
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import MoreIcon from '@mui/icons-material/MoreVert';
 
 const drawerWidth = 400;
 

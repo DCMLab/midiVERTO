@@ -35,6 +35,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import FormLabel from '@mui/material/FormLabel';
 
 const drawerWidth = 400;
 
@@ -273,9 +274,10 @@ function App() {
             <Box
               sx={{
                 display: 'flex',
-                alignItems: 'flex-end',
-                margin: '2% 5%',
+                alignItems: 'center',
+                margin: '5% 5%',
                 width: '90%',
+                height: '40%',
                 justifyContent: 'space-evenly',
               }}
             >
@@ -292,13 +294,13 @@ function App() {
                 Change
               </Button>
             </Box>
-
+            <Divider />
             <Box
               sx={{
                 flexDirection: 'column',
                 display: 'flex',
                 alignItems: 'center',
-                margin: '2% 5%',
+                margin: '5% 5%',
                 width: '90%',
                 height: '40%',
                 justifyContent: 'space-evenly',

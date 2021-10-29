@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 import { Wavescape } from './Wavescape';
 
 import Box from '@mui/material/Box';
