@@ -167,7 +167,12 @@ function App() {
           currentSongBPM
         );
         setCoeffTracesData(tracesData);
-        setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
+        setPlayerMidiData(
+          currentSongMidiData,
+          resolution,
+          staticResolution,
+          setCurrentSubdiv
+        );
       };
     }
   }, [file]);

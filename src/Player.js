@@ -8,11 +8,32 @@ import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import IconButton from '@mui/material/IconButton';
 import Slider from '@mui/material/Slider';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 let part;
-let currentSongDuration; // seconds
+let currentSongDuration = 0; // seconds
+let intervalID;
 
-export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
+const TinyText = styled(Typography)({
+  fontSize: '0.75rem',
+  opacity: 0.38,
+  fontWeight: 500,
+  letterSpacing: 0.2,
+});
+
+function formatDuration(value) {
+  const minute = Math.floor(value / 60);
+  const secondLeft = Math.floor(value - minute * 60);
+  return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
+}
+
+export function setPlayerMidiData(
+  midiData,
+  resolution,
+  wavescapeRes,
+  setCurrentSubdiv
+) {
   //Remove the scheduled previous song
   Tone.Transport.cancel(0);
   setCurrentSubdiv(0);
@@ -28,9 +49,10 @@ export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
     })
   );
 
-  partNotes.forEach(
-    (note) => (note.subdiv = Math.floor(note.time / resolution))
-  );
+  partNotes.forEach((note) => {
+    note.subdiv = Math.floor(note.time / resolution);
+    note.wavescapeSubdiv = Math.floor(note.time / wavescapeRes);
+  });
 
   part = new Tone.Part(
     (time, note) => {
@@ -87,12 +109,12 @@ const sampler = new Tone.Sampler({
 }).toDestination();
 sampler.volume.value = -20;
 
-export default function Player({ songLen, currentSubdiv }) {
-  useEffect(() => {
-    //console.log(songLen, currentSubdiv);
-  }, [songLen, currentSubdiv]);
-
+export default function Player() {
   const [playbackSliderProgress, setPlaybackSliderProgress] = useState(30);
+
+  useEffect(() => {
+    console.log(currentSongDuration);
+  }, [currentSongDuration]);
 
   return (
     <Box
@@ -109,6 +131,7 @@ export default function Player({ songLen, currentSubdiv }) {
           onClick={() => {
             console.log('stop');
             Tone.Transport.stop();
+            stopInterval();
           }}
           size='large'
           children={<StopRoundedIcon fontSize='large' />}
@@ -118,6 +141,7 @@ export default function Player({ songLen, currentSubdiv }) {
           onClick={() => {
             console.log('pause');
             Tone.Transport.pause();
+            stopInterval();
           }}
           size='large'
           children={<PauseRoundedIcon fontSize='large' />}
@@ -131,6 +155,11 @@ export default function Player({ songLen, currentSubdiv }) {
               Tone.context.resume();
             }
             Tone.Transport.start();
+            if (!intervalID && part)
+              intervalID = setInterval(
+                () => setPlaybackSliderProgress(part.progress),
+                1000
+              );
           }}
           size='large'
           children={<PlayArrowRoundedIcon fontSize='large' />}
@@ -139,13 +168,36 @@ export default function Player({ songLen, currentSubdiv }) {
       <Slider
         aria-label='Playback'
         size='small'
-        value={part ? part.progress * 100 : 0}
+        value={playbackSliderProgress ? playbackSliderProgress * 100 : 0}
         onChange={(event, newValue) => {
-          setPlaybackSliderProgress(newValue);
+          setPlaybackSliderProgress(newValue / 100);
           Tone.Transport.seconds = (newValue / 100) * currentSongDuration;
         }}
         sx={{ width: '90%' }}
       />
+      <Box
+        sx={{
+          display: 'flex',
+          width: '90%',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mt: -1,
+        }}
+      >
+        <TinyText>
+          -
+          {formatDuration(
+            currentSongDuration - playbackSliderProgress * currentSongDuration
+          )}
+        </TinyText>
+        <TinyText>{formatDuration(currentSongDuration)}</TinyText>
+      </Box>
     </Box>
   );
+}
+
+function stopInterval() {
+  clearInterval(intervalID);
+  // release our intervalID from the variable
+  intervalID = null;
 }

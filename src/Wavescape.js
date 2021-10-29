@@ -2,8 +2,8 @@ import { useRef, useEffect } from 'react';
 
 export const Wavescape = ({ wavescapeMatrix }) => {
   const canvasRef = useRef(null);
-  let width = 400;
-  let height = 400;
+  let width = 440;
+  let height = 440;
 
   useEffect(() => {
     const canvas = canvasRef.current;

@@ -269,12 +269,7 @@ function Application({
         sx={{ top: 'auto', bottom: 0 }}
       >
         <Toolbar>
-          <Player
-            songLen={
-              coeffTracesData.length !== 0 ? coeffTracesData[0].length : 0
-            }
-            currentSubdiv={currentSubdiv}
-          />
+          <Player />
           <Box
             sx={{
               display: 'flex',
