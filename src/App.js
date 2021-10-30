@@ -69,7 +69,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
 }));
 
 function App() {
@@ -242,31 +242,23 @@ function App() {
             open={open}
           >
             <DrawerHeader>
-              <Box
-                component='div'
-                sx={{
-                  display: 'flex',
-                  flexGrow: 1,
-                  alignItems: 'baseline',
-                }}
-              >
-                <Typography noWrap={true} sx={{ flexGrow: 2 }}>
-                  {file ? fileName : 'input file'}
-                </Typography>
-                <label htmlFor='file'>
-                  <input
-                    style={{ display: 'none' }}
-                    type='file'
-                    id='file'
-                    name='file'
-                    value={file}
-                    onChange={(e) => setFile(e.target.value)}
-                  />
-                  <Button variant='contained' color='primary' component='span'>
-                    Upload
-                  </Button>
-                </label>
-              </Box>
+              <Typography noWrap={true} sx={{ flexGrow: '2' }}>
+                {file ? fileName : 'Upload a midi file'}
+              </Typography>
+              <label htmlFor='file'>
+                <input
+                  style={{ display: 'none' }}
+                  type='file'
+                  id='file'
+                  name='file'
+                  value={file}
+                  onChange={(e) => setFile(e.target.value)}
+                />
+                <Button variant='contained' color='primary' component='span'>
+                  Upload
+                </Button>
+              </label>
+
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === 'ltr' ? (
                   <ChevronLeftIcon />
