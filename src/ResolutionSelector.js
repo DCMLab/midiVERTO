@@ -91,6 +91,7 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
             control={<Radio size='small' />}
             label={
               <TextField
+                sx={{ minHeight: '5rem' }}
                 error={isInputSecondsInvalid}
                 helperText={isInputSecondsInvalid && 'Invalid input'}
                 label='in seconds'

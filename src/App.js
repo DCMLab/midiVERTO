@@ -307,6 +307,9 @@ function App() {
               autoComplete='off'
             >
               <TextField
+                sx={{ minHeight: '5rem' }}
+                fullWidth
+                label={'margin="dense"'}
                 error={isInputPcvInvalid}
                 helperText={isInputPcvInvalid && 'Invalid input'}
                 id='outlined-basic'
