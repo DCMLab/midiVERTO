@@ -110,7 +110,7 @@ const sampler = new Tone.Sampler({
 sampler.volume.value = -20;
 
 export default function Player() {
-  const [playbackSliderProgress, setPlaybackSliderProgress] = useState(30);
+  const [playbackSliderProgress, setPlaybackSliderProgress] = useState(0);
 
   useEffect(() => {
     console.log(currentSongDuration);
