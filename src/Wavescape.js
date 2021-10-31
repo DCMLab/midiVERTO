@@ -1,34 +1,39 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
-export const Wavescape = ({ wavescapeMatrix }) => {
+const verticalScale = Math.sin(Math.PI / 3);
+
+export const Wavescape = ({ wavescapeMatrix, currentWavescapeSubdiv }) => {
   const canvasRef = useRef(null);
+  const [wsCoordinates, setWsCoordinates] = useState([]);
   let width = 440;
   let height = 440;
+  const margin = 40;
+  let ticks;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
     // increase the actual size of our canvas
-    canvas.width = width * devicePixelRatio;
-    canvas.height = height * devicePixelRatio;
+    //canvas.width = width * devicePixelRatio;
+    //canvas.height = height * devicePixelRatio;
 
     // ensure all drawing operations are scaled
-    ctx.scale(devicePixelRatio, devicePixelRatio);
+    //ctx.scale(devicePixelRatio, devicePixelRatio);
 
     // scale everything down using CSS
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
+    //canvas.style.width = width + 'px';
+    //canvas.style.height = height + 'px';
 
-    let margins = [0, 0];
+    let margins = [margin, margin];
     let innerSize = [canvas.width - margins[0], canvas.height - margins[1]];
     let baseSubdivision;
 
     if (wavescapeMatrix) {
       baseSubdivision = wavescapeMatrix[0].length;
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.setTransform(1, 0, 0, -1, 0, ctx.canvas.height);
-      let ticks = computeTicks(
+      //ctx.setTransform(1, 0, 0, -1, 0, ctx.canvas.height);
+      ticks = computeTicks(
         innerSize[0],
         innerSize[1],
         baseSubdivision,
@@ -36,11 +41,106 @@ export const Wavescape = ({ wavescapeMatrix }) => {
         margins[1]
       );
 
+      setWsCoordinates(ticks);
+
+      //Vertical scaling to make the triangle equilateral
+      //ctx.scale(1, verticalScale);
       drawWavescape(ticks, ctx, wavescapeMatrix);
     }
   }, [wavescapeMatrix, width, height]);
 
-  return <canvas width={width} height={height} ref={canvasRef}></canvas>;
+  useEffect(() => {}, [wavescapeMatrix]);
+
+  return (
+    <svg
+      width={width + margin}
+      height={height + margin}
+      transform={`scale(${1}, ${-verticalScale})`}
+    >
+      <foreignObject x={0} y={0} width={width} height={height}>
+        <canvas width={width} height={height} ref={canvasRef}></canvas>
+      </foreignObject>
+      <g
+      /*  transform={`scale(${1 / devicePixelRatio}, ${
+          1 / devicePixelRatio
+        }) translate(${0},${height * devicePixelRatio})`} */
+      >
+        {/* //Line ticks */}
+        {wsCoordinates.length > 0
+          ? wsCoordinates[0].map((coord, i) => (
+              <line
+                key={`tick${i}`}
+                x1={coord.x}
+                x2={coord.x}
+                y1={coord.y - 3}
+                y2={coord.y + 3}
+                stroke='grey'
+                strokeWidth='1px'
+              />
+            ))
+          : null}
+        {/* Contour line */}
+        {wsCoordinates.length > 0 ? (
+          <>
+            <line
+              x1={wsCoordinates[0][0].x}
+              x2={wsCoordinates[0][wsCoordinates[0].length - 1].x}
+              y1={wsCoordinates[0][0].y}
+              y2={wsCoordinates[0][wsCoordinates[0].length - 1].y}
+              stroke='grey'
+              strokeWidth='2px'
+            />
+            <line
+              x1={wsCoordinates[0][wsCoordinates[0].length - 1].x}
+              x2={wsCoordinates[wsCoordinates.length - 1][0].x}
+              y1={wsCoordinates[0][wsCoordinates[0].length - 1].y}
+              y2={wsCoordinates[wsCoordinates.length - 1][0].y}
+              stroke='grey'
+              strokeWidth='1px'
+            />
+            <line
+              x1={wsCoordinates[0][0].x}
+              x2={wsCoordinates[wsCoordinates.length - 1][0].x}
+              y1={wsCoordinates[0][0].y}
+              y2={wsCoordinates[wsCoordinates.length - 1][0].y}
+              stroke='grey'
+              strokeWidth='1px'
+            />
+            <circle
+              cx={
+                (wsCoordinates[0][currentWavescapeSubdiv].x +
+                  wsCoordinates[0][currentWavescapeSubdiv + 1].x) /
+                2
+              }
+              cy={
+                (wsCoordinates[0][currentWavescapeSubdiv].y +
+                  wsCoordinates[0][currentWavescapeSubdiv + 1].y) /
+                2
+              }
+              r={4}
+              fill='white'
+            />
+            <circle
+              cx={
+                (wsCoordinates[0][currentWavescapeSubdiv].x +
+                  wsCoordinates[0][currentWavescapeSubdiv + 1].x) /
+                2
+              }
+              cy={
+                (wsCoordinates[0][currentWavescapeSubdiv].y +
+                  wsCoordinates[0][currentWavescapeSubdiv + 1].y) /
+                2
+              }
+              r={4}
+              stroke='black'
+              strokeWidth={2}
+              fill='transparent'
+            />
+          </>
+        ) : null}
+      </g>
+    </svg>
+  );
 };
 
 function computeTicks(

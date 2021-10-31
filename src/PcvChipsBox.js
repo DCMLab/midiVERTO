@@ -22,10 +22,9 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs }) {
         flexWrap: 'wrap',
         listStyle: 'none',
         p: '5px',
-        m: '5% 5%',
-        width: '90%',
-        maxHeight: '100%',
         overflow: 'auto',
+        minHeight: '50%',
+        width: '100%',
       }}
       component='ul'
     >

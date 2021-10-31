@@ -51,6 +51,7 @@ function Application({
   wavescapesData,
   coeffTracesData,
   currentSubdiv,
+  currentWavescapeSubdiv,
   userPcvs,
 }) {
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
@@ -240,7 +241,10 @@ function Application({
           <Typography variant='h6'>Wavescape</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <WavescapeModule wavescapesData={wavescapesData} />
+          <WavescapeModule
+            wavescapesData={wavescapesData}
+            currentWavescapeSubdiv={currentWavescapeSubdiv}
+          />
         </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded={true}>

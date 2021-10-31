@@ -90,6 +90,8 @@ function App() {
     seconds: 1.5,
     useSeconds: false,
   });
+  const [wavescapeResolution, setWavescapeResolution] = useState(10);
+  const [circleResolution, setCircleResolution] = useState(1);
 
   const [userPcvs, setUserPcvs] = useState([]);
   const pcvTextRef = useRef(null);
@@ -153,6 +155,7 @@ function App() {
         let subdivsNumberStatic = 50;
         let staticResolution =
           currentSongMidiData.duration / subdivsNumberStatic;
+        setWavescapeResolution(staticResolution);
 
         setWavescapesData(
           getRgbaMatrix(
@@ -166,6 +169,7 @@ function App() {
           resolutionMode,
           currentSongBPM
         );
+        setCircleResolution(resolution);
         setCoeffTracesData(tracesData);
         setPlayerMidiData(
           currentSongMidiData,
@@ -173,6 +177,8 @@ function App() {
           staticResolution,
           setCurrentSubdiv
         );
+
+        console.log(midiData);
       };
     }
   }, [file]);
@@ -272,9 +278,8 @@ function App() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                margin: '5% 5%',
+                margin: '2% 5%',
                 width: '90%',
-                height: '40%',
                 justifyContent: 'space-evenly',
               }}
             >
@@ -297,9 +302,8 @@ function App() {
                 flexDirection: 'column',
                 display: 'flex',
                 alignItems: 'center',
-                margin: '5% 5%',
-                width: '90%',
-                height: '40%',
+                margin: '3% 5%',
+                height: '50%',
                 justifyContent: 'space-evenly',
               }}
               component='form'
@@ -343,6 +347,9 @@ function App() {
                     wavescapesData={wavescapesData}
                     coeffTracesData={coeffTracesData}
                     currentSubdiv={currentSubdiv}
+                    currentWavescapeSubdiv={Math.floor(
+                      (currentSubdiv * circleResolution) / wavescapeResolution
+                    )}
                     userPcvs={userPcvs}
                   />
                 )}
