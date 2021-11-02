@@ -11,16 +11,21 @@ function Circle({
   userPcvsCoeff,
   currentSubdiv,
   performanceCoeff,
+  targetCircleWidth,
 }) {
   const canvasRef = useRef(null);
-  const width = 440;
-  const height = width;
+  let width = 440;
+  let height = width;
 
   const margin = 40;
-  const innerWidth = width - margin;
   const circleRadius = width / 2 - margin;
 
   let marksRadiusRatio = 0.01;
+
+  /* useEffect(() => {
+    width = targetCircleWidth;
+    height = width;
+  }, []); */
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -233,42 +238,42 @@ function Circle({
   };
 
   return (
-    <>
-      <svg width={width} height={height}>
-        <foreignObject x={margin} y={margin} width={width} height={height}>
-          <canvas
-            style={{ zIndex: '-1' }}
-            width={width}
-            height={height}
-            ref={canvasRef}
-          />
-        </foreignObject>
-        <g transform={`translate(${width / 2},${width / 2})`}>
-          {drawBorder()}
-          {protoDataCoeff
-            ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
-            : null}
-          {/* {traceDataCoeff
+    <svg
+      width={targetCircleWidth}
+      height={targetCircleWidth}
+      viewBox={`0 0 ${width} ${height}`}
+      /* transform={`scale(${targetCircleWidth / width},${
+        targetCircleWidth / width
+      })`} */
+    >
+      <foreignObject x={margin} y={margin} width={width} height={height}>
+        <canvas
+          style={{ zIndex: '-1' }}
+          width={width}
+          height={height}
+          ref={canvasRef}
+        />
+      </foreignObject>
+      <g transform={`translate(${width / 2},${width / 2})`}>
+        {drawBorder()}
+        {protoDataCoeff
+          ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
+          : null}
+        {/* {traceDataCoeff
             ? traceDataCoeff.map((pcv, i) =>
                 circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
               )
             : null} */}
-          {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
-          {userPcvsCoeff
-            ? userPcvsCoeff.map((pcv, i) => {
-                if (!pcv.isDisabled)
-                  return circleMark(
-                    pcv,
-                    marksRadiusRatio + 0.015,
-                    pcv.color,
-                    i
-                  );
-              })
-            : null}
-          {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
-        </g>
-      </svg>
-    </>
+        {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
+        {userPcvsCoeff
+          ? userPcvsCoeff.map((pcv, i) => {
+              if (!pcv.isDisabled)
+                return circleMark(pcv, marksRadiusRatio + 0.015, pcv.color, i);
+            })
+          : null}
+        {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
+      </g>
+    </svg>
   );
 }
 

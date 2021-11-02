@@ -2,12 +2,15 @@ import Circle from './Circle';
 import { useEffect, useState } from 'react';
 import { prototypesData } from './prototypesData';
 
+import Box from '@mui/material/Box';
+
 function CoefficientsModule({
   coeffTracesData,
   showPrototypes,
   userPcvs,
   currentSubdiv,
   midiDevNotesDftCoeffs,
+  elemsWidth,
 }) {
   const [selectedProtoPitchClasses, setSelectedProtoPitchClasses] =
     useState(prototypesData);
@@ -40,8 +43,26 @@ function CoefficientsModule({
   }, [userPcvs]);
 
   return (
-    <>
-      <Circle
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+      }}
+    >
+      {[1, 2, 3, 4, 5, 6].map((coeffNum) => (
+        <Circle
+          key={`w.${coeffNum}`}
+          protoDataCoeff={selectedProtoPitchClasses[coeffNum - 1]}
+          traceDataCoeff={coeffTracesData[coeffNum - 1]}
+          userPcvsCoeff={subdivUserPcvs[coeffNum - 1]}
+          currentSubdiv={currentSubdiv}
+          performanceCoeff={midiDevNotesDftCoeffs[coeffNum]}
+          targetCircleWidth={elemsWidth}
+        />
+      ))}
+
+      {/* <Circle
         protoDataCoeff={selectedProtoPitchClasses[0]}
         traceDataCoeff={coeffTracesData[0]}
         userPcvsCoeff={subdivUserPcvs[0]}
@@ -82,8 +103,8 @@ function CoefficientsModule({
         userPcvsCoeff={subdivUserPcvs[5]}
         currentSubdiv={currentSubdiv}
         performanceCoeff={midiDevNotesDftCoeffs[6]}
-      />
-    </>
+      /> */}
+    </Box>
   );
 }
 

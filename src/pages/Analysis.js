@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
 import CoefficientsModule from '../CoefficientsModule';
@@ -8,6 +8,7 @@ import Player from '../Player';
 import dft from '../DFT';
 
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -63,6 +64,21 @@ function Application({
       return { x: coeff.re, y: coeff.im };
     })
   );
+
+  //Ref to get the width of the accordion used to computed layout sizes
+  const accordionRef = useRef(null);
+  const [elemsForEachRow, setElemsForEachRow] = useState(6);
+  const [elemsWidth, setElemsWidth] = useState(440);
+  const [scalingFactor, setScalingFactor] = useState(1);
+
+  useEffect(() => {
+    let currentAccWidth = accordionRef.current.offsetWidth;
+    setElemsWidth(currentAccWidth / elemsForEachRow);
+  }, []);
+
+  useEffect(() => {
+    console.log(elemsWidth);
+  }, [elemsWidth]);
 
   //Open drawer when page loads
   useEffect(() => {
@@ -232,39 +248,43 @@ function Application({
 
   return (
     <Box>
-      <Accordion defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls='panel1a-content'
-          id='panel1a-header'
-        >
-          <Typography variant='h6'>Wavescape</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <WavescapeModule
-            wavescapesData={wavescapesData}
-            currentWavescapeSubdiv={currentWavescapeSubdiv}
-          />
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls='panel2a-content'
-          id='panel2a-header'
-        >
-          <Typography variant='h6'>Fourier Coefficients</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <CoefficientsModule
-            coeffTracesData={coeffTracesData}
-            currentSubdiv={currentSubdiv}
-            showPrototypes={showPrototypes}
-            userPcvs={userPcvs}
-            midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
-          />
-        </AccordionDetails>
-      </Accordion>
+      <Container sx={{ padding: 0, margin: 0, marginBottom: '64px' }}>
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <Typography variant='h6'>Wavescape</Typography>
+          </AccordionSummary>
+          <AccordionDetails ref={accordionRef} sx={{ padding: 0 }}>
+            <WavescapeModule
+              wavescapesData={wavescapesData}
+              currentWavescapeSubdiv={currentWavescapeSubdiv}
+              elemsWidth={elemsWidth}
+            />
+          </AccordionDetails>
+        </Accordion>
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel2a-content'
+            id='panel2a-header'
+          >
+            <Typography variant='h6'>Fourier Coefficients</Typography>
+          </AccordionSummary>
+          <AccordionDetails sx={{ padding: 0 }}>
+            <CoefficientsModule
+              coeffTracesData={coeffTracesData}
+              currentSubdiv={currentSubdiv}
+              showPrototypes={showPrototypes}
+              userPcvs={userPcvs}
+              midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
+              elemsWidth={elemsWidth}
+            />
+          </AccordionDetails>
+        </Accordion>
+      </Container>
 
       <AppBar
         position='fixed'

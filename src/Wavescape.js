@@ -2,13 +2,23 @@ import { useRef, useEffect, useState } from 'react';
 
 const verticalScale = Math.sin(Math.PI / 3);
 
-export const Wavescape = ({ wavescapeMatrix, currentWavescapeSubdiv }) => {
+export const Wavescape = ({
+  wavescapeMatrix,
+  currentWavescapeSubdiv,
+  wavescapeWidth,
+}) => {
   const canvasRef = useRef(null);
   const [wsCoordinates, setWsCoordinates] = useState([]);
-  let width = 440;
-  let height = 440;
-  const margin = 40;
+  const margin = 10;
+  let width = wavescapeWidth - margin;
+  let height = wavescapeWidth;
   let ticks;
+
+  useEffect(() => {
+    width = wavescapeWidth;
+    height = wavescapeWidth;
+    console.log(wavescapeWidth);
+  }, [wavescapeWidth]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -54,7 +64,7 @@ export const Wavescape = ({ wavescapeMatrix, currentWavescapeSubdiv }) => {
   return (
     <svg
       width={width + margin}
-      height={height + margin}
+      height={height}
       transform={`scale(${1}, ${-verticalScale})`}
     >
       <foreignObject x={0} y={0} width={width} height={height}>
@@ -117,7 +127,7 @@ export const Wavescape = ({ wavescapeMatrix, currentWavescapeSubdiv }) => {
                   wsCoordinates[0][currentWavescapeSubdiv + 1].y) /
                 2
               }
-              r={4}
+              r={0.01 * width}
               fill='white'
             />
             <circle
@@ -131,9 +141,9 @@ export const Wavescape = ({ wavescapeMatrix, currentWavescapeSubdiv }) => {
                   wsCoordinates[0][currentWavescapeSubdiv + 1].y) /
                 2
               }
-              r={4}
+              r={0.01 * width}
               stroke='black'
-              strokeWidth={2}
+              strokeWidth={1}
               fill='transparent'
             />
           </>
