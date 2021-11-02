@@ -321,6 +321,7 @@ function App() {
                 variant='outlined'
                 onKeyPress={(event) => {
                   if (event.key === 'Enter') {
+                    event.preventDefault();
                     handleSubmitPitchClass(pcvTextRef.current.value);
                     pcvTextRef.current.value = '';
                   }
