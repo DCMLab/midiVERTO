@@ -99,6 +99,9 @@ function App() {
   //State: error states in input
   const [isInputPcvInvalid, setIsInputPcvInvalid] = useState(false);
 
+  //State: in analysis page flag
+  const [inAnalysisPage, setInAnalysisPage] = useState(false);
+
   function handleSubmitPitchClass(input) {
     //In order not to refresh the page (default behaviuor)
     let parsedInput;
@@ -171,12 +174,7 @@ function App() {
         );
         setCircleResolution(resolution);
         setCoeffTracesData(tracesData);
-        setPlayerMidiData(
-          currentSongMidiData,
-          resolution,
-          staticResolution,
-          setCurrentSubdiv
-        );
+        setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
 
         console.log(midiData);
       };
@@ -232,7 +230,12 @@ function App() {
     <>
       <HashRouter basename={process.env.PUBLIC_URL}>
         <CssBaseline />
-        <Navbar open={open} setOpen={setOpen} />
+        <Navbar
+          open={open}
+          setOpen={setOpen}
+          setInAnalysisPage={setInAnalysisPage}
+          inAnalysisPage={inAnalysisPage}
+        />
         <Box sx={{ display: 'flex' }}>
           <Drawer
             sx={{
@@ -343,6 +346,7 @@ function App() {
                 path='/analysis'
                 render={() => (
                   <Analysis
+                    setInAnalysisPage={setInAnalysisPage}
                     open={open}
                     setOpen={setOpen}
                     wavescapesData={wavescapesData}

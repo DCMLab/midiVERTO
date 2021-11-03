@@ -28,12 +28,7 @@ function formatDuration(value) {
   return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
 }
 
-export function setPlayerMidiData(
-  midiData,
-  resolution,
-  wavescapeRes,
-  setCurrentSubdiv
-) {
+export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
   //Remove the scheduled previous song
   Tone.Transport.cancel(0);
   setCurrentSubdiv(0);
@@ -51,7 +46,6 @@ export function setPlayerMidiData(
 
   partNotes.forEach((note) => {
     note.subdiv = Math.floor(note.time / resolution);
-    note.wavescapeSubdiv = Math.floor(note.time / wavescapeRes);
   });
 
   part = new Tone.Part(
@@ -109,12 +103,8 @@ const sampler = new Tone.Sampler({
 }).toDestination();
 sampler.volume.value = -20;
 
-export default function Player() {
+export default function Player(currentWavescapeSubdiv) {
   const [playbackSliderProgress, setPlaybackSliderProgress] = useState(0);
-
-  useEffect(() => {
-    console.log(currentSongDuration);
-  }, [currentSongDuration]);
 
   return (
     <Box

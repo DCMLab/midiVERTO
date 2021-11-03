@@ -30,15 +30,22 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function Navbar({ open, setOpen }) {
+export default function Navbar({
+  open,
+  setOpen,
+  setInAnalysisPage,
+  inAnalysisPage,
+}) {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static' open={open}>
         <Toolbar>
           <IconButton
+            disabled={!inAnalysisPage}
             color='inherit'
             aria-label='open drawer'
             onClick={handleDrawerOpen}
@@ -56,6 +63,10 @@ export default function Navbar({ open, setOpen }) {
               to='/'
               variant='contained'
               disableElevation={true}
+              onClick={() => {
+                setInAnalysisPage(false);
+                setOpen(false);
+              }}
             >
               Home
             </Button>
@@ -64,6 +75,10 @@ export default function Navbar({ open, setOpen }) {
               to='/theory'
               variant='contained'
               disableElevation={true}
+              onClick={() => {
+                setInAnalysisPage(false);
+                setOpen(false);
+              }}
             >
               Theory
             </Button>

@@ -47,6 +47,7 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function Application({
+  setInAnalysisPage,
   open,
   setOpen,
   wavescapesData,
@@ -69,20 +70,22 @@ function Application({
   const accordionRef = useRef(null);
   const [elemsForEachRow, setElemsForEachRow] = useState(6);
   const [elemsWidth, setElemsWidth] = useState(440);
-  const [scalingFactor, setScalingFactor] = useState(1);
 
   useEffect(() => {
-    let currentAccWidth = accordionRef.current.offsetWidth;
-    setElemsWidth(currentAccWidth / elemsForEachRow);
-  }, []);
+    setInAnalysisPage(true);
 
-  useEffect(() => {
-    console.log(elemsWidth);
-  }, [elemsWidth]);
-
-  //Open drawer when page loads
-  useEffect(() => {
+    //Open drawer when page loads
     setOpen(true);
+
+    //Minus some pixel for robustness: sometimes width with fractional pixels
+    setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
+
+    //Resize plot when window changes size
+    function handleResize() {
+      setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
+    }
+
+    window.addEventListener('resize', handleResize);
   }, []);
 
   //MIDI devices init
@@ -248,7 +251,7 @@ function Application({
 
   return (
     <Box>
-      <Container sx={{ padding: 0, margin: 0, marginBottom: '64px' }}>
+      <Box sx={{ padding: 0, margin: '0 0 70px 0' }}>
         <Accordion defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -284,7 +287,7 @@ function Application({
             />
           </AccordionDetails>
         </Accordion>
-      </Container>
+      </Box>
 
       <AppBar
         position='fixed'
@@ -293,7 +296,7 @@ function Application({
         sx={{ top: 'auto', bottom: 0 }}
       >
         <Toolbar>
-          <Player />
+          <Player currentWavescapeSubdiv={currentWavescapeSubdiv} />
           <Box
             sx={{
               display: 'flex',
