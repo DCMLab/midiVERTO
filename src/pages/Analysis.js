@@ -8,10 +8,13 @@ import Player from '../Player';
 import dft from '../DFT';
 
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 //Drawer mui components
 import { styled } from '@mui/material/styles';
@@ -81,12 +84,16 @@ function Application({
     setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
 
     //Resize plot when window changes size
-    function handleResize() {
+    /* function handleResize() {
       setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
     }
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize); */
   }, []);
+
+  useEffect(() => {
+    setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
+  }, [elemsForEachRow]);
 
   //MIDI devices init
   useEffect(() => {
@@ -318,6 +325,21 @@ function Application({
                 label='Show Prototypes'
               />
             </FormGroup>
+          </Box>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel>Layout</InputLabel>
+              <Select
+                value={elemsForEachRow}
+                label='Layout'
+                onChange={(event) => setElemsForEachRow(event.target.value)}
+              >
+                <MenuItem value={6}>1x6</MenuItem>
+                <MenuItem value={3}>2x3</MenuItem>
+                <MenuItem value={2}>3x2</MenuItem>
+                <MenuItem value={1}>6x1</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
         </Toolbar>
       </AppBar>
