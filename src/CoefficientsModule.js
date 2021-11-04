@@ -52,6 +52,7 @@ function CoefficientsModule({
     >
       {[1, 2, 3, 4, 5, 6].map((coeffNum) => (
         <Circle
+          coeffNumber={coeffNum}
           key={`w.${coeffNum}`}
           protoDataCoeff={selectedProtoPitchClasses[coeffNum - 1]}
           traceDataCoeff={coeffTracesData[coeffNum - 1]}

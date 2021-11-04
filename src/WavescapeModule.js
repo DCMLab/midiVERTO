@@ -19,6 +19,7 @@ function WavescapeModule({
       {wavescapesData.length > 0 ? (
         wavescapesData.map((data, i) => (
           <Wavescape
+            wsNumber={i + 1}
             key={`w.${i}`}
             wavescapeMatrix={data}
             currentWavescapeSubdiv={currentWavescapeSubdiv}

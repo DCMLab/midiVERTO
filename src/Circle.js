@@ -6,6 +6,7 @@ import { pixelColor } from './colorMapping';
 //downward, meanwhile cartesian plane has positive y upward
 
 function Circle({
+  coeffNumber,
   protoDataCoeff,
   traceDataCoeff,
   userPcvsCoeff,
@@ -246,6 +247,9 @@ function Circle({
         targetCircleWidth / width
       })`} */
     >
+      <text x='24' y='24' style={{ fontSize: '24px' }}>
+        {`${coeffNumber}. `}
+      </text>
       <foreignObject x={margin} y={margin} width={width} height={height}>
         <canvas
           style={{ zIndex: '-1' }}

@@ -3,6 +3,7 @@ import { useRef, useEffect, useState } from 'react';
 const verticalScale = Math.sin(Math.PI / 3);
 
 export const Wavescape = ({
+  wsNumber,
   wavescapeMatrix,
   currentWavescapeSubdiv,
   wavescapeWidth,
@@ -62,19 +63,17 @@ export const Wavescape = ({
   useEffect(() => {}, [wavescapeMatrix]);
 
   return (
-    <svg
-      width={width + margin}
-      height={height}
-      transform={`scale(${1}, ${-verticalScale})`}
-    >
-      <foreignObject x={0} y={0} width={width} height={height}>
-        <canvas width={width} height={height} ref={canvasRef}></canvas>
-      </foreignObject>
+    <svg width={width + margin} height={height}>
+      <text x='35%' y='15%' style={{ fontSize: `${(width / 100) * 7}px` }}>
+        {`${wsNumber}. `}
+      </text>
       <g
-      /*  transform={`scale(${1 / devicePixelRatio}, ${
-          1 / devicePixelRatio
-        }) translate(${0},${height * devicePixelRatio})`} */
+        transform={`scale(${1}, ${-verticalScale}) translate(${0},${-height})`}
       >
+        <foreignObject x={0} y={0} width={width} height={height}>
+          <canvas width={width} height={height} ref={canvasRef}></canvas>
+        </foreignObject>
+
         {/* //Line ticks */}
         {wsCoordinates.length > 0
           ? wsCoordinates[0].map((coord, i) => (
