@@ -228,7 +228,7 @@ function App() {
 
   return (
     <>
-      <HashRouter basename={process.env.PUBLIC_URL}>
+      <HashRouter>
         <CssBaseline />
         <Navbar
           open={open}
