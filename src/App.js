@@ -1,5 +1,5 @@
 import Navbar from './Navbar';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, useEffect, useRef } from 'react';
 
@@ -228,7 +228,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <HashRouter>
         <CssBaseline />
         <Navbar
           open={open}
@@ -363,7 +363,7 @@ function App() {
             </Switch>
           </Main>
         </Box>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
