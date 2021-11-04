@@ -346,6 +346,7 @@ function App() {
                 path='/analysis'
                 render={() => (
                   <Analysis
+                    fileName={fileName}
                     setInAnalysisPage={setInAnalysisPage}
                     open={open}
                     setOpen={setOpen}

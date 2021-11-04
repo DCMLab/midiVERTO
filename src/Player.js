@@ -103,7 +103,7 @@ const sampler = new Tone.Sampler({
 }).toDestination();
 sampler.volume.value = -20;
 
-export default function Player(currentWavescapeSubdiv) {
+export default function Player({ fileName, currentWavescapeSubdiv }) {
   const [playbackSliderProgress, setPlaybackSliderProgress] = useState(0);
 
   return (
@@ -115,46 +115,58 @@ export default function Player(currentWavescapeSubdiv) {
         width: '60%',
       }}
     >
-      <Stack direction='row'>
-        <IconButton
-          sx={{ padding: '0' }}
-          onClick={() => {
-            console.log('stop');
-            Tone.Transport.stop();
-            stopInterval();
-          }}
-          size='large'
-          children={<StopRoundedIcon fontSize='large' />}
-        />
-        <IconButton
-          sx={{ padding: '0' }}
-          onClick={() => {
-            console.log('pause');
-            Tone.Transport.pause();
-            stopInterval();
-          }}
-          size='large'
-          children={<PauseRoundedIcon fontSize='large' />}
-        />
-        <IconButton
-          sx={{ padding: '0' }}
-          onClick={() => {
-            console.log('play');
-            if (Tone.context.state !== 'running') {
-              console.log('state running');
-              Tone.context.resume();
-            }
-            Tone.Transport.start();
-            if (!intervalID && part)
-              intervalID = setInterval(
-                () => setPlaybackSliderProgress(part.progress),
-                1000
-              );
-          }}
-          size='large'
-          children={<PlayArrowRoundedIcon fontSize='large' />}
-        />
-      </Stack>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <Stack direction='row' sx={{ flexGrow: 1, paddingLeft: '10%' }}>
+          <IconButton
+            sx={{ padding: '0' }}
+            onClick={() => {
+              console.log('stop');
+              Tone.Transport.stop();
+              stopInterval();
+            }}
+            size='large'
+            children={<StopRoundedIcon fontSize='large' />}
+          />
+          <IconButton
+            sx={{ padding: '0' }}
+            onClick={() => {
+              console.log('pause');
+              Tone.Transport.pause();
+              stopInterval();
+            }}
+            size='large'
+            children={<PauseRoundedIcon fontSize='large' />}
+          />
+          <IconButton
+            sx={{ padding: '0' }}
+            onClick={() => {
+              console.log('play');
+              if (Tone.context.state !== 'running') {
+                console.log('state running');
+                Tone.context.resume();
+              }
+              Tone.Transport.start();
+              if (!intervalID && part)
+                intervalID = setInterval(
+                  () => setPlaybackSliderProgress(part.progress),
+                  1000
+                );
+            }}
+            size='large'
+            children={<PlayArrowRoundedIcon fontSize='large' />}
+          />
+        </Stack>
+        <Typography noWrap={true} sx={{ flexGrow: '2', paddingRight: '10%' }}>
+          {fileName ? fileName : 'Upload a midi file'}
+        </Typography>
+      </Box>
       <Slider
         aria-label='Playback'
         size='small'

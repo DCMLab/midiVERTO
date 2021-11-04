@@ -50,6 +50,7 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function Application({
+  fileName,
   setInAnalysisPage,
   open,
   setOpen,
@@ -303,7 +304,10 @@ function Application({
         sx={{ top: 'auto', bottom: 0 }}
       >
         <Toolbar>
-          <Player currentWavescapeSubdiv={currentWavescapeSubdiv} />
+          <Player
+            fileName={fileName}
+            currentWavescapeSubdiv={currentWavescapeSubdiv}
+          />
           <Box
             sx={{
               display: 'flex',
