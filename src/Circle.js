@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { pixelColor } from './colorMapping';
 
 //Minus before every y coordinate due to the fact that svg has positive y
@@ -13,8 +13,13 @@ function Circle({
   currentSubdiv,
   performanceCoeff,
   targetCircleWidth,
+  showMagAndPhase,
 }) {
   const canvasRef = useRef(null);
+  const [currentSubdivCoeff, setCurrentSubdivCoeff] = useState({
+    mu: 0,
+    phi: 0,
+  });
   let width = 440;
   let height = width;
 
@@ -23,10 +28,20 @@ function Circle({
 
   let marksRadiusRatio = 0.01;
 
-  /* useEffect(() => {
-    width = targetCircleWidth;
-    height = width;
-  }, []); */
+  useEffect(() => {
+    if (traceDataCoeff) {
+      //Rounding to second decimal and converting to polar coordinate
+      let x = traceDataCoeff[currentSubdiv].x;
+      let y = traceDataCoeff[currentSubdiv].y;
+
+      let phi = (Math.atan2(y, x) * 180) / Math.PI;
+      let mu = Math.sqrt(x * x + y * y);
+
+      phi = Math.round(phi + Number.EPSILON);
+      mu = Math.round((mu + Number.EPSILON) * 100) / 100;
+      setCurrentSubdivCoeff({ mu, phi });
+    }
+  }, [currentSubdiv]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -247,9 +262,24 @@ function Circle({
         targetCircleWidth / width
       })`} */
     >
-      <text x='24' y='24' style={{ fontSize: '24px' }}>
-        {`${coeffNumber}. `}
+      <text x='0' y='24' style={{ fontSize: '24px' }}>
+        {`${coeffNumber}.`}
       </text>
+      {showMagAndPhase ? (
+        <>
+          <text
+            x='23'
+            y='24'
+            style={{ fontSize: '24px' }}
+          >{`\u{3BC}: ${currentSubdivCoeff.mu}`}</text>
+          <text
+            x='20'
+            y='44'
+            style={{ fontSize: '24px' }}
+          >{`\u{3C6}: ${currentSubdivCoeff.phi}\u{b0}`}</text>
+        </>
+      ) : null}
+
       <foreignObject x={margin} y={margin} width={width} height={height}>
         <canvas
           style={{ zIndex: '-1' }}

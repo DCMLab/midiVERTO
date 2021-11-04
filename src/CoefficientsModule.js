@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 function CoefficientsModule({
   coeffTracesData,
   showPrototypes,
+  showMagAndPhase,
   userPcvs,
   currentSubdiv,
   midiDevNotesDftCoeffs,
@@ -60,6 +61,7 @@ function CoefficientsModule({
           currentSubdiv={currentSubdiv}
           performanceCoeff={midiDevNotesDftCoeffs[coeffNum]}
           targetCircleWidth={elemsWidth}
+          showMagAndPhase={showMagAndPhase}
         />
       ))}
 

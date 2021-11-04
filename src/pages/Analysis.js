@@ -62,6 +62,7 @@ function Application({
 }) {
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [showPrototypes, setShowPrototypes] = useState(true);
+  const [showMagAndPhase, setShowMagAndPhase] = useState(true);
 
   //MIDI inputs
   const [midiDevNotesDftCoeffs, setMidiDevNotesDftCoeffs] = useState(
@@ -257,6 +258,10 @@ function Application({
     setShowPrototypes(!showPrototypes);
   }
 
+  function toggleShowMagAndPhase() {
+    setShowMagAndPhase(!showMagAndPhase);
+  }
+
   return (
     <Box>
       <Box sx={{ padding: 0, margin: '0 0 70px 0' }}>
@@ -289,6 +294,7 @@ function Application({
               coeffTracesData={coeffTracesData}
               currentSubdiv={currentSubdiv}
               showPrototypes={showPrototypes}
+              showMagAndPhase={showMagAndPhase}
               userPcvs={userPcvs}
               midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
               elemsWidth={elemsWidth}
@@ -301,7 +307,7 @@ function Application({
         position='fixed'
         open={open}
         color='secondary'
-        sx={{ top: 'auto', bottom: 0 }}
+        sx={{ top: 'auto', bottom: 0, maxHeight: '74px' }}
       >
         <Toolbar>
           <Player
@@ -326,7 +332,19 @@ function Application({
                     size='small'
                   />
                 }
-                label='Show Prototypes'
+                label={<Typography noWrap={true}>Show Prototypes</Typography>}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    onChange={() => toggleShowMagAndPhase()}
+                    checked={showMagAndPhase}
+                    size='small'
+                  />
+                }
+                label={
+                  <Typography noWrap={true}>Show &mu; and &phi;</Typography>
+                }
               />
             </FormGroup>
           </Box>
