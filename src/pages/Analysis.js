@@ -74,24 +74,30 @@ function Application({
 
   //Ref to get the width of the accordion used to computed layout sizes
   const accordionRef = useRef(null);
+  const [accordionWidth, setAccordionWidth] = useState(100);
+  const refSizeSlider = useRef(null);
   const [elemsForEachRow, setElemsForEachRow] = useState(6);
   const [elemsWidth, setElemsWidth] = useState(440);
 
   function changeElementsSize(drawerOffset = 0) {
-    let adjustmentFractSizes = 6;
-
-    console.log(
-      accordionRef.current.clientWidth,
-      drawerOffset,
-      elemsForEachRow,
-      adjustmentFractSizes
-    );
+    let adjustmentFractSizes = 5;
 
     setElemsWidth(
       (accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
         adjustmentFractSizes
     );
   }
+
+  /* function changeElementsSize(drawerOffset = 0) {
+    let adjustmentFractSizes = 5;
+
+    setElemsWidth(
+      (((accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
+        adjustmentFractSizes) *
+        accordionWidth) /
+        100
+    );
+  } */
 
   function handleResize() {
     let drawerOffset = 0;
@@ -116,10 +122,14 @@ function Application({
   }, [elemsForEachRow]);
 
   useEffect(() => {
-    let drawerOffset;
+    let drawerOffset = 0;
     open ? (drawerOffset = -400) : (drawerOffset = +400);
     changeElementsSize(drawerOffset);
   }, [open]);
+
+  useEffect(() => {
+    changeElementsSize();
+  }, [accordionWidth]);
 
   //MIDI devices init
   useEffect(() => {
@@ -288,7 +298,14 @@ function Application({
 
   return (
     <Box>
-      <Box sx={{ padding: 0, margin: '0 0 70px 0' }}>
+      <Box
+        sx={{
+          padding: 0,
+          margin: 'auto',
+          marginBottom: '70px',
+          width: `${accordionWidth}%`,
+        }}
+      >
         <Accordion defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -372,13 +389,24 @@ function Application({
               />
             </FormGroup>
           </Box>
-          <Box sx={{ minWidth: '20%', paddingRight: '2%', paddingLeft: '1%' }}>
-            <Typography>Size</Typography>
+          <Box sx={{ minWidth: '20%', paddingRight: '3%', paddingLeft: '1%' }}>
+            <Typography>Plots size</Typography>
             <Slider
-              size='small'
-              defaultValue={70}
-              aria-label='Small'
+              ref={refSizeSlider}
+              min={50}
+              max={200}
+              defaultValue={100}
+              aria-label='Plots size'
               valueLabelDisplay='auto'
+              onChangeCommitted={(event, value) => {
+                console.log(refSizeSlider);
+                setAccordionWidth(value);
+              }}
+              marks={[
+                { value: 50, label: '50%' },
+                { value: 100, label: '100%' },
+                { value: 200, label: '200%' },
+              ]}
             />
           </Box>
           <Box sx={{ minWidth: 120 }}>
@@ -387,7 +415,10 @@ function Application({
               <Select
                 value={elemsForEachRow}
                 label='Layout'
-                onChange={(event) => setElemsForEachRow(event.target.value)}
+                onChange={(event) => {
+                  setAccordionWidth(100);
+                  setElemsForEachRow(event.target.value);
+                }}
               >
                 <MenuItem value={6}>1x6</MenuItem>
                 <MenuItem value={3}>2x3</MenuItem>
