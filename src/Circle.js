@@ -214,7 +214,7 @@ function Circle({
 
     opacityArray.push(1);
     for (let i = 1; i < length; i++) {
-      opacityArray.push(opacityArray[i - 1] * 0.8);
+      opacityArray.push(opacityArray[i - 1] * 0.4);
     }
 
     if (currentSubdiv < length)
@@ -268,15 +268,15 @@ function Circle({
       {showMagAndPhase ? (
         <>
           <text
-            x='23'
+            x='19'
             y='24'
             style={{ fontSize: '24px' }}
-          >{`\u{3BC}: ${currentSubdivCoeff.mu}`}</text>
+          >{`\u{3C6}: ${currentSubdivCoeff.phi}\u{b0}`}</text>
           <text
             x='20'
             y='44'
             style={{ fontSize: '24px' }}
-          >{`\u{3C6}: ${currentSubdivCoeff.phi}\u{b0}`}</text>
+          >{`\u{3BC}: ${currentSubdivCoeff.mu}`}</text>
         </>
       ) : null}
 

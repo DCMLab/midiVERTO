@@ -15,6 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Slider from '@mui/material/Slider';
 
 //Drawer mui components
 import { styled } from '@mui/material/styles';
@@ -76,6 +77,27 @@ function Application({
   const [elemsForEachRow, setElemsForEachRow] = useState(6);
   const [elemsWidth, setElemsWidth] = useState(440);
 
+  function changeElementsSize(drawerOffset = 0) {
+    let adjustmentFractSizes = 6;
+
+    console.log(
+      accordionRef.current.clientWidth,
+      drawerOffset,
+      elemsForEachRow,
+      adjustmentFractSizes
+    );
+
+    setElemsWidth(
+      (accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
+        adjustmentFractSizes
+    );
+  }
+
+  function handleResize() {
+    let drawerOffset = 0;
+    changeElementsSize(drawerOffset);
+  }
+
   useEffect(() => {
     setInAnalysisPage(true);
 
@@ -83,19 +105,21 @@ function Application({
     setOpen(true);
 
     //Minus some pixel for robustness: sometimes width with fractional pixels
-    setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
+    changeElementsSize();
 
-    //Resize plot when window changes size
-    /* function handleResize() {
-      setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
-    }
-
-    window.addEventListener('resize', handleResize); */
+    window.addEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    setElemsWidth(accordionRef.current.clientWidth / elemsForEachRow - 6);
+    changeElementsSize();
+    window.addEventListener('resize', handleResize);
   }, [elemsForEachRow]);
+
+  useEffect(() => {
+    let drawerOffset;
+    open ? (drawerOffset = -400) : (drawerOffset = +400);
+    changeElementsSize(drawerOffset);
+  }, [open]);
 
   //MIDI devices init
   useEffect(() => {
@@ -319,7 +343,7 @@ function Application({
               display: 'flex',
               alignItems: 'center',
               margin: '2% 5%',
-              width: '30%',
+              maxWidth: '100px',
               justifyContent: 'space-evenly',
             }}
           >
@@ -348,8 +372,17 @@ function Application({
               />
             </FormGroup>
           </Box>
+          <Box sx={{ minWidth: '20%', paddingRight: '2%', paddingLeft: '1%' }}>
+            <Typography>Size</Typography>
+            <Slider
+              size='small'
+              defaultValue={70}
+              aria-label='Small'
+              valueLabelDisplay='auto'
+            />
+          </Box>
           <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
+            <FormControl size='small' variant='standard' fullWidth>
               <InputLabel>Layout</InputLabel>
               <Select
                 value={elemsForEachRow}
