@@ -1,14 +1,17 @@
 import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
-import CircleIcon from '@mui/icons-material/Circle';
 
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
-export default function PcvChipsBox({ userPcvs, setUserPcvs }) {
+export default function PcvChipsBox({ userPcvs, setUserPcvs, rosesMat }) {
   const handleDelete = (chipToDelete) => () => {
+    //on detele, set the rose icon to unused
+    //matrix coeffs are i = d-1, j=d-1
+    rosesMat[chipToDelete.d - 1][chipToDelete.n - 1].used = false;
+
     setUserPcvs((chips) =>
       chips.filter((chip) => chip.label !== chipToDelete.label)
     );
@@ -33,7 +36,32 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs }) {
           <ListItem key={`${i}`}>
             <Chip
               variant={data.isDisabled ? 'outlined' : 'filled'}
-              icon={<CircleIcon style={{ color: data.colours[1] }} />}
+              icon={
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                >
+                  <g /* fill='none' fill-rule='evenodd' */>
+                    {/* <rect
+                      width='20'
+                      height='20'
+                      x='2'
+                      y='2'
+                      fill='#FFF'
+                      rx='10'
+                    /> */}
+                    <polyline
+                      transform={`translate(${12},${12})`}
+                      fill='none'
+                      stroke='black'
+                      strokeWidth='0.5px'
+                      points={data.rosePoints}
+                    />
+                  </g>
+                </svg>
+              }
               label={data.label}
               onDelete={handleDelete(data)}
               onClick={() => {

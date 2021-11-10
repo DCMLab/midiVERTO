@@ -393,8 +393,8 @@ function Application({
             <Typography>Plots size</Typography>
             <Slider
               ref={refSizeSlider}
-              min={50}
-              max={200}
+              min={20}
+              max={100}
               defaultValue={100}
               aria-label='Plots size'
               valueLabelDisplay='auto'
@@ -403,9 +403,8 @@ function Application({
                 setAccordionWidth(value);
               }}
               marks={[
-                { value: 50, label: '50%' },
+                { value: 20, label: '20%' },
                 { value: 100, label: '100%' },
-                { value: 200, label: '200%' },
               ]}
             />
           </Box>

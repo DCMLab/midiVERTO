@@ -111,6 +111,19 @@ function Circle({
     );
   };
 
+  function svgRoseIcon(rosePoints, translateX, translateY, scale, i) {
+    return (
+      <polyline
+        key={`r.${i}`}
+        transform={`translate(${translateX},${translateY}) scale(${scale})`}
+        fill='none'
+        stroke='white'
+        strokeWidth='1px'
+        points={rosePoints}
+      />
+    );
+  }
+
   const protoCircleMark = (pcvData, id) => {
     let scaleRatio = 0.02;
     const mark = d3
@@ -186,7 +199,7 @@ function Circle({
         d={d3
           .arc()
           .innerRadius(circleRadius - 1)
-          .outerRadius(circleRadius + 1)
+          .outerRadius(circleRadius + 3)
           .startAngle(0)
           .endAngle(2 * Math.PI)()}
       ></path>
@@ -303,6 +316,18 @@ function Circle({
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
                 return circleMark(pcv, marksRadiusRatio + 0.015, pcv.color, i);
+            })
+          : null}
+        {userPcvsCoeff
+          ? userPcvsCoeff.map((pcv, i) => {
+              if (!pcv.isDisabled)
+                return svgRoseIcon(
+                  pcv.rosePoints,
+                  pcv.x * circleRadius,
+                  -pcv.y * circleRadius,
+                  0.5,
+                  i
+                );
             })
           : null}
         {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}

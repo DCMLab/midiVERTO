@@ -33,7 +33,7 @@ function CoefficientsModule({
         temp.push({
           x: userPcvs[j].coeffs[i].re,
           y: userPcvs[j].coeffs[i].im,
-          color: userPcvs[j].colours[i],
+          rosePoints: userPcvs[j].rosePoints,
           isDisabled: userPcvs[j].isDisabled,
         });
       }

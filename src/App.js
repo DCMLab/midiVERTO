@@ -13,6 +13,7 @@ import {
 } from './getDftMatrices';
 import dft from './DFT';
 import parse from './parser';
+import { getRosePoints } from './roses';
 
 import ResolutionSelector from './ResolutionSelector';
 import PcvChipsBox from './PcvChipsBox';
@@ -102,6 +103,9 @@ function App() {
   //State: in analysis page flag
   const [inAnalysisPage, setInAnalysisPage] = useState(false);
 
+  //State: usable/used roses for pcvs' labels
+  const [rosesMat, setRosesMat] = useState([]);
+
   function handleSubmitPitchClass(input) {
     //In order not to refresh the page (default behaviuor)
     let parsedInput;
@@ -120,12 +124,11 @@ function App() {
         label: `(${input})`,
         isDisabled: false,
         coeffs: dft(input, true, true, false),
+        rosePoints: [],
+        n: -1,
+        d: -1,
       })
     );
-
-    userPcvObjects.forEach((pcvData) => {
-      pcvData.colours = getComplementaryColours(pcvData.coeffs);
-    });
 
     //Check if we are adding an input already inserted
     let labels = userPcvs.map((pcvData) => pcvData.label);
@@ -133,6 +136,23 @@ function App() {
       userPcvObjects = userPcvObjects.filter(
         (pcvObj) => pcvObj.label !== label
       );
+    });
+
+    //Assing an unused rose to each pcv
+    userPcvObjects.forEach((pcvData) => {
+      let found = false;
+
+      for (let i = 0; i < rosesMat.length && !found; i++) {
+        for (let j = 0; j < rosesMat[i].length && !found; j++) {
+          if (rosesMat[i][j].usable && !rosesMat[i][j].used) {
+            found = true;
+            pcvData.rosePoints = rosesMat[i][j].points;
+            rosesMat[i][j].used = true;
+            pcvData.n = rosesMat[i][j].n;
+            pcvData.d = rosesMat[i][j].d;
+          }
+        }
+      }
     });
 
     setUserPcvs([...userPcvs, ...userPcvObjects]);
@@ -181,8 +201,27 @@ function App() {
     }
   }, [file]);
 
-  //Init user pcv examples
+  //Init roseMatrix and user pcv examples
   useEffect(() => {
+    let initMatrix = [];
+    for (let i = 1; i <= 7; i++) {
+      let temp = [];
+      for (let j = 1; j <= 7; j++) {
+        let rose = { n: j, d: i, used: false, usable: true, points: [] };
+        if (j % i === 0 && i !== 1) rose.usable = false;
+
+        if (rose.usable === true) rose.points = getRosePoints(j, i);
+
+        temp.push(rose);
+      }
+      initMatrix.push(temp);
+    }
+
+    //(0,0) or n=1, d=1 can't be used since it is a simple circle
+    initMatrix[0][0].usable = false;
+
+    setRosesMat(initMatrix);
+
     let examplePcvs = [
       [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0], // C
       [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0], // Cmin
@@ -194,15 +233,32 @@ function App() {
         label: `(${pcv.toString()})`,
         isDisabled: false,
         coeffs: dft(pcv, true, true, false),
+        rosePoints: [],
+        n: -1,
+        d: -1,
       };
     });
 
+    //Assing an unused rose to each pcv
     exPcvObjects.forEach((pcvData) => {
-      pcvData.colours = getComplementaryColours(pcvData.coeffs);
+      let found = false;
+
+      for (let i = 0; i < initMatrix.length && !found; i++) {
+        for (let j = 0; j < initMatrix[i].length && !found; j++) {
+          if (initMatrix[i][j].usable && !initMatrix[i][j].used) {
+            found = true;
+            pcvData.rosePoints = initMatrix[i][j].points;
+            initMatrix[i][j].used = true;
+            pcvData.n = initMatrix[i][j].n;
+            pcvData.d = initMatrix[i][j].d;
+          }
+        }
+      }
     });
 
     exPcvObjects[1].isDisabled = true;
     exPcvObjects[2].isDisabled = true;
+
     setUserPcvs(exPcvObjects);
   }, []);
 
@@ -334,7 +390,11 @@ function App() {
                 }}
                 inputRef={pcvTextRef}
               />
-              <PcvChipsBox userPcvs={userPcvs} setUserPcvs={setUserPcvs} />
+              <PcvChipsBox
+                userPcvs={userPcvs}
+                setUserPcvs={setUserPcvs}
+                rosesMat={rosesMat}
+              />
             </Box>
           </Drawer>
           <Main open={open}>
