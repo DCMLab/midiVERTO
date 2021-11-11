@@ -163,8 +163,12 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
             children={<PlayArrowRoundedIcon fontSize='large' />}
           />
         </Stack>
-        <Typography noWrap={true} sx={{ flexGrow: '2', paddingRight: '10%' }}>
-          {fileName ? fileName : 'Upload a midi file'}
+        <Typography
+          color={fileName ? 'primary' : 'error'}
+          noWrap={true}
+          sx={{ flexGrow: '2', paddingRight: '10%' }}
+        >
+          {fileName ? fileName : 'No midi file uploaded'}
         </Typography>
       </Box>
       <Slider

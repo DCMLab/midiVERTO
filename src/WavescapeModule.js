@@ -27,7 +27,7 @@ function WavescapeModule({
           />
         ))
       ) : (
-        <Typography>Upload a midi file first</Typography>
+        <Typography color='error'>No midi file uploaded</Typography>
       )}
     </Box>
   );
