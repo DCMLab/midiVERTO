@@ -100,28 +100,46 @@ function Circle({
       .endAngle(2 * Math.PI);
 
     return (
-      <path
-        transform={`translate(${pcvData.x * circleRadius},${
-          -pcvData.y * circleRadius
-        })`}
-        fill={color}
-        fillOpacity={opacity}
-        key={id}
-        d={mark()}
-      ></path>
+      <Tooltip placement='top-start' title='test'>
+        <path
+          transform={`translate(${pcvData.x * circleRadius},${
+            -pcvData.y * circleRadius
+          })`}
+          fill={color}
+          fillOpacity={opacity}
+          key={id}
+          d={mark()}
+        ></path>
+      </Tooltip>
     );
   };
 
   function svgRoseIcon(rosePoints, translateX, translateY, scale, i) {
     return (
-      <polyline
-        key={`r.${i}`}
-        transform={`translate(${translateX},${translateY}) scale(${scale})`}
-        fill='none'
-        stroke='black'
-        strokeWidth='1px'
-        points={rosePoints}
-      />
+      <Tooltip
+        key={`rtt.${i}`}
+        placement='top-start'
+        title={`test x: ${translateX} y: ${-translateY}`}
+      >
+        <g>
+          <circle
+            cx={translateX}
+            cy={translateY}
+            r='5'
+            strokeWidth='1'
+            fill='#FFF'
+            fillOpacity={0}
+          ></circle>
+
+          <polyline
+            transform={`translate(${translateX},${translateY}) scale(${scale})`}
+            fill='none'
+            stroke='black'
+            strokeWidth='1px'
+            points={rosePoints}
+          />
+        </g>
+      </Tooltip>
     );
   }
 
@@ -312,11 +330,12 @@ function Circle({
                 circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
               )
             : null} */}
+        {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
         {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
         {/* {userPcvsCoeff
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
-                return circleMark(pcv, marksRadiusRatio + 0.015, pcv.color, i);
+                return circleMark(pcv, marksRadiusRatio + 0.015, '#FFF', i, 0);
             })
           : null} */}
         {userPcvsCoeff
@@ -331,7 +350,6 @@ function Circle({
                 );
             })
           : null}
-        {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
       </g>
     </svg>
   );
