@@ -75,7 +75,6 @@ function Application({
   //Ref to get the width of the accordion used to computed layout sizes
   const accordionRef = useRef(null);
   const [accordionWidth, setAccordionWidth] = useState(100);
-  const refSizeSlider = useRef(null);
   const [elemsForEachRow, setElemsForEachRow] = useState(6);
   const [elemsWidth, setElemsWidth] = useState(440);
 
@@ -389,21 +388,21 @@ function Application({
               />
             </FormGroup>
           </Box>
-          <Box sx={{ minWidth: '20%', paddingRight: '3%', paddingLeft: '1%' }}>
+          <Box sx={{ minWidth: '20%', padding: '1% 3% 1% 2%' }}>
             <Typography>Plots size</Typography>
             <Slider
-              ref={refSizeSlider}
               min={20}
               max={100}
+              value={accordionWidth}
               defaultValue={100}
               aria-label='Plots size'
               valueLabelDisplay='auto'
-              onChangeCommitted={(event, value) => {
-                console.log(refSizeSlider);
+              onChange={(event, value) => {
                 setAccordionWidth(value);
               }}
               marks={[
                 { value: 20, label: '20%' },
+                { value: 50, label: '50%' },
                 { value: 100, label: '100%' },
               ]}
             />

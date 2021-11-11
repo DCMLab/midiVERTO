@@ -56,7 +56,7 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs, rosesMat }) {
                       transform={`translate(${12},${12})`}
                       fill='none'
                       stroke='black'
-                      strokeWidth='0.5px'
+                      strokeWidth='1px'
                       points={data.rosePoints}
                     />
                   </g>

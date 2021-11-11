@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { useRef, useEffect, useState } from 'react';
 import { pixelColor } from './colorMapping';
+import Tooltip from '@mui/material/Tooltip';
 
 //Minus before every y coordinate due to the fact that svg has positive y
 //downward, meanwhile cartesian plane has positive y upward
@@ -117,7 +118,7 @@ function Circle({
         key={`r.${i}`}
         transform={`translate(${translateX},${translateY}) scale(${scale})`}
         fill='none'
-        stroke='white'
+        stroke='black'
         strokeWidth='1px'
         points={rosePoints}
       />
@@ -312,12 +313,12 @@ function Circle({
               )
             : null} */}
         {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
-        {userPcvsCoeff
+        {/* {userPcvsCoeff
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
                 return circleMark(pcv, marksRadiusRatio + 0.015, pcv.color, i);
             })
-          : null}
+          : null} */}
         {userPcvsCoeff
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
