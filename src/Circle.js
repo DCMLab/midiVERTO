@@ -3,6 +3,8 @@ import { useRef, useEffect, useState } from 'react';
 import { pixelColor } from './colorMapping';
 import Tooltip from '@mui/material/Tooltip';
 
+let savedImage = null;
+
 //Minus before every y coordinate due to the fact that svg has positive y
 //downward, meanwhile cartesian plane has positive y upward
 
@@ -15,6 +17,7 @@ function Circle({
   performanceCoeff,
   targetCircleWidth,
   showMagAndPhase,
+  showFullTrace,
 }) {
   const canvasRef = useRef(null);
   const [currentSubdivCoeff, setCurrentSubdivCoeff] = useState({
@@ -62,34 +65,83 @@ function Circle({
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
 
-    for (let x = -radius; x < radius; x++) {
-      for (let y = -radius; y < radius; y++) {
-        let distance = Math.sqrt(x * x + y * y);
+    if (!savedImage) {
+      for (let x = -radius; x < radius; x++) {
+        for (let y = -radius; y < radius; y++) {
+          let distance = Math.sqrt(x * x + y * y);
 
-        if (distance > radius) {
-          // skip all (x,y) coordinates that are outside of the circle
-          continue;
+          if (distance > radius) {
+            // skip all (x,y) coordinates that are outside of the circle
+            continue;
+          }
+          // Figure out the starting index of this pixel in the image data array.
+          let rowLength = 2 * radius;
+          let adjustedX = x + radius; // convert x from [-50, 50] to [0, 100] (the coordinates of the image data array)
+          let adjustedY = y + radius; // convert y from [-50, 50] to [0, 100] (the coordinates of the image data array)
+          let pixelWidth = 4; // each pixel requires 4 slots in the data array
+          let index = (adjustedX + adjustedY * rowLength) * pixelWidth;
+          let rgba = pixelColor(x, y, distance / radius);
+          data[index] = rgba.r;
+          data[index + 1] = rgba.g;
+          data[index + 2] = rgba.b;
+          data[index + 3] = rgba.a;
         }
-        // Figure out the starting index of this pixel in the image data array.
-        let rowLength = 2 * radius;
-        let adjustedX = x + radius; // convert x from [-50, 50] to [0, 100] (the coordinates of the image data array)
-        let adjustedY = y + radius; // convert y from [-50, 50] to [0, 100] (the coordinates of the image data array)
-        let pixelWidth = 4; // each pixel requires 4 slots in the data array
-        let index = (adjustedX + adjustedY * rowLength) * pixelWidth;
-        let rgba = pixelColor(x, y, distance / radius);
-        data[index] = rgba.r;
-        data[index + 1] = rgba.g;
-        data[index + 2] = rgba.b;
-        data[index + 3] = rgba.a;
       }
+      savedImage = image;
     }
-    ctx.putImageData(image, 0, 0);
-  }, [width, height, circleRadius]);
+    ctx.putImageData(savedImage, 0, 0);
+
+    if (traceDataCoeff && showFullTrace) {
+      ctx.save();
+      ctx.translate((400 - margin) / 2, (400 - margin) / 2);
+      drawTrace();
+      ctx.restore();
+    }
+  }, [width, height, circleRadius, traceDataCoeff, showFullTrace]);
 
   useEffect(() => {
     //Workaround for chrome bug on canvas overlay in foreignObj SVG
     canvasRef.current.getContext('2d').getImageData(0, 0, 1, 1);
   }, []);
+
+  {
+    /* {traceDataCoeff
+          ? traceDataCoeff.map((pcv, i) =>
+              circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
+            )
+          : null} */
+  }
+
+  useEffect(() => {
+    if (traceDataCoeff) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.translate((400 - margin) / 2, (400 - margin) / 2);
+      drawTrace();
+      ctx.restore();
+    }
+  }, [traceDataCoeff]);
+
+  function drawTrace() {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+
+    traceDataCoeff.forEach((element) => {
+      ctx.beginPath();
+      ctx.arc(
+        element.x * circleRadius,
+        -element.y * circleRadius,
+        (marksRadiusRatio * width) / 2,
+        0,
+        Math.PI * 2,
+        true
+      );
+      ctx.fill();
+    });
+  }
 
   const circleMark = (pcvData, radiusScaleWidth, color, id, opacity = 1) => {
     const mark = d3
@@ -100,7 +152,7 @@ function Circle({
       .endAngle(2 * Math.PI);
 
     return (
-      <Tooltip placement='top-start' title='test'>
+      <Tooltip placement='top' title='test'>
         <path
           transform={`translate(${pcvData.x * circleRadius},${
             -pcvData.y * circleRadius
@@ -118,14 +170,14 @@ function Circle({
     return (
       <Tooltip
         key={`rtt.${i}`}
-        placement='top-start'
+        placement='top'
         title={`test x: ${translateX} y: ${-translateY}`}
       >
         <g>
           <circle
             cx={translateX}
             cy={translateY}
-            r='5'
+            r='7'
             strokeWidth='1'
             fill='#FFF'
             fillOpacity={0}
@@ -241,12 +293,13 @@ function Circle({
       .endAngle(2 * Math.PI);
 
     let highlightedTrace = [];
-    let length = 10;
+    let length = 7;
     let opacityArray = [];
 
     opacityArray.push(1);
-    for (let i = 1; i < length; i++) {
-      opacityArray.push(opacityArray[i - 1] * 0.4);
+    opacityArray.push(0.5);
+    for (let i = 2; i < length; i++) {
+      opacityArray.push(opacityArray[i - 1] * 0.8);
     }
 
     if (currentSubdiv < length)
@@ -318,7 +371,7 @@ function Circle({
           width={width}
           height={height}
           ref={canvasRef}
-        />
+        ></canvas>
       </foreignObject>
       <g transform={`translate(${width / 2},${width / 2})`}>
         {drawBorder()}
@@ -326,10 +379,10 @@ function Circle({
           ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
           : null}
         {/* {traceDataCoeff
-            ? traceDataCoeff.map((pcv, i) =>
-                circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
-              )
-            : null} */}
+          ? traceDataCoeff.map((pcv, i) =>
+              circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
+            )
+          : null} */}
         {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
         {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
         {/* {userPcvsCoeff
@@ -345,7 +398,7 @@ function Circle({
                   pcv.rosePoints,
                   pcv.x * circleRadius,
                   -pcv.y * circleRadius,
-                  0.5,
+                  0.7,
                   i
                 );
             })

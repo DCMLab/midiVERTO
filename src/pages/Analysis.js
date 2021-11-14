@@ -64,6 +64,7 @@ function Application({
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [showPrototypes, setShowPrototypes] = useState(true);
   const [showMagAndPhase, setShowMagAndPhase] = useState(true);
+  const [showFullTrace, setShowFullTrace] = useState(true);
 
   //MIDI inputs
   const [midiDevNotesDftCoeffs, setMidiDevNotesDftCoeffs] = useState(
@@ -79,7 +80,7 @@ function Application({
   const [elemsWidth, setElemsWidth] = useState(440);
 
   function changeElementsSize(drawerOffset = 0) {
-    let adjustmentFractSizes = 5;
+    let adjustmentFractSizes = 20;
 
     setElemsWidth(
       (accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
@@ -295,6 +296,10 @@ function Application({
     setShowMagAndPhase(!showMagAndPhase);
   }
 
+  function toggleShowFullTrace() {
+    setShowFullTrace(!showFullTrace);
+  }
+
   return (
     <Box>
       <Box
@@ -335,6 +340,7 @@ function Application({
               currentSubdiv={currentSubdiv}
               showPrototypes={showPrototypes}
               showMagAndPhase={showMagAndPhase}
+              showFullTrace={showFullTrace}
               userPcvs={userPcvs}
               midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
               elemsWidth={elemsWidth}
@@ -364,6 +370,16 @@ function Application({
             }}
           >
             <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    onChange={() => toggleShowFullTrace()}
+                    checked={showFullTrace}
+                    size='small'
+                  />
+                }
+                label={<Typography noWrap={true}>Show full trace</Typography>}
+              />
               <FormControlLabel
                 control={
                   <Switch

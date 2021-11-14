@@ -12,6 +12,7 @@ function CoefficientsModule({
   currentSubdiv,
   midiDevNotesDftCoeffs,
   elemsWidth,
+  showFullTrace,
 }) {
   const [selectedProtoPitchClasses, setSelectedProtoPitchClasses] =
     useState(prototypesData);
@@ -62,6 +63,7 @@ function CoefficientsModule({
           performanceCoeff={midiDevNotesDftCoeffs[coeffNum]}
           targetCircleWidth={elemsWidth}
           showMagAndPhase={showMagAndPhase}
+          showFullTrace={showFullTrace}
         />
       ))}
 
