@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import { useRef, useEffect, useState } from 'react';
 import { pixelColor } from './colorMapping';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
 let savedImage = null;
 
@@ -38,12 +40,7 @@ function Circle({
       let x = traceDataCoeff[currentSubdiv].x;
       let y = traceDataCoeff[currentSubdiv].y;
 
-      let phi = (Math.atan2(y, x) * 180) / Math.PI;
-      let mu = Math.sqrt(x * x + y * y);
-
-      phi = Math.round(phi + Number.EPSILON);
-      mu = Math.round((mu + Number.EPSILON) * 100) / 100;
-      setCurrentSubdivCoeff({ mu, phi });
+      setCurrentSubdivCoeff(cartesianToPolar(x, y));
     }
   }, [currentSubdiv]);
 
@@ -123,6 +120,18 @@ function Circle({
     }
   }, [traceDataCoeff]);
 
+  function cartesianToPolar(x, y, norm = false) {
+    let phi = (Math.atan2(y, x) * 180) / Math.PI;
+    let mu = Math.sqrt(x * x + y * y);
+
+    if (norm) mu = mu / circleRadius;
+
+    phi = Math.round(phi + Number.EPSILON);
+    mu = Math.round((mu + Number.EPSILON) * 100) / 100;
+
+    return { mu, phi };
+  }
+
   function drawTrace() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -152,36 +161,73 @@ function Circle({
       .endAngle(2 * Math.PI);
 
     return (
-      <Tooltip placement='top' title='test'>
-        <path
-          transform={`translate(${pcvData.x * circleRadius},${
-            -pcvData.y * circleRadius
-          })`}
-          fill={color}
-          fillOpacity={opacity}
-          key={id}
-          d={mark()}
-        ></path>
-      </Tooltip>
+      <path
+        transform={`translate(${pcvData.x * circleRadius},${
+          -pcvData.y * circleRadius
+        })`}
+        fill={color}
+        fillOpacity={opacity}
+        key={id}
+        d={mark()}
+      ></path>
     );
   };
 
   function svgRoseIcon(rosePoints, translateX, translateY, scale, i) {
+    let polarCoord = cartesianToPolar(translateX, translateY, true);
+    let widthSvg = 40;
     return (
       <Tooltip
         key={`rtt.${i}`}
         placement='top'
-        title={`test x: ${translateX} y: ${-translateY}`}
+        arrow
+        title={
+          <Stack
+            direction='row'
+            justifyContent='center'
+            alignItems='center'
+            spacing={2}
+          >
+            <svg
+              width={widthSvg}
+              height={widthSvg}
+              viewBox={`0 0 ${widthSvg} ${widthSvg}`}
+            >
+              <circle
+                cx={widthSvg / 2}
+                cy={widthSvg / 2}
+                r={widthSvg / 2}
+                strokeWidth='1'
+                fill='#FFF'
+                fillOpacity={1}
+              ></circle>
+
+              <polyline
+                transform={`translate(${widthSvg / 2},${
+                  widthSvg / 2
+                }) scale(${1.9})`}
+                fill='none'
+                stroke='black'
+                strokeWidth='1px'
+                points={rosePoints}
+              />
+            </svg>
+            <Typography>{`\u{3BC}: ${
+              polarCoord.mu
+            } \u{3C6}: ${-polarCoord.phi}\u{b0}`}</Typography>
+          </Stack>
+        }
       >
         <g>
-          <circle
-            cx={translateX}
-            cy={translateY}
-            r='7'
-            strokeWidth='1'
+          <polyline
+            transform={`translate(${translateX},${translateY}) scale(${scale})`}
+            fill='none'
+            stroke='black'
+            strokeWidth='1px'
             fill='#FFF'
             fillOpacity={0}
-          ></circle>
+            points={rosePoints}
+          />
 
           <polyline
             transform={`translate(${translateX},${translateY}) scale(${scale})`}
