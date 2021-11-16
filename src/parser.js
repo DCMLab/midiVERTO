@@ -27,9 +27,14 @@ export default function parse(input) {
         j++
       ) {
         //Check if there is an invalid char in the group
-        if (input[j] !== ',' && input[j] !== '.' && isNaN(parseFloat(input[j])))
+        if (
+          input[j] !== ',' &&
+          input[j] !== '.' &&
+          input[j] !== ' ' &&
+          isNaN(parseFloat(input[j]))
+        )
           throw new Error('Found NaN');
-        stringGroup.push(input[j]);
+        if (input[j] !== ' ') stringGroup.push(input[j]);
       }
 
       stringGroup = stringGroup.join('');
