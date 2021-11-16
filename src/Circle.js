@@ -429,7 +429,9 @@ function Circle({
               circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
             )
           : null} */}
-        {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
+        {performanceCoeff.x === 0 && performanceCoeff.y === 0
+          ? null
+          : circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
         {/* {userPcvsCoeff
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
