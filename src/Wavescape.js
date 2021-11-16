@@ -60,8 +60,6 @@ export const Wavescape = ({
     }
   }, [wavescapeMatrix, width, height]);
 
-  useEffect(() => {}, [wavescapeMatrix]);
-
   return (
     <svg width={width + margin} height={height}>
       <text x='35%' y='15%' style={{ fontSize: `${(width / 100) * 7}px` }}>

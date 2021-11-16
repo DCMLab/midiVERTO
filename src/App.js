@@ -278,6 +278,7 @@ function App() {
       resolutionMode,
       currentSongBPM
     );
+    setCircleResolution(resolution);
     setCoeffTracesData(tracesData);
     setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
   }

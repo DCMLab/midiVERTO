@@ -430,7 +430,6 @@ function Circle({
             )
           : null} */}
         {circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
-        {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
         {/* {userPcvsCoeff
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
@@ -449,6 +448,7 @@ function Circle({
                 );
             })
           : null}
+        {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
       </g>
     </svg>
   );
