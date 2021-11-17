@@ -18,7 +18,6 @@ export const Wavescape = ({
   useEffect(() => {
     width = wavescapeWidth;
     height = wavescapeWidth;
-    console.log(wavescapeWidth);
   }, [wavescapeWidth]);
 
   useEffect(() => {

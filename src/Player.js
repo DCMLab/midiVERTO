@@ -35,7 +35,6 @@ export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
   Tone.Transport.stop();
 
   currentSongDuration = midiData.duration;
-  console.log(currentSongDuration);
 
   let partNotes = [];
   midiData.tracks.forEach((track) =>

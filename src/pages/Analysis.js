@@ -81,7 +81,7 @@ function Application({
 
   function changeElementsSize(drawerOffset = 0) {
     let adjustmentFractSizes = 20;
-    if (accordionRef.current.clientWidth) {
+    if (accordionRef.current) {
       setElemsWidth(
         (accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
           adjustmentFractSizes
