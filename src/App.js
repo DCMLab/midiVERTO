@@ -32,6 +32,8 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
 
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -396,6 +398,69 @@ function App() {
                 setUserPcvs={setUserPcvs}
                 rosesMat={rosesMat}
               />
+            </Box>
+            <Divider />
+            <Box sx={{ margin: '10px 10px' }}>
+              <Typography sx={{ fontSize: 17, paddingLeft: 1 }}>
+                Legend
+              </Typography>
+              <Paper>
+                <Stack>
+                  <Stack direction='row'>
+                    <svg width='24' height='24' viewBox='0 0 24 24'>
+                      <circle cx='12' cy='12' r='6' fill='black' />
+                    </svg>
+                    Coefficients of the whole midi file
+                  </Stack>
+                  <Stack direction='row'>
+                    <svg width='24' height='24' viewBox='0 0 24 24'>
+                      <circle cx='12' cy='12' r='5' fill='white' />
+                      <circle
+                        cx='12'
+                        cy='12'
+                        r='5'
+                        fill='none'
+                        stroke='black'
+                        strokeWidth='3px'
+                      />
+                    </svg>
+                    Coefficients that follow the midi playback
+                  </Stack>
+                  <Stack direction='row'>
+                    <svg width='24' height='24' viewBox='0 0 24 24'>
+                      <circle cx='12' cy='12' r='6' fill='teal' />
+                    </svg>
+                    Coefficients related to midi inputs
+                  </Stack>
+                  <Stack direction='row'>
+                    <svg width='24' height='24' viewBox='0 0 24 24'>
+                      <circle
+                        cx='12'
+                        cy='12'
+                        r='7'
+                        fill='none'
+                        stroke='grey'
+                        strokeWidth='2px'
+                      />
+                    </svg>
+                    Coefficients of the prototypes
+                  </Stack>
+                  <Stack direction='row'>
+                    <svg width='24' height='24' viewBox='0 0 24 24'>
+                      {rosesMat.length > 0 ? (
+                        <polyline
+                          transform={`translate(${12},${12})`}
+                          fill='none'
+                          stroke='black'
+                          strokeWidth='1px'
+                          points={rosesMat[3][0].points}
+                        />
+                      ) : null}
+                    </svg>
+                    Coefficients of the PCVs entered by the user
+                  </Stack>
+                </Stack>
+              </Paper>
             </Box>
           </Drawer>
           <Main open={open}>
