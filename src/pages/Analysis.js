@@ -81,23 +81,13 @@ function Application({
 
   function changeElementsSize(drawerOffset = 0) {
     let adjustmentFractSizes = 20;
-
-    setElemsWidth(
-      (accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
-        adjustmentFractSizes
-    );
+    if (accordionRef.current.clientWidth) {
+      setElemsWidth(
+        (accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
+          adjustmentFractSizes
+      );
+    }
   }
-
-  /* function changeElementsSize(drawerOffset = 0) {
-    let adjustmentFractSizes = 5;
-
-    setElemsWidth(
-      (((accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
-        adjustmentFractSizes) *
-        accordionWidth) /
-        100
-    );
-  } */
 
   function handleResize() {
     let drawerOffset = 0;
