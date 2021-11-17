@@ -40,9 +40,11 @@ function Circle({
       let x = traceDataCoeff[currentSubdiv].x;
       let y = traceDataCoeff[currentSubdiv].y;
 
+      if (coeffNumber === 1) console.log(x, y, '-->', cartesianToPolar(x, y));
+
       setCurrentSubdivCoeff(cartesianToPolar(x, y));
     }
-  }, [currentSubdiv]);
+  }, [currentSubdiv, traceDataCoeff]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -345,18 +347,21 @@ function Circle({
     opacityArray.push(1);
     opacityArray.push(0.5);
     for (let i = 2; i < length; i++) {
-      opacityArray.push(opacityArray[i - 1] * 0.8);
+      opacityArray.push(
+        Math.round((opacityArray[i - 1] - 0.5 / (length - 2)) * 100) / 100
+      );
     }
 
     if (currentSubdiv < length)
       highlightedTrace = traceDataCoeff.slice(0, currentSubdiv + 1);
     else
       highlightedTrace = traceDataCoeff.slice(
-        currentSubdiv - length,
-        currentSubdiv
+        currentSubdiv - length + 1,
+        currentSubdiv + 1
       );
 
     highlightedTrace = highlightedTrace.reverse();
+    if (coeffNumber === 1) console.log(highlightedTrace);
 
     return highlightedTrace.map((coeff, i) => {
       return (
