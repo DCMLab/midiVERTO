@@ -157,6 +157,8 @@ function App() {
       }
     });
 
+    console.log([...userPcvs, ...userPcvObjects]);
+
     setUserPcvs([...userPcvs, ...userPcvObjects]);
   }
 

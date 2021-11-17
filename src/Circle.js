@@ -35,6 +35,10 @@ function Circle({
   let marksRadiusRatio = 0.01;
 
   useEffect(() => {
+    console.log(userPcvsCoeff);
+  }, []);
+
+  useEffect(() => {
     if (traceDataCoeff) {
       //Rounding to second decimal and converting to polar coordinate
       let x = traceDataCoeff[currentSubdiv].x;
@@ -173,7 +177,7 @@ function Circle({
     );
   };
 
-  function svgRoseIcon(rosePoints, translateX, translateY, scale, i) {
+  function svgRoseIcon(label, rosePoints, translateX, translateY, scale, i) {
     let polarCoord = cartesianToPolar(translateX, translateY, true);
     let widthSvg = 40;
     return (
@@ -205,16 +209,19 @@ function Circle({
               <polyline
                 transform={`translate(${widthSvg / 2},${
                   widthSvg / 2
-                }) scale(${1.9})`}
+                }) scale(${1.8})`}
                 fill='none'
                 stroke='black'
                 strokeWidth='1px'
                 points={rosePoints}
               />
             </svg>
-            <Typography>{`\u{3BC}: ${
-              polarCoord.mu
-            } \u{3C6}: ${-polarCoord.phi}\u{b0}`}</Typography>
+            <Stack>
+              <Typography>{label}</Typography>
+              <Typography>{`\u{3BC}: ${
+                polarCoord.mu
+              } \u{3C6}: ${-polarCoord.phi}\u{b0}`}</Typography>
+            </Stack>
           </Stack>
         }
       >
@@ -444,6 +451,7 @@ function Circle({
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
                 return svgRoseIcon(
+                  pcv.label,
                   pcv.rosePoints,
                   pcv.x * circleRadius,
                   -pcv.y * circleRadius,

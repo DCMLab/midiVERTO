@@ -36,6 +36,7 @@ function CoefficientsModule({
           y: userPcvs[j].coeffs[i].im,
           rosePoints: userPcvs[j].rosePoints,
           isDisabled: userPcvs[j].isDisabled,
+          label: userPcvs[j].label,
         });
       }
       tempSubdivUserPcvs.push(temp);
