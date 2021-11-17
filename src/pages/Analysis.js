@@ -117,6 +117,11 @@ function Application({
   }, []);
 
   useEffect(() => {
+    //When analysis data changes, show by default the full trace
+    setShowFullTrace(true);
+  }, [coeffTracesData]);
+
+  useEffect(() => {
     changeElementsSize();
     window.addEventListener('resize', handleResize);
   }, [elemsForEachRow]);
