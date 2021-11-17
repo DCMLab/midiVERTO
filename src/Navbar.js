@@ -30,12 +30,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export default function Navbar({
-  open,
-  setOpen,
-  setInAnalysisPage,
-  inAnalysisPage,
-}) {
+export default function Navbar({ open, setOpen, inAnalysisPage }) {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -63,10 +58,6 @@ export default function Navbar({
               to='/'
               variant='contained'
               disableElevation={true}
-              onClick={() => {
-                setInAnalysisPage(false);
-                setOpen(false);
-              }}
             >
               Home
             </Button>
@@ -75,10 +66,6 @@ export default function Navbar({
               to='/theory'
               variant='contained'
               disableElevation={true}
-              onClick={() => {
-                setInAnalysisPage(false);
-                setOpen(false);
-              }}
             >
               Theory
             </Button>

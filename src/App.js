@@ -400,8 +400,26 @@ function App() {
           </Drawer>
           <Main open={open}>
             <Switch>
-              <Route exact path='/' component={Home}></Route>
-              <Route exact path='/theory' component={Theory}></Route>
+              <Route
+                exact
+                path='/'
+                render={() => (
+                  <Home
+                    setOpen={setOpen}
+                    setInAnalysisPage={setInAnalysisPage}
+                  ></Home>
+                )}
+              ></Route>
+              <Route
+                exact
+                path='/theory'
+                render={() => (
+                  <Theory
+                    setOpen={setOpen}
+                    setInAnalysisPage={setInAnalysisPage}
+                  ></Theory>
+                )}
+              ></Route>
               <Route
                 exact
                 path='/analysis'

@@ -1,4 +1,11 @@
-export default function Home() {
+import { useEffect } from 'react';
+
+export default function Home({ setOpen, setInAnalysisPage }) {
+  useEffect(() => {
+    setInAnalysisPage(false);
+    setOpen(false);
+  }, []);
+
   return (
     <div>
       <h1>Home - Theory and analysis</h1>

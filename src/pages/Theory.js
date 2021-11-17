@@ -1,4 +1,11 @@
-export default function Theory() {
+import { useEffect } from 'react';
+
+export default function Theory({ setOpen, setInAnalysisPage }) {
+  useEffect(() => {
+    setInAnalysisPage(false);
+    setOpen(false);
+  }, []);
+
   return (
     <div>
       <h1>Theory page</h1>

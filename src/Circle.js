@@ -40,8 +40,6 @@ function Circle({
       let x = traceDataCoeff[currentSubdiv].x;
       let y = traceDataCoeff[currentSubdiv].y;
 
-      if (coeffNumber === 1) console.log(x, y, '-->', cartesianToPolar(x, y));
-
       setCurrentSubdivCoeff(cartesianToPolar(x, y));
     }
   }, [currentSubdiv, traceDataCoeff]);
@@ -361,7 +359,6 @@ function Circle({
       );
 
     highlightedTrace = highlightedTrace.reverse();
-    if (coeffNumber === 1) console.log(highlightedTrace);
 
     return highlightedTrace.map((coeff, i) => {
       return (
