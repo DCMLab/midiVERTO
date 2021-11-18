@@ -1,17 +1,22 @@
 {
   "files": {
-    "main.js": "/MIDFT/static/js/main.b94f20d8.chunk.js",
-    "main.js.map": "/MIDFT/static/js/main.b94f20d8.chunk.js.map",
+    "main.js": "/MIDFT/static/js/main.025cb4a0.chunk.js",
+    "main.js.map": "/MIDFT/static/js/main.025cb4a0.chunk.js.map",
     "runtime-main.js": "/MIDFT/static/js/runtime-main.b7db8c69.js",
     "runtime-main.js.map": "/MIDFT/static/js/runtime-main.b7db8c69.js.map",
-    "static/js/2.59aebfdc.chunk.js": "/MIDFT/static/js/2.59aebfdc.chunk.js",
-    "static/js/2.59aebfdc.chunk.js.map": "/MIDFT/static/js/2.59aebfdc.chunk.js.map",
+    "static/js/2.ce1f4db2.chunk.js": "/MIDFT/static/js/2.ce1f4db2.chunk.js",
+    "static/js/2.ce1f4db2.chunk.js.map": "/MIDFT/static/js/2.ce1f4db2.chunk.js.map",
     "index.html": "/MIDFT/index.html",
-    "static/js/2.59aebfdc.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.59aebfdc.chunk.js.LICENSE.txt"
+    "static/js/2.ce1f4db2.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.ce1f4db2.chunk.js.LICENSE.txt",
+    "static/media/eighth.347a1769.svg": "/MIDFT/static/media/eighth.347a1769.svg",
+    "static/media/half.7d756528.svg": "/MIDFT/static/media/half.7d756528.svg",
+    "static/media/quarter.a35808dc.svg": "/MIDFT/static/media/quarter.a35808dc.svg",
+    "static/media/sixteenth.91907e68.svg": "/MIDFT/static/media/sixteenth.91907e68.svg",
+    "static/media/whole.69e31bd8.svg": "/MIDFT/static/media/whole.69e31bd8.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.b7db8c69.js",
-    "static/js/2.59aebfdc.chunk.js",
-    "static/js/main.b94f20d8.chunk.js"
+    "static/js/2.ce1f4db2.chunk.js",
+    "static/js/main.025cb4a0.chunk.js"
   ]
 }
