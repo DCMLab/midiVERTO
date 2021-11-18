@@ -9,6 +9,12 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import wholeSvg from './svgNotation/whole.svg';
+import halfSvg from './svgNotation/half.svg';
+import quarterSvg from './svgNotation/quarter.svg';
+import eighthSvg from './svgNotation/eighth.svg';
+import sixteenthSvg from './svgNotation/sixteenth.svg';
+
 function ResolutionSelector({ resolutionMode, setResolutionMode }) {
   //State: input error
   const [isInputSecondsInvalid, setIsInputSecondsInvalid] = useState(false);
@@ -61,30 +67,77 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
           name='row-radio-buttons-group'
         >
           <FormControlLabel
-            sx={{ fontSize: '20px' }}
             value='sixteenth'
             control={<Radio size='small' />}
-            label={<Typography sx={{ fontSize: '2rem' }}>&#119137;</Typography>}
+            label={
+              <img
+                style={{
+                  width: 10,
+                  height: 10,
+                  transform: 'scale(3, 3)',
+                }}
+                src={sixteenthSvg}
+              />
+            }
           />
           <FormControlLabel
             value='eighth'
             control={<Radio size='small' />}
-            label={<Typography sx={{ fontSize: '2rem' }}>&#119136;</Typography>}
+            label={
+              <img
+                style={{
+                  width: 10,
+                  height: 10,
+                  transform: 'scale(3, 3) translate(0, 0)',
+                }}
+                src={eighthSvg}
+              />
+            }
           />
           <FormControlLabel
             value='quarter'
             control={<Radio size='small' />}
-            label={<Typography sx={{ fontSize: '2rem' }}>&#9833;</Typography>}
+            label={
+              <img
+                style={{
+                  width: 10,
+                  height: 10,
+                  marginTop: 8,
+                  transform: 'scale(1, 3)',
+                }}
+                src={quarterSvg}
+              />
+            }
           />
           <FormControlLabel
             value='half'
             control={<Radio size='small' />}
-            label={<Typography sx={{ fontSize: '2rem' }}>&#119134;</Typography>}
+            label={
+              <img
+                style={{
+                  width: 10,
+                  height: 10,
+                  marginTop: 8,
+                  transform: 'scale(3.7, 3.2) ',
+                }}
+                src={halfSvg}
+              />
+            }
           />
           <FormControlLabel
             value='whole'
             control={<Radio size='small' />}
-            label={<Typography sx={{ fontSize: '2rem' }}>&#119133;</Typography>}
+            label={
+              <img
+                style={{
+                  width: 10,
+                  height: 10,
+                  marginTop: 0,
+                  transform: 'scale(1.5, 1)',
+                }}
+                src={wholeSvg}
+              />
+            }
           />
           <FormControlLabel
             value='seconds'

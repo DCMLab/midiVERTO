@@ -35,10 +35,6 @@ function Circle({
   let marksRadiusRatio = 0.01;
 
   useEffect(() => {
-    console.log(userPcvsCoeff);
-  }, []);
-
-  useEffect(() => {
     if (traceDataCoeff) {
       //Rounding to second decimal and converting to polar coordinate
       let x = traceDataCoeff[currentSubdiv].x;
