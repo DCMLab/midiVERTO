@@ -51,6 +51,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
+    backgroundColor: '#e0e0e0',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -62,6 +63,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         duration: theme.transitions.duration.enteringScreen,
       }),
       marginLeft: 0,
+      backgroundColor: '#e0e0e0',
     }),
   })
 );
@@ -372,14 +374,17 @@ function App() {
               noValidate
               autoComplete='off'
             >
+              <Typography sx={{ fontSize: 17, paddingBottom: 1 }}>
+                Custom Pitch-Class Vectors
+              </Typography>
               <TextField
-                sx={{ minHeight: '5rem' }}
+                /* sx={{ minHeight: '5rem' }} */
                 fullWidth
                 label={'margin="dense"'}
                 error={isInputPcvInvalid}
                 helperText={isInputPcvInvalid && 'Invalid input'}
                 id='outlined-basic'
-                label='Pitch class vector'
+                label='e.g. {0,0,4,7,10} (2,0,0,0,1,0,0,1,0,0,1,0)'
                 variant='outlined'
                 onKeyPress={(event) => {
                   if (event.key === 'Enter') {
@@ -402,7 +407,7 @@ function App() {
             <Divider />
             <Box sx={{ margin: '10px 10px' }}>
               <Typography sx={{ fontSize: 17, paddingLeft: 1 }}>
-                Legend
+                Legend of coefficients
               </Typography>
               <Paper>
                 <Stack>
@@ -410,7 +415,7 @@ function App() {
                     <svg width='24' height='24' viewBox='0 0 24 24'>
                       <circle cx='12' cy='12' r='6' fill='black' />
                     </svg>
-                    Coefficients of the whole midi file
+                    MIDI file segments
                   </Stack>
                   <Stack direction='row'>
                     <svg width='24' height='24' viewBox='0 0 24 24'>
@@ -424,13 +429,13 @@ function App() {
                         strokeWidth='3px'
                       />
                     </svg>
-                    Coefficients that follow the midi playback
+                    MIDI playback
                   </Stack>
                   <Stack direction='row'>
                     <svg width='24' height='24' viewBox='0 0 24 24'>
                       <circle cx='12' cy='12' r='6' fill='teal' />
                     </svg>
-                    Coefficients related to midi inputs
+                    MIDI controller input
                   </Stack>
                   <Stack direction='row'>
                     <svg width='24' height='24' viewBox='0 0 24 24'>
@@ -443,7 +448,7 @@ function App() {
                         strokeWidth='2px'
                       />
                     </svg>
-                    Coefficients of the prototypes
+                    Prototypes
                   </Stack>
                   <Stack direction='row'>
                     <svg width='24' height='24' viewBox='0 0 24 24'>
@@ -457,7 +462,7 @@ function App() {
                         />
                       ) : null}
                     </svg>
-                    Coefficients of the PCVs entered by the user
+                    Custom Pitch-Class Vectors
                   </Stack>
                 </Stack>
               </Paper>

@@ -327,7 +327,7 @@ function Application({
             aria-controls='panel2a-content'
             id='panel2a-header'
           >
-            <Typography variant='h6'>Fourier Coefficients</Typography>
+            <Typography variant='h6'>Fourier Coefficient Spaces</Typography>
           </AccordionSummary>
           <AccordionDetails sx={{ padding: 0 }}>
             <CoefficientsModule

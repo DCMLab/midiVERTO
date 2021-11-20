@@ -24,7 +24,7 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs, rosesMat }) {
         justifyContent: 'center',
         flexWrap: 'wrap',
         listStyle: 'none',
-        p: '5px',
+        p: '3px',
         overflow: 'auto',
         minHeight: '50%',
         width: '100%',

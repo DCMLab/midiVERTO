@@ -404,13 +404,13 @@ function Circle({
       {showMagAndPhase ? (
         <>
           <text
-            x='19'
-            y='24'
+            x='120'
+            y='23'
             style={{ fontSize: '24px' }}
           >{`\u{3C6}: ${currentSubdivCoeff.phi}\u{b0}`}</text>
           <text
-            x='20'
-            y='44'
+            x='34'
+            y='24'
             style={{ fontSize: '24px' }}
           >{`\u{3BC}: ${currentSubdivCoeff.mu}`}</text>
         </>
