@@ -312,22 +312,41 @@ function App() {
             open={open}
           >
             <DrawerHeader>
-              <Typography noWrap={true} sx={{ flexGrow: '2' }}>
-                {file ? fileName : 'Upload a midi file'}
-              </Typography>
-              <label htmlFor='file'>
-                <input
-                  style={{ display: 'none' }}
-                  type='file'
-                  id='file'
-                  name='file'
-                  value={file}
-                  onChange={(e) => setFile(e.target.value)}
-                />
-                <Button variant='contained' color='primary' component='span'>
-                  Upload
-                </Button>
-              </label>
+              <Stack sx={{ flexGrow: '2', maxWidth: '85%' }}>
+                <Typography sx={{ fontWeight: 'bold' }}>
+                  Upload a midi file
+                </Typography>
+                <Stack
+                  spacing={2}
+                  direction='row'
+                  sx={{ alignItems: 'center' }}
+                >
+                  <label htmlFor='file'>
+                    <input
+                      style={{ display: 'none' }}
+                      type='file'
+                      id='file'
+                      name='file'
+                      value={file}
+                      onChange={(e) => setFile(e.target.value)}
+                    />
+                    <Button
+                      variant='contained'
+                      size='small'
+                      color='primary'
+                      component='span'
+                    >
+                      Upload
+                    </Button>
+                  </label>
+                  <Typography
+                    noWrap={true}
+                    color={fileName ? 'primary' : 'error'}
+                  >
+                    {file ? fileName : 'No midi file uploaded'}
+                  </Typography>
+                </Stack>
+              </Stack>
 
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === 'ltr' ? (

@@ -58,7 +58,6 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
   return (
     <Box>
       <FormControl component='fieldset'>
-        <FormLabel component='legend'>Resolution</FormLabel>
         <RadioGroup
           row
           defaultValue='quarter'
