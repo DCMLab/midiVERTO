@@ -454,7 +454,24 @@ function App() {
                   </Stack>
                   <Stack direction='row'>
                     <svg width='24' height='24' viewBox='0 0 24 24'>
-                      <circle cx='12' cy='12' r='6' fill='teal' />
+                      <g transform='translate(12,12)'>
+                        <line
+                          x1='5'
+                          x2='-5'
+                          y1='5'
+                          y2='-5'
+                          stroke='black'
+                          stroke-width='1.5'
+                        ></line>
+                        <line
+                          x1='5'
+                          x2='-5'
+                          y1='-5'
+                          y2='5'
+                          stroke='black'
+                          stroke-width='1.5'
+                        ></line>
+                      </g>
                     </svg>
                     MIDI controller input
                   </Stack>

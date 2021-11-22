@@ -173,6 +173,33 @@ function Circle({
     );
   };
 
+  const crossMark = (pcvData, radiusScaleWidth) => {
+    return (
+      <g
+        transform={`translate(${pcvData.x * circleRadius},${
+          -pcvData.y * circleRadius
+        })`}
+      >
+        <line
+          x1='5'
+          x2='-5'
+          y1='5'
+          y2='-5'
+          stroke='black'
+          stroke-width='1.5'
+        ></line>
+        <line
+          x1='5'
+          x2='-5'
+          y1='-5'
+          y2='5'
+          stroke='black'
+          stroke-width='1.5'
+        ></line>
+      </g>
+    );
+  };
+
   function svgRoseIcon(label, rosePoints, translateX, translateY, scale, i) {
     let polarCoord = cartesianToPolar(translateX, translateY, true);
     let widthSvg = 40;
@@ -436,7 +463,7 @@ function Circle({
           : null} */}
         {performanceCoeff.x === 0 && performanceCoeff.y === 0
           ? null
-          : circleMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
+          : crossMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
         {/* {userPcvsCoeff
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
