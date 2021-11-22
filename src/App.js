@@ -366,7 +366,7 @@ function App() {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                margin: '2% 5%',
+                margin: '2% 5% 0 2%',
                 width: '90%',
                 justifyContent: 'space-evenly',
               }}
@@ -374,15 +374,8 @@ function App() {
               <ResolutionSelector
                 setResolutionMode={setResolutionMode}
                 resolutionMode={resolutionMode}
+                retriggerAnalysis={retriggerAnalysis}
               />
-              <Button
-                variant='contained'
-                color='primary'
-                onClick={retriggerAnalysis}
-                sx={{ width: '10%' }}
-              >
-                Change
-              </Button>
             </Box>
             <Divider />
             <Typography

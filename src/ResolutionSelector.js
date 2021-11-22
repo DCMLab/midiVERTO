@@ -7,6 +7,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import wholeSvg from './svgNotation/whole.svg';
@@ -15,7 +16,11 @@ import quarterSvg from './svgNotation/quarter.svg';
 import eighthSvg from './svgNotation/eighth.svg';
 import sixteenthSvg from './svgNotation/sixteenth.svg';
 
-function ResolutionSelector({ resolutionMode, setResolutionMode }) {
+function ResolutionSelector({
+  resolutionMode,
+  setResolutionMode,
+  retriggerAnalysis,
+}) {
   //State: input error
   const [isInputSecondsInvalid, setIsInputSecondsInvalid] = useState(false);
   const resolutionTextRef = useRef(null);
@@ -64,6 +69,7 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
           onChange={onChangeResolutionSelection}
           aria-label='resolution'
           name='row-radio-buttons-group'
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <FormControlLabel
             value='sixteenth'
@@ -138,12 +144,13 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
               />
             }
           />
+
           <FormControlLabel
             value='seconds'
             control={<Radio size='small' />}
             label={
               <TextField
-                sx={{ minHeight: '5rem' }}
+                sx={{ minHeight: '4.4rem', maxWidth: '5rem' }}
                 error={isInputSecondsInvalid}
                 helperText={isInputSecondsInvalid && 'Invalid input'}
                 label='in seconds'
@@ -167,6 +174,14 @@ function ResolutionSelector({ resolutionMode, setResolutionMode }) {
               />
             }
           />
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={retriggerAnalysis}
+            sx={{ width: '10%', height: '20%', marginTop: 2 }}
+          >
+            Change
+          </Button>
         </RadioGroup>
       </FormControl>
     </Box>
