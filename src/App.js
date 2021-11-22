@@ -357,6 +357,11 @@ function App() {
               </IconButton>
             </DrawerHeader>
             <Divider />
+            <Typography
+              sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}
+            >
+              Time resolution
+            </Typography>
             <Box
               sx={{
                 display: 'flex',
@@ -380,6 +385,11 @@ function App() {
               </Button>
             </Box>
             <Divider />
+            <Typography
+              sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}
+            >
+              Custom Pitch-Class Vectors
+            </Typography>
             <Box
               sx={{
                 flexDirection: 'column',
@@ -393,9 +403,6 @@ function App() {
               noValidate
               autoComplete='off'
             >
-              <Typography sx={{ fontSize: 17, paddingBottom: 1 }}>
-                Custom Pitch-Class Vectors
-              </Typography>
               <TextField
                 /* sx={{ minHeight: '5rem' }} */
                 fullWidth
@@ -424,10 +431,12 @@ function App() {
               />
             </Box>
             <Divider />
-            <Box sx={{ margin: '10px 10px' }}>
-              <Typography sx={{ fontSize: 17, paddingLeft: 1 }}>
-                Legend of coefficients
-              </Typography>
+            <Typography
+              sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}
+            >
+              Legend of coefficients
+            </Typography>
+            <Box sx={{ margin: '5px 10px' }}>
               <Paper>
                 <Stack>
                   <Stack direction='row'>
