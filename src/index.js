@@ -11,6 +11,9 @@ const customTheme = createTheme({
     secondary: {
       main: '#fefefe',
     },
+    background: {
+      default: '#e0e0e0',
+    },
   },
 });
 
