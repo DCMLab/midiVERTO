@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+
 export default function Home({ setOpen, setInAnalysisPage }) {
   useEffect(() => {
     setInAnalysisPage(false);
@@ -7,9 +10,11 @@ export default function Home({ setOpen, setInAnalysisPage }) {
   }, []);
 
   return (
-    <div>
-      <h1>Home - Theory and analysis</h1>
-      <p>
+    <Paper>
+      <Typography sx={{ padding: 3, paddingBottom: 0 }} variant='h3'>
+        Home - Theory and analysis
+      </Typography>
+      <Typography sx={{ padding: 2 }}>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae,
         architecto temporibus laboriosam, atque veniam quod provident minus eos
         aspernatur ipsa ad nihil veritatis ea, eaque amet! Itaque cupiditate
@@ -65,7 +70,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
         earum possimus? Doloribus nostrum, impedit aut, officia amet at fuga
         velit minima tempora, harum molestiae non nisi quia maxime? Odio quo
         reiciendis nostrum repudiandae, alias delectus aut ullam quisquam. Eius?
-      </p>
-    </div>
+      </Typography>
+    </Paper>
   );
 }
