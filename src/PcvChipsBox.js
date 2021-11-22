@@ -26,7 +26,7 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs, rosesMat }) {
         listStyle: 'none',
         p: '3px',
         overflow: 'auto',
-        minHeight: '50%',
+        height: '100%',
         width: '100%',
       }}
       component='ul'

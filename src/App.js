@@ -389,8 +389,9 @@ function App() {
                 display: 'flex',
                 alignItems: 'center',
                 margin: '3% 5%',
-                height: '50%',
-                justifyContent: 'space-evenly',
+                height: '40%',
+                maxHeight: '350px',
+                justifyContent: 'flex-start',
               }}
               component='form'
               noValidate
