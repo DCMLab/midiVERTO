@@ -461,7 +461,7 @@ function App() {
                           y1='5'
                           y2='-5'
                           stroke='black'
-                          stroke-width='1.5'
+                          strokeWidth='1.5'
                         ></line>
                         <line
                           x1='5'
@@ -469,7 +469,7 @@ function App() {
                           y1='-5'
                           y2='5'
                           stroke='black'
-                          stroke-width='1.5'
+                          strokeWidth='1.5'
                         ></line>
                       </g>
                     </svg>
