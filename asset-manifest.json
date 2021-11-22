@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/MIDFT/static/js/main.25499d70.chunk.js",
-    "main.js.map": "/MIDFT/static/js/main.25499d70.chunk.js.map",
+    "main.js": "/MIDFT/static/js/main.c7421b09.chunk.js",
+    "main.js.map": "/MIDFT/static/js/main.c7421b09.chunk.js.map",
     "runtime-main.js": "/MIDFT/static/js/runtime-main.b7db8c69.js",
     "runtime-main.js.map": "/MIDFT/static/js/runtime-main.b7db8c69.js.map",
-    "static/js/2.ce1f4db2.chunk.js": "/MIDFT/static/js/2.ce1f4db2.chunk.js",
-    "static/js/2.ce1f4db2.chunk.js.map": "/MIDFT/static/js/2.ce1f4db2.chunk.js.map",
+    "static/js/2.680923d1.chunk.js": "/MIDFT/static/js/2.680923d1.chunk.js",
+    "static/js/2.680923d1.chunk.js.map": "/MIDFT/static/js/2.680923d1.chunk.js.map",
     "index.html": "/MIDFT/index.html",
-    "static/js/2.ce1f4db2.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.ce1f4db2.chunk.js.LICENSE.txt",
+    "static/js/2.680923d1.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.680923d1.chunk.js.LICENSE.txt",
     "static/media/eighth.347a1769.svg": "/MIDFT/static/media/eighth.347a1769.svg",
     "static/media/half.7d756528.svg": "/MIDFT/static/media/half.7d756528.svg",
     "static/media/quarter.a35808dc.svg": "/MIDFT/static/media/quarter.a35808dc.svg",
@@ -16,7 +16,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.b7db8c69.js",
-    "static/js/2.ce1f4db2.chunk.js",
-    "static/js/main.25499d70.chunk.js"
+    "static/js/2.680923d1.chunk.js",
+    "static/js/main.c7421b09.chunk.js"
   ]
 }
