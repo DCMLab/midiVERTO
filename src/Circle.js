@@ -4,6 +4,7 @@ import { pixelColor } from './colorMapping';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 let savedImage = null;
 
@@ -30,6 +31,7 @@ function Circle({
   let height = width;
 
   const margin = 45;
+  const headerOffset = 15;
   const circleRadius = width / 2 - margin;
 
   let marksRadiusRatio = 0.01;
@@ -441,75 +443,78 @@ function Circle({
   };
 
   return (
-    <svg
-      width={targetCircleWidth}
-      height={targetCircleWidth}
-      viewBox={`0 0 ${width} ${height}`}
-      /* transform={`scale(${targetCircleWidth / width},${
-        targetCircleWidth / width
-      })`} */
-    >
-      <text x='0' y='24' style={{ fontSize: '24px' }}>
-        {`${coeffNumber}.`}
-      </text>
-      {showMagAndPhase ? (
-        <>
-          <text
-            x='120'
-            y='23'
-            style={{ fontSize: '24px' }}
-          >{`\u{3C6}: ${currentSubdivCoeff.phi}\u{b0}`}</text>
-          <text
-            x='34'
-            y='24'
-            style={{ fontSize: '24px' }}
-          >{`\u{3BC}: ${currentSubdivCoeff.mu}`}</text>
-        </>
-      ) : null}
+    <Box sx={{ marginBottom: 2 }}>
+      <svg
+        width={targetCircleWidth}
+        height={targetCircleWidth}
+        viewBox={`0 0 ${width} ${height}`}
+      >
+        <g transform={`translate(${125},0)`}>
+          <text x='0' y='24' style={{ fontSize: '24px' }}>
+            {`${coeffNumber}.`}
+          </text>
+          {showMagAndPhase ? (
+            <>
+              <text
+                x='120'
+                y='23'
+                style={{ fontSize: '24px' }}
+              >{`\u{3C6}: ${currentSubdivCoeff.phi}\u{b0}`}</text>
+              <text
+                x='34'
+                y='24'
+                style={{ fontSize: '24px' }}
+              >{`\u{3BC}: ${currentSubdivCoeff.mu}`}</text>
+            </>
+          ) : null}
+        </g>
 
-      <foreignObject x={margin} y={margin} width={width} height={height}>
-        <canvas
-          style={{ zIndex: '-1' }}
-          width={width}
-          height={height}
-          ref={canvasRef}
-        ></canvas>
-      </foreignObject>
-      <g transform={`translate(${width / 2},${width / 2})`}>
-        {drawBorder()}
-        {protoDataCoeff
-          ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
-          : null}
-        {/* {traceDataCoeff
+        <g transform={`translate(0,${headerOffset})`}>
+          <foreignObject x={margin} y={margin} width={width} height={height}>
+            <canvas
+              style={{ zIndex: '-1' }}
+              width={width}
+              height={height}
+              ref={canvasRef}
+            ></canvas>
+          </foreignObject>
+          <g transform={`translate(${width / 2},${width / 2})`}>
+            {drawBorder()}
+            {protoDataCoeff
+              ? protoDataCoeff.map((pcv, i) => protoCircleMark(pcv, i))
+              : null}
+            {/* {traceDataCoeff
           ? traceDataCoeff.map((pcv, i) =>
               circleMark(pcv, marksRadiusRatio, 'black', i, 0.1)
             )
           : null} */}
-        {performanceCoeff.x === 0 && performanceCoeff.y === 0
-          ? null
-          : crossMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
-        {/* {userPcvsCoeff
+            {performanceCoeff.x === 0 && performanceCoeff.y === 0
+              ? null
+              : crossMark(performanceCoeff, marksRadiusRatio * 2, 'teal')}
+            {/* {userPcvsCoeff
           ? userPcvsCoeff.map((pcv, i) => {
               if (!pcv.isDisabled)
                 return circleMark(pcv, marksRadiusRatio + 0.015, '#FFF', i, 0);
             })
           : null} */}
-        {userPcvsCoeff
-          ? userPcvsCoeff.map((pcv, i) => {
-              if (!pcv.isDisabled)
-                return svgRoseIcon(
-                  pcv.label,
-                  pcv.rosePoints,
-                  pcv.x * circleRadius,
-                  -pcv.y * circleRadius,
-                  0.7,
-                  i
-                );
-            })
-          : null}
-        {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
-      </g>
-    </svg>
+            {userPcvsCoeff
+              ? userPcvsCoeff.map((pcv, i) => {
+                  if (!pcv.isDisabled)
+                    return svgRoseIcon(
+                      pcv.label,
+                      pcv.rosePoints,
+                      pcv.x * circleRadius,
+                      -pcv.y * circleRadius,
+                      0.7,
+                      i
+                    );
+                })
+              : null}
+            {traceDataCoeff ? highlightSubdiv(marksRadiusRatio) : null}
+          </g>
+        </g>
+      </svg>
+    </Box>
   );
 }
 
