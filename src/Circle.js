@@ -27,7 +27,7 @@ function Circle({
     mu: 0,
     phi: 0,
   });
-  let width = 440;
+  let width = 445;
   let height = width;
 
   const margin = 45;
