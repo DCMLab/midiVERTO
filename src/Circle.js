@@ -29,7 +29,7 @@ function Circle({
   let width = 440;
   let height = width;
 
-  const margin = 40;
+  const margin = 45;
   const circleRadius = width / 2 - margin;
 
   let marksRadiusRatio = 0.01;
@@ -301,19 +301,43 @@ function Circle({
     }
 
     //Computation of label offset
-    let dxOffset = 0,
-      dyOffset = 5;
+    //Good for most of the labels
+    let dxOffset = Math.sign(pcvData.x) * 18,
+      dyOffset = -Math.sign(pcvData.y) * 18 + 7;
 
-    if (Math.sign(pcvData.x) === 1) dxOffset = 20;
-    else if (Math.sign(pcvData.x) === -1) dxOffset = -20;
-
-    if (Math.sign(-pcvData.y) === 1) dyOffset = 25;
-    else if (Math.sign(-pcvData.y) === -1) dyOffset = -8;
-
-    if (pcvData.x === 0 && pcvData.y === 0) {
+    //Custom rules for labels
+    if (labelName === '♯') dyOffset -= 3;
+    if (labelName === 'WT' && subSup === '2') dxOffset *= 1.2;
+    if (labelName === 'WT' && subSup === '1') dxOffset *= 1.4;
+    if (labelName === 'C' && subSup === 'o7') dxOffset *= 1.2;
+    if (labelName === 'O' && subSup === '1,2') dyOffset *= 1.1;
+    if (labelName === 'C♯' && subSup === 'o7') {
+      dxOffset *= 1.1;
+      dyOffset *= 1.1;
+    }
+    if (labelName === 'D' && subSup === 'o7') {
+      dxOffset *= 0.7;
+      dyOffset *= 0.7;
+    }
+    if (labelName === 'H' && subSup === '2,3') {
+      dxOffset *= 1.2;
+      dyOffset *= 1.2;
+    }
+    if (labelName === 'H' && subSup === '1,2') {
+      dxOffset *= 0.7;
+      dyOffset *= 0.7;
+    }
+    if (labelName === 'Ω') {
       dxOffset = 15;
       dyOffset = 5;
     }
+
+    /* if (Math.sign(pcvData.x) === 1) dxOffset = 22;
+    else if (Math.sign(pcvData.x) === -1) dxOffset = -20; */
+
+    /* 
+    if (Math.sign(-pcvData.y) === 1) dyOffset = 25;
+    else if (Math.sign(-pcvData.y) === -1) dyOffset = -8;*/
 
     return (
       <g
