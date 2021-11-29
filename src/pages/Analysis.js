@@ -311,7 +311,7 @@ function Application({
             aria-controls='panel1a-content'
             id='panel1a-header'
           >
-            <Typography variant='h6'>Wavescape</Typography>
+            <Typography variant='h6'>Wavescapes</Typography>
           </AccordionSummary>
           <AccordionDetails ref={accordionRef} sx={{ padding: 0 }}>
             <WavescapeModule
