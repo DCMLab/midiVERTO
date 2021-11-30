@@ -14,7 +14,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
   }, []);
 
   return (
-    <Paper>
+    <Paper sx={{ margin: 'auto', maxWidth: '1200px' }}>
       <Typography variant='h3' sx={{ padding: 3, paddingBottom: 0 }}>
         Theory page
       </Typography>

@@ -10,7 +10,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
   }, []);
 
   return (
-    <Paper>
+    <Paper sx={{ margin: 'auto', maxWidth: '1200px' }}>
       <Typography sx={{ padding: 3, paddingBottom: 0 }} variant='h3'>
         Home - Theory and analysis
       </Typography>
