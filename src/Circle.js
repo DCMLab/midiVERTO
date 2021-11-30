@@ -183,18 +183,18 @@ function Circle({
         })`}
       >
         <line
-          x1='5'
-          x2='-5'
-          y1='5'
-          y2='-5'
+          x1='0'
+          x2='0'
+          y1='7'
+          y2='-7'
           stroke='black'
           strokeWidth='1.5'
         ></line>
         <line
-          x1='5'
-          x2='-5'
-          y1='-5'
-          y2='5'
+          x1='7'
+          x2='-7'
+          y1='0'
+          y2='0'
           stroke='black'
           strokeWidth='1.5'
         ></line>
