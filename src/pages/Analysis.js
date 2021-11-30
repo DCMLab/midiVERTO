@@ -412,7 +412,7 @@ function Application({
               />
             </FormGroup>
           </Box>
-          <Box sx={{ minWidth: '20%', padding: '1% 3% 1% 2%' }}>
+          <Box sx={{ minWidth: '20%', padding: '1% 3% 1% 2%', marginTop: 1 }}>
             <Typography>Plots size</Typography>
             <Slider
               min={20}

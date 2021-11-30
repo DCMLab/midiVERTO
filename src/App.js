@@ -312,7 +312,7 @@ function App() {
             open={open}
           >
             <DrawerHeader>
-              <Stack sx={{ flexGrow: '2', maxWidth: '85%' }}>
+              <Stack sx={{ flexGrow: '2', maxWidth: '85%', marginBottom: 1 }}>
                 <Typography sx={{ fontWeight: 'bold' }}>
                   Upload a midi file
                 </Typography>
