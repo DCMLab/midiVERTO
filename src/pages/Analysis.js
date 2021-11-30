@@ -233,9 +233,20 @@ function Application({
 
     function handleInput(input) {
       const command = input.data[0];
+
+      //Discard messages different from note on and note off
+      if (command !== 144 && command !== 128) return;
+
       const note = Tone.Frequency(input.data[1], 'midi').toNote();
+
+      //Discard note off messages for unplayed notes
+      if (command === 128 && !currentNotes.includes(note)) return;
+
+      //Decrease velocity to avoid clipping
       const velocity = Math.round(input.data[2] * 0.05);
       //const velocity = input.data[2];
+
+      //console.log(`command ${command}: note ${note}, vel ${velocity}`);
 
       switch (command) {
         case 144: //noteOn
@@ -244,9 +255,11 @@ function Application({
             sampler.triggerAttack(note, Tone.immediate(), velocity);
             currentNotes.push(note);
           } else {
-            //Note is off
+            //Note on + vel 0 = Note off
             sampler.triggerRelease(note, Tone.immediate());
-            currentNotes.filter((currentNote) => currentNote !== note);
+            currentNotes = currentNotes.filter(
+              (currentNote) => currentNote !== note
+            );
           }
           break;
         case 128: //noteOff

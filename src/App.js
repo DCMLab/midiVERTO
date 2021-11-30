@@ -506,6 +506,27 @@ function App() {
                 </Stack>
               </Paper>
             </Box>
+            <Button
+              variant='contained'
+              size='small'
+              color='primary'
+              component='span'
+              /* onClick={() => {
+                let data = document.getElementById('wavescape1').outerHTML;
+                var url =
+                  'data:image/svg+xml; charset=utf8, ' +
+                  encodeURIComponent(data);
+
+                var link = document.createElement('a');
+                link.download = 'export.svg';
+                link.href = url;
+                link.click();
+
+                console.log(url);
+              }} */
+            >
+              Save
+            </Button>
           </Drawer>
           <Main open={open}>
             <Switch>

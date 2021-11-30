@@ -60,7 +60,12 @@ export const Wavescape = ({
   }, [wavescapeMatrix, width, height]);
 
   return (
-    <svg width={width + margin} height={height}>
+    <svg
+      id={`wavescape${wsNumber}`}
+      width={width + margin}
+      height={height}
+      xmlns='http://www.w3.org/2000/svg'
+    >
       <text x='35%' y='15%' style={{ fontSize: `${(width / 100) * 7}px` }}>
         {`${wsNumber}. `}
       </text>

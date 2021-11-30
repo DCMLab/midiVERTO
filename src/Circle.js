@@ -448,6 +448,7 @@ function Circle({
         width={targetCircleWidth}
         height={targetCircleWidth}
         viewBox={`0 0 ${width} ${height}`}
+        xmlns='http://www.w3.org/2000/svg'
       >
         <g transform={`translate(${125},0)`}>
           <text x='0' y='24' style={{ fontSize: '24px' }}>
@@ -472,6 +473,7 @@ function Circle({
         <g transform={`translate(0,${headerOffset})`}>
           <foreignObject x={margin} y={margin} width={width} height={height}>
             <canvas
+              id={`circle${coeffNumber}`}
               style={{ zIndex: '-1' }}
               width={width}
               height={height}
