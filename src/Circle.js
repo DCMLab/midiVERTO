@@ -450,10 +450,13 @@ function Circle({
         viewBox={`0 0 ${width} ${height}`}
         xmlns='http://www.w3.org/2000/svg'
       >
-        <g transform={`translate(${125},0)`}>
-          <text x='0' y='24' style={{ fontSize: '24px' }}>
-            {`${coeffNumber}.`}
+        <g transform={`translate(32,8)`}>
+          <circle cx='12' cy='12' r='12' fill='black' />
+          <text fontSize='24' textAnchor='middle' x='12' y='20' fill='white'>
+            {coeffNumber}
           </text>
+        </g>
+        <g transform={`translate(${125},0)`}>
           {showMagAndPhase ? (
             <>
               <text

@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 
 const verticalScale = Math.sin(Math.PI / 3);
+let previousWidth = 1;
 
 export const Wavescape = ({
   wsNumber,
@@ -16,8 +17,10 @@ export const Wavescape = ({
   let ticks;
 
   useEffect(() => {
+    previousWidth = width;
     width = wavescapeWidth;
     height = wavescapeWidth;
+    console.log(previousWidth, width);
   }, [wavescapeWidth]);
 
   useEffect(() => {
@@ -66,9 +69,18 @@ export const Wavescape = ({
       height={height}
       xmlns='http://www.w3.org/2000/svg'
     >
-      <text x='35%' y='15%' style={{ fontSize: `${(width / 100) * 7}px` }}>
-        {`${wsNumber}. `}
-      </text>
+      <g transform={`translate(${width * 0.06},${width * 0.1})`}>
+        <circle cx='5%' cy='1%' r={`${(width / 100) * 2.8}px`} fill='black' />
+        <text
+          fontSize={`${(width / 100) * 5.2}px`}
+          textAnchor='middle'
+          x='5%'
+          y='2.8%'
+          fill='white'
+        >
+          {wsNumber}
+        </text>
+      </g>
       <g
         transform={`scale(${1}, ${-verticalScale}) translate(${0},${-height})`}
       >

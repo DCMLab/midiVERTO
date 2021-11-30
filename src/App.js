@@ -435,6 +435,21 @@ function App() {
                 <Stack>
                   <Stack direction='row'>
                     <svg width='24' height='24' viewBox='0 0 24 24'>
+                      <circle cx='12' cy='12' r='8' fill='black' />
+                      <text
+                        fontSize='15'
+                        textAnchor='middle'
+                        x='12'
+                        y='17'
+                        fill='white'
+                      >
+                        k
+                      </text>
+                    </svg>
+                    Fourier Coefficient number
+                  </Stack>
+                  <Stack direction='row'>
+                    <svg width='24' height='24' viewBox='0 0 24 24'>
                       <circle cx='12' cy='12' r='6' fill='black' />
                     </svg>
                     MIDI file segments
@@ -510,7 +525,12 @@ function App() {
               variant='contained'
               size='small'
               color='primary'
-              component='span'
+              sx={{
+                width: '50%',
+                margin: 'auto',
+                marginTop: 1,
+                marginBottom: 1,
+              }}
               /* onClick={() => {
                 let data = document.getElementById('wavescape1').outerHTML;
                 var url =
