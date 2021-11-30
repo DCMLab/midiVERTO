@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/MIDFT/static/js/main.52b920b5.chunk.js",
-    "main.js.map": "/MIDFT/static/js/main.52b920b5.chunk.js.map",
+    "main.js": "/MIDFT/static/js/main.39cd5f76.chunk.js",
+    "main.js.map": "/MIDFT/static/js/main.39cd5f76.chunk.js.map",
     "runtime-main.js": "/MIDFT/static/js/runtime-main.b7db8c69.js",
     "runtime-main.js.map": "/MIDFT/static/js/runtime-main.b7db8c69.js.map",
     "static/js/2.5a591052.chunk.js": "/MIDFT/static/js/2.5a591052.chunk.js",
@@ -17,6 +17,6 @@
   "entrypoints": [
     "static/js/runtime-main.b7db8c69.js",
     "static/js/2.5a591052.chunk.js",
-    "static/js/main.52b920b5.chunk.js"
+    "static/js/main.39cd5f76.chunk.js"
   ]
 }
