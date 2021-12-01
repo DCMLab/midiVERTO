@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 
 const verticalScale = Math.sin(Math.PI / 3);
-let previousWidth = 1;
 
 export const Wavescape = ({
   wsNumber,
@@ -17,10 +16,8 @@ export const Wavescape = ({
   let ticks;
 
   useEffect(() => {
-    previousWidth = width;
     width = wavescapeWidth;
     height = wavescapeWidth;
-    console.log(previousWidth, width);
   }, [wavescapeWidth]);
 
   useEffect(() => {
