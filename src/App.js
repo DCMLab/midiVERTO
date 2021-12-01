@@ -2,6 +2,8 @@ import Navbar from './Navbar';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, useEffect, useRef } from 'react';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 import { setPlayerMidiData } from './Player';
 import {
@@ -531,19 +533,20 @@ function App() {
                 marginTop: 1,
                 marginBottom: 1,
               }}
-              /* onClick={() => {
-                let data = document.getElementById('wavescape1').outerHTML;
-                var url =
-                  'data:image/svg+xml; charset=utf8, ' +
-                  encodeURIComponent(data);
+              onClick={() => {
+                let zip = new JSZip();
+                const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${20}' height='${20}'>
+                          <circle cx='12' cy='12' r='12' fill='black' />
+                        </svg>`;
+                zip.file('nested/hello.svg', svg);
 
-                var link = document.createElement('a');
-                link.download = 'export.svg';
-                link.href = url;
-                link.click();
+                //Generate zip and save it
+                zip.generateAsync({ type: 'blob' }).then(function (content) {
+                  saveAs(content, 'example.zip');
+                });
 
-                console.log(url);
-              }} */
+                console.log(wavescapesData);
+              }}
             >
               Save
             </Button>
