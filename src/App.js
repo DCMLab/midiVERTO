@@ -31,18 +31,17 @@ import Analysis from './pages/Analysis';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
+import Slider from '@mui/material/Slider';
 
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import FormLabel from '@mui/material/FormLabel';
 
 const drawerWidth = 400;
 
@@ -92,6 +91,7 @@ function App() {
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [coeffTracesData, setCoeffTracesData] = useState([]);
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
+  const [windowLen, setWindowLen] = useState(1);
 
   //State: inputs
   const [resolutionMode, setResolutionMode] = useState({
@@ -113,6 +113,8 @@ function App() {
 
   //State: usable/used roses for pcvs' labels
   const [rosesMat, setRosesMat] = useState([]);
+
+  useEffect(() => {}, [windowLen]);
 
   function handleSubmitPitchClass(input) {
     //In order not to refresh the page (default behaviuor)
@@ -307,321 +309,332 @@ function App() {
   }
 
   return (
-    <>
-      <HashRouter>
-        <CssBaseline />
-        <Navbar
-          open={open}
-          setOpen={setOpen}
-          setInAnalysisPage={setInAnalysisPage}
-          inAnalysisPage={inAnalysisPage}
-        />
-        <Box sx={{ display: 'flex' }}>
-          <Drawer
-            sx={{
+    <HashRouter>
+      <CssBaseline />
+      <Navbar
+        open={open}
+        setOpen={setOpen}
+        setInAnalysisPage={setInAnalysisPage}
+        inAnalysisPage={inAnalysisPage}
+      />
+      <Box sx={{ display: 'flex' }}>
+        <Drawer
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
               width: drawerWidth,
-              flexShrink: 0,
-              '& .MuiDrawer-paper': {
-                width: drawerWidth,
-                boxSizing: 'border-box',
-              },
-            }}
-            variant='persistent'
-            anchor='left'
-            open={open}
-          >
-            <DrawerHeader>
-              <Stack sx={{ flexGrow: '2', maxWidth: '85%', marginBottom: 1 }}>
-                <Typography sx={{ fontWeight: 'bold' }}>
-                  Upload a midi file
-                </Typography>
-                <Stack
-                  spacing={2}
-                  direction='row'
-                  sx={{ alignItems: 'center' }}
-                >
-                  <label htmlFor='file'>
-                    <input
-                      style={{ display: 'none' }}
-                      type='file'
-                      id='file'
-                      name='file'
-                      value={file}
-                      onChange={(e) => setFile(e.target.value)}
-                    />
-                    <Button
-                      variant='contained'
-                      size='small'
-                      color='primary'
-                      component='span'
-                    >
-                      Upload
-                    </Button>
-                  </label>
-                  <Typography
-                    noWrap={true}
-                    color={fileName ? 'primary' : 'error'}
+              boxSizing: 'border-box',
+            },
+          }}
+          variant='persistent'
+          anchor='left'
+          open={open}
+        >
+          <DrawerHeader>
+            <Stack sx={{ flexGrow: '2', maxWidth: '85%', marginBottom: 1 }}>
+              <Typography sx={{ fontWeight: 'bold' }}>
+                Upload a midi file
+              </Typography>
+              <Stack spacing={2} direction='row' sx={{ alignItems: 'center' }}>
+                <label htmlFor='file'>
+                  <input
+                    style={{ display: 'none' }}
+                    type='file'
+                    id='file'
+                    name='file'
+                    value={file}
+                    onChange={(e) => setFile(e.target.value)}
+                  />
+                  <Button
+                    variant='contained'
+                    size='small'
+                    color='primary'
+                    component='span'
                   >
-                    {file ? fileName : 'No midi file uploaded'}
-                  </Typography>
-                </Stack>
+                    Upload
+                  </Button>
+                </label>
+                <Typography
+                  noWrap={true}
+                  color={fileName ? 'primary' : 'error'}
+                >
+                  {file ? fileName : 'No midi file uploaded'}
+                </Typography>
               </Stack>
+            </Stack>
 
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === 'ltr' ? (
-                  <ChevronLeftIcon />
-                ) : (
-                  <ChevronRightIcon />
-                )}
-              </IconButton>
-            </DrawerHeader>
-            <Divider />
-            <Typography
-              sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}
-            >
-              Time resolution
-            </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                margin: '2% 5% 0 2%',
-                width: '90%',
-                justifyContent: 'space-evenly',
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
+            Time resolution
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              margin: '2% 5% 0 2%',
+              width: '90%',
+              justifyContent: 'space-evenly',
+            }}
+          >
+            <ResolutionSelector
+              setResolutionMode={setResolutionMode}
+              resolutionMode={resolutionMode}
+              retriggerAnalysis={retriggerAnalysis}
+            />
+          </Box>
+          <Divider />
+          <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
+            Window Length
+          </Typography>
+          <Typography
+            sx={{ marginLeft: 1, fontSize: '18px' }}
+            variant='h5'
+            gutterBottom
+          >{`\u00D7${windowLen} time resolution`}</Typography>
+          <Slider
+            onChangeCommitted={(event, value) => {
+              setWindowLen(value);
+            }}
+            size='small'
+            sx={{ width: '70%', margin: 'auto', marginBottom: 1 }}
+            aria-label='Window Length'
+            defaultValue={1}
+            valueLabelDisplay='auto'
+            step={1}
+            marks
+            min={1}
+            max={10}
+          />
+          <Divider />
+          <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
+            Custom pitch-class vectors
+          </Typography>
+          <Box
+            sx={{
+              flexDirection: 'column',
+              display: 'flex',
+              alignItems: 'center',
+              margin: '3% 5%',
+              height: '40%',
+              maxHeight: '350px',
+              justifyContent: 'flex-start',
+            }}
+            component='form'
+            noValidate
+            autoComplete='off'
+          >
+            <TextField
+              /* sx={{ minHeight: '5rem' }} */
+              fullWidth
+              label={'margin="dense"'}
+              error={isInputPcvInvalid}
+              helperText={isInputPcvInvalid && 'Invalid input'}
+              id='outlined-basic'
+              label='e.g. {0,0,4,7,10} (2,0,0,0,1,0,0,1,0,0,1,0)'
+              variant='outlined'
+              onKeyPress={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  handleSubmitPitchClass(pcvTextRef.current.value);
+                  pcvTextRef.current.value = '';
+                }
               }}
-            >
-              <ResolutionSelector
-                setResolutionMode={setResolutionMode}
-                resolutionMode={resolutionMode}
-                retriggerAnalysis={retriggerAnalysis}
-              />
-            </Box>
-            <Divider />
-            <Typography
-              sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}
-            >
-              Custom pitch-class vectors
-            </Typography>
-            <Box
-              sx={{
-                flexDirection: 'column',
-                display: 'flex',
-                alignItems: 'center',
-                margin: '3% 5%',
-                height: '40%',
-                maxHeight: '350px',
-                justifyContent: 'flex-start',
+              onChange={() => {
+                setIsInputPcvInvalid(false);
               }}
-              component='form'
-              noValidate
-              autoComplete='off'
-            >
-              <TextField
-                /* sx={{ minHeight: '5rem' }} */
-                fullWidth
-                label={'margin="dense"'}
-                error={isInputPcvInvalid}
-                helperText={isInputPcvInvalid && 'Invalid input'}
-                id='outlined-basic'
-                label='e.g. {0,0,4,7,10} (2,0,0,0,1,0,0,1,0,0,1,0)'
-                variant='outlined'
-                onKeyPress={(event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault();
-                    handleSubmitPitchClass(pcvTextRef.current.value);
-                    pcvTextRef.current.value = '';
-                  }
-                }}
-                onChange={() => {
-                  setIsInputPcvInvalid(false);
-                }}
-                inputRef={pcvTextRef}
-              />
-              <PcvChipsBox
-                userPcvs={userPcvs}
-                setUserPcvs={setUserPcvs}
-                rosesMat={rosesMat}
-              />
-            </Box>
-            <Divider />
-            <Typography
-              sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}
-            >
-              Legend of coefficients
-            </Typography>
-            <Box sx={{ margin: '5px 10px' }}>
-              <Paper>
-                <Stack>
-                  <Stack direction='row'>
-                    <svg width='24' height='24' viewBox='0 0 24 24'>
-                      <circle cx='12' cy='12' r='8' fill='black' />
-                      <text
-                        fontSize='15'
-                        textAnchor='middle'
-                        x='12'
-                        y='17'
-                        fill='white'
-                      >
-                        k
-                      </text>
-                    </svg>
-                    Fourier coefficient number
-                  </Stack>
-                  <Stack direction='row'>
-                    <svg width='24' height='24' viewBox='0 0 24 24'>
-                      <circle cx='12' cy='12' r='6' fill='black' />
-                    </svg>
-                    MIDI file segments
-                  </Stack>
-                  <Stack direction='row'>
-                    <svg width='24' height='24' viewBox='0 0 24 24'>
-                      <circle cx='12' cy='12' r='5' fill='white' />
-                      <circle
-                        cx='12'
-                        cy='12'
-                        r='5'
+              inputRef={pcvTextRef}
+            />
+            <PcvChipsBox
+              userPcvs={userPcvs}
+              setUserPcvs={setUserPcvs}
+              rosesMat={rosesMat}
+            />
+          </Box>
+          <Divider />
+          <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
+            Legend of coefficients
+          </Typography>
+          <Box sx={{ margin: '5px 10px' }}>
+            <Paper>
+              <Stack>
+                <Stack direction='row'>
+                  <svg width='24' height='24' viewBox='0 0 24 24'>
+                    <circle cx='12' cy='12' r='8' fill='black' />
+                    <text
+                      fontSize='15'
+                      textAnchor='middle'
+                      x='12'
+                      y='17'
+                      fill='white'
+                    >
+                      k
+                    </text>
+                  </svg>
+                  Fourier coefficient number
+                </Stack>
+                <Stack direction='row'>
+                  <svg width='24' height='24' viewBox='0 0 24 24'>
+                    <circle cx='12' cy='12' r='6' fill='black' />
+                  </svg>
+                  MIDI file segments
+                </Stack>
+                <Stack direction='row'>
+                  <svg width='24' height='24' viewBox='0 0 24 24'>
+                    <circle cx='12' cy='12' r='5' fill='white' />
+                    <circle
+                      cx='12'
+                      cy='12'
+                      r='5'
+                      fill='none'
+                      stroke='black'
+                      strokeWidth='3px'
+                    />
+                  </svg>
+                  MIDI playback
+                </Stack>
+                <Stack direction='row'>
+                  <svg width='24' height='24' viewBox='0 0 24 24'>
+                    <g transform='translate(12,12)'>
+                      <line
+                        x1='0'
+                        x2='0'
+                        y1='7'
+                        y2='-7'
+                        stroke='black'
+                        strokeWidth='1.5'
+                      ></line>
+                      <line
+                        x1='7'
+                        x2='-7'
+                        y1='0'
+                        y2='0'
+                        stroke='black'
+                        strokeWidth='1.5'
+                      ></line>
+                    </g>
+                  </svg>
+                  MIDI controller input
+                </Stack>
+                <Stack direction='row'>
+                  <svg width='24' height='24' viewBox='0 0 24 24'>
+                    <circle
+                      cx='12'
+                      cy='12'
+                      r='7'
+                      fill='none'
+                      stroke='grey'
+                      strokeWidth='2px'
+                    />
+                  </svg>
+                  Prototypes
+                </Stack>
+                <Stack direction='row'>
+                  <svg width='24' height='24' viewBox='0 0 24 24'>
+                    {rosesMat.length > 0 ? (
+                      <polyline
+                        transform={`translate(${12},${12})`}
                         fill='none'
                         stroke='black'
-                        strokeWidth='3px'
+                        strokeWidth='1px'
+                        points={rosesMat[3][0].points}
                       />
-                    </svg>
-                    MIDI playback
-                  </Stack>
-                  <Stack direction='row'>
-                    <svg width='24' height='24' viewBox='0 0 24 24'>
-                      <g transform='translate(12,12)'>
-                        <line
-                          x1='0'
-                          x2='0'
-                          y1='7'
-                          y2='-7'
-                          stroke='black'
-                          strokeWidth='1.5'
-                        ></line>
-                        <line
-                          x1='7'
-                          x2='-7'
-                          y1='0'
-                          y2='0'
-                          stroke='black'
-                          strokeWidth='1.5'
-                        ></line>
-                      </g>
-                    </svg>
-                    MIDI controller input
-                  </Stack>
-                  <Stack direction='row'>
-                    <svg width='24' height='24' viewBox='0 0 24 24'>
-                      <circle
-                        cx='12'
-                        cy='12'
-                        r='7'
-                        fill='none'
-                        stroke='grey'
-                        strokeWidth='2px'
-                      />
-                    </svg>
-                    Prototypes
-                  </Stack>
-                  <Stack direction='row'>
-                    <svg width='24' height='24' viewBox='0 0 24 24'>
-                      {rosesMat.length > 0 ? (
-                        <polyline
-                          transform={`translate(${12},${12})`}
-                          fill='none'
-                          stroke='black'
-                          strokeWidth='1px'
-                          points={rosesMat[3][0].points}
-                        />
-                      ) : null}
-                    </svg>
-                    Custom pitch-class vectors
-                  </Stack>
+                    ) : null}
+                  </svg>
+                  Custom pitch-class vectors
                 </Stack>
-              </Paper>
-            </Box>
-            <Button
-              variant='contained'
-              size='small'
-              color='primary'
-              sx={{
-                width: '50%',
-                margin: 'auto',
-                marginTop: 1,
-                marginBottom: 1,
-              }}
-              onClick={() => {
-                let zip = new JSZip();
+              </Stack>
+            </Paper>
+          </Box>
+          <Button
+            variant='contained'
+            size='small'
+            color='primary'
+            sx={{
+              width: '50%',
+              margin: 'auto',
+              marginTop: 1,
+              marginBottom: 1,
+            }}
+            onClick={() => {
+              let zip = new JSZip();
 
-                const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${20}' height='${20}'>
+              const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${20}' height='${20}'>
                           <circle cx='12' cy='12' r='12' fill='black' />
                         </svg>`;
 
-                [1, 2, 3, 4, 5, 6].forEach((i) => {
-                  //Generate SVGs
-                  let circleSVG = generateCircleSVG(i);
-                  let wavescapeSVG = generateWavescapeSVG(i);
+              [1, 2, 3, 4, 5, 6].forEach((i) => {
+                //Generate SVGs
+                let circleSVG = generateCircleSVG(i);
+                let wavescapeSVG = generateWavescapeSVG(i);
 
-                  //Adding files to zip
-                  zip.file(`wavescapes/wavescape${i}.svg`, svg);
-                  zip.file(`fourier/space${i}.svg`, circleSVG);
-                });
+                //Adding files to zip
+                zip.file(`wavescapes/wavescape${i}.svg`, svg);
+                zip.file(`fourier/space${i}.svg`, circleSVG);
+              });
 
-                //Generate zip and save it
-                zip.generateAsync({ type: 'blob' }).then(function (content) {
-                  saveAs(content, 'images.zip');
-                });
-              }}
-            >
-              Export images
-            </Button>
-          </Drawer>
-          <Main open={open}>
-            <Switch>
-              <Route
-                exact
-                path='/'
-                render={() => (
-                  <Home
-                    setOpen={setOpen}
-                    setInAnalysisPage={setInAnalysisPage}
-                  ></Home>
-                )}
-              ></Route>
-              <Route
-                exact
-                path='/theory'
-                render={() => (
-                  <Theory
-                    setOpen={setOpen}
-                    setInAnalysisPage={setInAnalysisPage}
-                  ></Theory>
-                )}
-              ></Route>
-              <Route
-                exact
-                path='/analysis'
-                render={() => (
-                  <Analysis
-                    fileName={fileName}
-                    setInAnalysisPage={setInAnalysisPage}
-                    open={open}
-                    setOpen={setOpen}
-                    wavescapesData={wavescapesData}
-                    coeffTracesData={coeffTracesData}
-                    currentSubdiv={currentSubdiv}
-                    currentWavescapeSubdiv={Math.floor(
-                      (currentSubdiv * circleResolution) / wavescapeResolution
-                    )}
-                    userPcvs={userPcvs}
-                  />
-                )}
-              ></Route>
-            </Switch>
-          </Main>
-        </Box>
-      </HashRouter>
-    </>
+              //Generate zip and save it
+              zip.generateAsync({ type: 'blob' }).then(function (content) {
+                saveAs(content, 'images.zip');
+              });
+            }}
+          >
+            Export images
+          </Button>
+        </Drawer>
+        <Main open={open}>
+          <Switch>
+            <Route
+              exact
+              path='/'
+              render={() => (
+                <Home
+                  setOpen={setOpen}
+                  setInAnalysisPage={setInAnalysisPage}
+                ></Home>
+              )}
+            ></Route>
+            <Route
+              exact
+              path='/theory'
+              render={() => (
+                <Theory
+                  setOpen={setOpen}
+                  setInAnalysisPage={setInAnalysisPage}
+                ></Theory>
+              )}
+            ></Route>
+            <Route
+              exact
+              path='/analysis'
+              render={() => (
+                <Analysis
+                  fileName={fileName}
+                  setInAnalysisPage={setInAnalysisPage}
+                  open={open}
+                  setOpen={setOpen}
+                  wavescapesData={wavescapesData}
+                  coeffTracesData={coeffTracesData}
+                  currentSubdiv={currentSubdiv}
+                  currentWavescapeSubdiv={Math.floor(
+                    (currentSubdiv * circleResolution) / wavescapeResolution
+                  )}
+                  userPcvs={userPcvs}
+                />
+              )}
+            ></Route>
+          </Switch>
+        </Main>
+      </Box>
+    </HashRouter>
   );
 }
 
