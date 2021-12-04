@@ -11,14 +11,15 @@ export const DrawCircles = ({
   traceData,
   userPcv,
   currentSubdiv,
+  coeffNumber,
 }) => {
   //Size and N number of subdivisions of the arches
   const width = 300;
   const height = width;
   const innerWidth = 0.9 * width;
   //const innerHeight = innerWidth;
-  const N = 20;
-  const K = 10;
+  const N = 100;
+  const K = 50;
 
   //console.log(traceData);
 
@@ -141,45 +142,52 @@ export const DrawCircles = ({
     );
   };
 
-  return d3.range(0, 6, 1).map((i) => {
-    return (
-      <svg key={`circle${i}`} width={width} height={height}>
-        <g transform={`translate(${width / 2},${height / 2})`}>
-          {circularSectors.map((innerRadius) =>
-            angles.map((angle, id) => arc(angle, id, i, innerRadius))
-          )}
-        </g>
-        {/* <canvas width={width} height={height} ref={canvasRef}></canvas> */}
-        <g transform={`translate(${width / 2},${width / 2})`}>
-          {printablePitchClasses.map((pc) => {
-            if (pc.coeff.includes(i + 1)) {
-              return circleMark(pc, 0.05, 'grey');
-            } else;
-            return null;
-          })}
-        </g>
-        <g transform={`translate(${width / 2},${width / 2})`}>
-          {userPcv.map((pcv, k) => {
-            return pcv.map((coeff, j) => {
-              if (j > 0 && i + 1 === j) {
-                return circleMark(
-                  { x: coeff.re, y: coeff.im, id: `userpcv${i}.${k}.${j}` },
-                  0.03,
-                  'navy'
-                );
-              } else return null;
-            });
-          })}
-        </g>
-        <g transform={`translate(${width / 2},${width / 2})`}>
-          {traces.length > 1
-            ? traces[i].map((dot, j) => drawTrace(dot, i, j))
-            : null}
-        </g>
-        <g transform={`translate(${width / 2},${width / 2})`}>
-          {traces.length > 1 ? highlightSubdiv(i) : null}
-        </g>
-      </svg>
-    );
-  });
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      key={`circle${coeffNumber}`}
+      width={width}
+      height={height}
+    >
+      <g transform={`translate(${width / 2},${height / 2})`}>
+        {circularSectors.map((innerRadius) =>
+          angles.map((angle, id) => arc(angle, id, coeffNumber, innerRadius))
+        )}
+      </g>
+      {/* <canvas width={width} height={height} ref={canvasRef}></canvas> */}
+      <g transform={`translate(${width / 2},${width / 2})`}>
+        {printablePitchClasses.map((pc) => {
+          if (pc.coeff.includes(coeffNumber + 1)) {
+            return circleMark(pc, 0.05, 'grey');
+          } else;
+          return null;
+        })}
+      </g>
+      <g transform={`translate(${width / 2},${width / 2})`}>
+        {userPcv.map((pcv, k) => {
+          return pcv.map((coeff, j) => {
+            if (j > 0 && coeffNumber + 1 === j) {
+              return circleMark(
+                {
+                  x: coeff.re,
+                  y: coeff.im,
+                  id: `userpcv${coeffNumber}.${k}.${j}`,
+                },
+                0.03,
+                'navy'
+              );
+            } else return null;
+          });
+        })}
+      </g>
+      <g transform={`translate(${width / 2},${width / 2})`}>
+        {traces.length > 1
+          ? traces[coeffNumber].map((dot, j) => drawTrace(dot, coeffNumber, j))
+          : null}
+      </g>
+      <g transform={`translate(${width / 2},${width / 2})`}>
+        {traces.length > 1 ? highlightSubdiv(coeffNumber) : null}
+      </g>
+    </svg>
+  );
 };

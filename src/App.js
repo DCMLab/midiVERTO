@@ -1,8 +1,10 @@
 import Navbar from './Navbar';
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import ReactDOMServer from 'react-dom/server';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, useEffect, useRef } from 'react';
 import JSZip from 'jszip';
+import { DrawCircles } from './DrawCircles';
 import { saveAs } from 'file-saver';
 
 import { setPlayerMidiData } from './Player';
@@ -289,6 +291,21 @@ function App() {
     setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
   }
 
+  function generateWavescapeSVG(k) {}
+
+  function generateCircleSVG(k) {
+    let data = (
+      <DrawCircles
+        traceData={coeffTracesData}
+        printablePitchClasses={[]}
+        userPcv={[]}
+        coeffNumber={k}
+      />
+    );
+
+    return ReactDOMServer.renderToStaticMarkup(data);
+  }
+
   return (
     <>
       <HashRouter>
@@ -383,7 +400,7 @@ function App() {
             <Typography
               sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}
             >
-              Custom Pitch-Class Vectors
+              Custom pitch-class vectors
             </Typography>
             <Box
               sx={{
@@ -448,7 +465,7 @@ function App() {
                         k
                       </text>
                     </svg>
-                    Fourier Coefficient number
+                    Fourier coefficient number
                   </Stack>
                   <Stack direction='row'>
                     <svg width='24' height='24' viewBox='0 0 24 24'>
@@ -518,7 +535,7 @@ function App() {
                         />
                       ) : null}
                     </svg>
-                    Custom Pitch-Class Vectors
+                    Custom pitch-class vectors
                   </Stack>
                 </Stack>
               </Paper>
@@ -535,20 +552,28 @@ function App() {
               }}
               onClick={() => {
                 let zip = new JSZip();
+
                 const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${20}' height='${20}'>
                           <circle cx='12' cy='12' r='12' fill='black' />
                         </svg>`;
-                zip.file('nested/hello.svg', svg);
+
+                [1, 2, 3, 4, 5, 6].forEach((i) => {
+                  //Generate SVGs
+                  let circleSVG = generateCircleSVG(i);
+                  let wavescapeSVG = generateWavescapeSVG(i);
+
+                  //Adding files to zip
+                  zip.file(`wavescapes/wavescape${i}.svg`, svg);
+                  zip.file(`fourier/space${i}.svg`, circleSVG);
+                });
 
                 //Generate zip and save it
                 zip.generateAsync({ type: 'blob' }).then(function (content) {
-                  saveAs(content, 'example.zip');
+                  saveAs(content, 'images.zip');
                 });
-
-                console.log(wavescapesData);
               }}
             >
-              Save
+              Export images
             </Button>
           </Drawer>
           <Main open={open}>

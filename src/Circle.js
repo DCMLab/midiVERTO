@@ -451,7 +451,7 @@ function Circle({
         xmlns='http://www.w3.org/2000/svg'
       >
         <g transform={`translate(32,8)`}>
-          <circle cx='12' cy='12' r='12' fill='black' />
+          <circle cx='12' cy='12' r='13' fill='black' />
           <text fontSize='24' textAnchor='middle' x='12' y='20' fill='white'>
             {coeffNumber}
           </text>
