@@ -630,7 +630,7 @@ function App() {
             size='small'
             color='primary'
             sx={{
-              width: '50%',
+              width: '35%',
               margin: 'auto',
               marginTop: 1,
               marginBottom: 1,
