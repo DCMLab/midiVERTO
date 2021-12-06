@@ -446,7 +446,6 @@ function App() {
             sx={{
               marginLeft: 1,
               marginTop: 1,
-              marginBottom: 1,
               fontWeight: 'bold',
             }}
           >
