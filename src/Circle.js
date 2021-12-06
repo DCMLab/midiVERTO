@@ -311,8 +311,8 @@ function Circle({
 
     //Custom rules for labels
     if (labelName === '♯') dyOffset -= 3;
-    if (labelName === 'WT' && subSup === '2') dxOffset *= 1.2;
-    if (labelName === 'WT' && subSup === '1') dxOffset *= 1.4;
+    if (labelName === 'WT' && subSup === '1') dxOffset *= 1.2;
+    if (labelName === 'WT' && subSup === '0') dxOffset *= 1.4;
     if (labelName === 'C' && subSup === 'o7') dxOffset *= 1.2;
     if (labelName === 'O' && subSup === '1,2') dyOffset *= 1.1;
     if (labelName === 'C♯' && subSup === 'o7') {
