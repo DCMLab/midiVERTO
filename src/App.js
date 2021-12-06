@@ -95,6 +95,8 @@ function App() {
   const [windowedCoeffTraces, setWindowedCoeffTraces] = useState([]);
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
   const [windowLen, setWindowLen] = useState(1);
+  const [invalidWndLen, setInvalidWndLen] = useState(false);
+  const [textfieldWndLen, setTextfieldWndLen] = useState('1');
 
   //State: inputs
   const [resolutionMode, setResolutionMode] = useState({
@@ -120,35 +122,17 @@ function App() {
   //When window length is changed, recompute the trace to be visualized
   useEffect(() => {
     let temp = [];
-    let hopSize = windowLen / 2; //50% overlap, window length always multiple of 2
-
-    //Check if valid window len
-    if (coeffTracesData.length > 0 && coeffTracesData[0].length < windowLen) {
-      setWindowedCoeffTraces(coeffTracesData);
-      return;
-    }
 
     if (windowLen === 1) setWindowedCoeffTraces(coeffTracesData);
     else {
       coeffTracesData.forEach((trace) => {
         let windowedTrace = [];
 
-        let cursor = 0;
-        for (; cursor <= trace.length - windowLen; cursor += hopSize) {
+        for (let i = 0; i <= trace.length - windowLen; i++) {
           let smoothedPoint = { x: 0, y: 0 };
           for (let j = 0; j < windowLen; j++) {
-            smoothedPoint.x += trace[cursor + j].x;
-            smoothedPoint.y += trace[cursor + j].y;
-          }
-          windowedTrace.push(smoothedPoint);
-        }
-
-        //Last coeffs that don't fit a full window
-        if (cursor !== trace.length - 1) {
-          let smoothedPoint = { x: 0, y: 0 };
-          for (; cursor < trace.length; cursor++) {
-            smoothedPoint.x += trace[cursor].x;
-            smoothedPoint.y += trace[cursor].y;
+            smoothedPoint.x += trace[i + j].x;
+            smoothedPoint.y += trace[i + j].y;
           }
           windowedTrace.push(smoothedPoint);
         }
@@ -161,6 +145,8 @@ function App() {
 
         temp.push(windowedTrace);
       });
+
+      console.log(temp);
 
       setWindowedCoeffTraces(temp);
     }
@@ -451,40 +437,86 @@ function App() {
           >
             Window Length
           </Typography>
-          <FormControlLabel
-            sx={{ marginLeft: '0px' }}
-            control={
-              <MuiSwitch
-                onChange={(event, value) => {
-                  value ? setWindowLen(2) : setWindowLen(1);
-                }}
-              />
-            }
-            label='Smoothing'
-          />
-          <Stack sx={{ marginLeft: 2, marginBottom: 1 }} direction='row'>
-            <Slider
-              disabled={windowLen === 1 ? true : false}
-              value={windowLen}
-              onChangeCommitted={(event, value) => {
-                setWindowLen(value);
-              }}
-              size='small'
-              sx={{ width: '40%' }}
-              aria-label='Window Length'
-              defaultValue={1}
-              valueLabelDisplay='auto'
-              step={2}
-              marks
-              min={2}
-              max={10}
-            />
+          <Stack
+            sx={{ margin: 'auto', marginBottom: 1, marginTop: 1 }}
+            direction='row'
+          >
             <Typography
-              sx={{ marginLeft: 1, fontSize: '18px' }}
+              sx={{
+                marginLeft: 1,
+                paddingTop: '5px',
+                marginRight: '5px',
+                fontSize: '18px',
+              }}
               variant='h5'
               gutterBottom
-            >{`\u00D7${windowLen} time resolution`}</Typography>
+            >{`\u00D7 `}</Typography>
+            <TextField
+              inputProps={{ style: { textAlign: 'center' } }}
+              sx={{ width: '15%' }}
+              error={invalidWndLen}
+              onChange={(event) => {
+                setTextfieldWndLen(event.target.value);
+                let input = parseInt(event.target.value);
+                if (isNaN(input)) {
+                  setInvalidWndLen(true);
+                } else {
+                  setInvalidWndLen(false);
+                  if (coeffTracesData.length > 0) {
+                    if (input < 1) {
+                      setInvalidWndLen(true);
+                      setWindowLen(1);
+                    } else if (input > coeffTracesData[0].length) {
+                      setInvalidWndLen(true);
+                      setWindowLen(coeffTracesData[0].length);
+                    } else setWindowLen(input);
+                  } else {
+                    setWindowLen(input);
+                  }
+                }
+              }}
+              value={textfieldWndLen}
+              variant='standard'
+            />
+            <Typography
+              sx={{
+                marginLeft: 1,
+                paddingTop: '5px',
+                fontSize: '18px',
+              }}
+              variant='h5'
+              gutterBottom
+            >
+              {'time resolution'}
+            </Typography>
           </Stack>
+          <Slider
+            sx={{ margin: 'auto', width: '80%', marginBottom: 3 }}
+            value={windowLen}
+            onChange={(event, value) => {
+              setWindowLen(value);
+              setTextfieldWndLen(value);
+            }}
+            aria-label='Window Length'
+            defaultValue={1}
+            valueLabelDisplay='auto'
+            min={1}
+            max={coeffTracesData.length > 0 ? coeffTracesData[0].length : 100}
+            marks={
+              coeffTracesData.length > 0
+                ? [
+                    { value: 1, label: '1' },
+                    {
+                      value: coeffTracesData[0].length,
+                      label: `${coeffTracesData[0].length}`,
+                    },
+                  ]
+                : [
+                    { value: 1, label: '1' },
+                    { value: 100, label: '100' },
+                  ]
+            }
+          />
           <Divider />
           <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
             Custom pitch-class vectors
@@ -695,7 +727,12 @@ function App() {
                   wavescapesData={wavescapesData}
                   fullTraces={coeffTracesData}
                   coeffTracesData={windowedCoeffTraces}
-                  currentSubdiv={Math.floor(currentSubdiv / (windowLen / 2))} //Indexing frames
+                  currentSubdiv={
+                    windowedCoeffTraces.length > 0 &&
+                    currentSubdiv >= windowedCoeffTraces[0].length
+                      ? windowedCoeffTraces[0].length - 1
+                      : currentSubdiv
+                  }
                   currentWavescapeSubdiv={Math.floor(
                     (currentSubdiv * circleResolution) / wavescapeResolution
                   )}

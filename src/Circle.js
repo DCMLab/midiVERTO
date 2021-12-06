@@ -142,7 +142,7 @@ function Circle({
     ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
 
     //traceDataCoeff to visualze the smoothing, fullTrace otherwise
-    fullTrace.forEach((element) => {
+    traceDataCoeff.forEach((element) => {
       ctx.beginPath();
       ctx.arc(
         element.x * circleRadius,

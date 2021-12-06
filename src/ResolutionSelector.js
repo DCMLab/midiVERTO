@@ -177,7 +177,7 @@ function ResolutionSelector({
           <Button
             variant='contained'
             onClick={retriggerAnalysis}
-            sx={{ width: '22%', height: '20%', marginTop: 2 }}
+            sx={{ width: '22%', height: '15%', marginTop: 2 }}
           >
             Change
           </Button>
