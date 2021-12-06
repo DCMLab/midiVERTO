@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/MIDFT/static/js/main.fbd0e85e.chunk.js",
-    "main.js.map": "/MIDFT/static/js/main.fbd0e85e.chunk.js.map",
+    "main.js": "/MIDFT/static/js/main.756e596c.chunk.js",
+    "main.js.map": "/MIDFT/static/js/main.756e596c.chunk.js.map",
     "runtime-main.js": "/MIDFT/static/js/runtime-main.b7db8c69.js",
     "runtime-main.js.map": "/MIDFT/static/js/runtime-main.b7db8c69.js.map",
-    "static/js/2.d30795c1.chunk.js": "/MIDFT/static/js/2.d30795c1.chunk.js",
-    "static/js/2.d30795c1.chunk.js.map": "/MIDFT/static/js/2.d30795c1.chunk.js.map",
+    "static/js/2.04e01a84.chunk.js": "/MIDFT/static/js/2.04e01a84.chunk.js",
+    "static/js/2.04e01a84.chunk.js.map": "/MIDFT/static/js/2.04e01a84.chunk.js.map",
     "index.html": "/MIDFT/index.html",
-    "static/js/2.d30795c1.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.d30795c1.chunk.js.LICENSE.txt",
+    "static/js/2.04e01a84.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.04e01a84.chunk.js.LICENSE.txt",
     "static/media/HomeMarkdown.4682608b.md": "/MIDFT/static/media/HomeMarkdown.4682608b.md",
     "static/media/TheoryMarkdown.26c0a4ee.md": "/MIDFT/static/media/TheoryMarkdown.26c0a4ee.md",
     "static/media/eighth.347a1769.svg": "/MIDFT/static/media/eighth.347a1769.svg",
@@ -18,7 +18,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.b7db8c69.js",
-    "static/js/2.d30795c1.chunk.js",
-    "static/js/main.fbd0e85e.chunk.js"
+    "static/js/2.04e01a84.chunk.js",
+    "static/js/main.756e596c.chunk.js"
   ]
 }
