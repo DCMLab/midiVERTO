@@ -19,7 +19,7 @@ export const DrawCircles = ({
   const innerWidth = 0.9 * width;
   //const innerHeight = innerWidth;
   const N = 100;
-  const K = 50;
+  const K = 100;
 
   //console.log(traceData);
 
@@ -70,8 +70,6 @@ export const DrawCircles = ({
       ></path>
     );
   };
-
-  console.log(currentSubdiv);
 
   /* const outerRadius = (0.9 * height) / 2;
   const innerRadius = (0.7 * height) / 2; */

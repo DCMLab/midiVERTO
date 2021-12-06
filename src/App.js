@@ -90,6 +90,7 @@ function App() {
 
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [coeffTracesData, setCoeffTracesData] = useState([]);
+  const [windowedCoeffTraces, setWindowedCoeffTraces] = useState([]);
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
   const [windowLen, setWindowLen] = useState(1);
 
@@ -114,7 +115,44 @@ function App() {
   //State: usable/used roses for pcvs' labels
   const [rosesMat, setRosesMat] = useState([]);
 
-  useEffect(() => {}, [windowLen]);
+  //When window length is changed, recompute the trace to be visualized
+  useEffect(() => {
+    let temp = [];
+
+    //Check if valid window len
+    if (coeffTracesData.length > 0 && coeffTracesData[0].length < windowLen) {
+      setWindowedCoeffTraces(coeffTracesData);
+      return;
+    }
+
+    if (windowLen === 1) setWindowedCoeffTraces(coeffTracesData);
+    else {
+      coeffTracesData.forEach((trace) => {
+        let windowedTrace = [];
+        for (let i = 0; i <= trace.length - windowLen; i++) {
+          let smoothedPoint = { x: 0, y: 0 };
+          for (let j = 0; j < windowLen; j++) {
+            smoothedPoint.x += trace[i + j].x;
+            smoothedPoint.y += trace[i + j].y;
+          }
+
+          //Normalization
+          let magn = Math.sqrt(
+            smoothedPoint.x * smoothedPoint.x +
+              smoothedPoint.y * smoothedPoint.y
+          );
+          if (magn !== 0) {
+            smoothedPoint.x = smoothedPoint.x / magn;
+            smoothedPoint.y = smoothedPoint.y / magn;
+          }
+          windowedTrace.push(smoothedPoint);
+        }
+        temp.push(windowedTrace);
+      });
+    }
+
+    setWindowedCoeffTraces(temp);
+  }, [windowLen, coeffTracesData]);
 
   function handleSubmitPitchClass(input) {
     //In order not to refresh the page (default behaviuor)
@@ -622,7 +660,7 @@ function App() {
                   open={open}
                   setOpen={setOpen}
                   wavescapesData={wavescapesData}
-                  coeffTracesData={coeffTracesData}
+                  coeffTracesData={windowedCoeffTraces}
                   currentSubdiv={currentSubdiv}
                   currentWavescapeSubdiv={Math.floor(
                     (currentSubdiv * circleResolution) / wavescapeResolution
