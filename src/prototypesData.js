@@ -72,7 +72,7 @@ export const prototypesData = [
   ],
   [
     { label: 'Ω', x: 0, y: 0 },
-    { label: 'WT_1', x: 1, y: 0 },
-    { label: 'WT_2', x: -1, y: 0 },
+    { label: 'WT_0', x: 1, y: 0 },
+    { label: 'WT_1', x: -1, y: 0 },
   ],
 ];
