@@ -14,6 +14,7 @@ let savedImage = null;
 function Circle({
   coeffNumber,
   protoDataCoeff,
+  fullTrace,
   traceDataCoeff,
   userPcvsCoeff,
   currentSubdiv,
@@ -37,7 +38,7 @@ function Circle({
   let marksRadiusRatio = 0.01;
 
   useEffect(() => {
-    if (traceDataCoeff) {
+    if (traceDataCoeff && traceDataCoeff[currentSubdiv]) {
       //Rounding to second decimal and converting to polar coordinate
       let x = traceDataCoeff[currentSubdiv].x;
       let y = traceDataCoeff[currentSubdiv].y;
@@ -140,7 +141,8 @@ function Circle({
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
 
-    traceDataCoeff.forEach((element) => {
+    //traceDataCoeff to visualze the smoothing, fullTrace otherwise
+    fullTrace.forEach((element) => {
       ctx.beginPath();
       ctx.arc(
         element.x * circleRadius,

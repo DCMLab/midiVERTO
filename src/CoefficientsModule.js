@@ -5,6 +5,7 @@ import { prototypesData } from './prototypesData';
 import Box from '@mui/material/Box';
 
 function CoefficientsModule({
+  fullTraces,
   coeffTracesData,
   showPrototypes,
   showMagAndPhase,
@@ -58,6 +59,7 @@ function CoefficientsModule({
           coeffNumber={coeffNum}
           key={`w.${coeffNum}`}
           protoDataCoeff={selectedProtoPitchClasses[coeffNum - 1]}
+          fullTrace={fullTraces[coeffNum - 1]}
           traceDataCoeff={coeffTracesData[coeffNum - 1]}
           userPcvsCoeff={subdivUserPcvs[coeffNum - 1]}
           currentSubdiv={currentSubdiv}

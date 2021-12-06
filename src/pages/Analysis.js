@@ -56,6 +56,7 @@ function Application({
   open,
   setOpen,
   wavescapesData,
+  fullTraces,
   coeffTracesData,
   currentSubdiv,
   currentWavescapeSubdiv,
@@ -344,6 +345,7 @@ function Application({
           </AccordionSummary>
           <AccordionDetails sx={{ padding: 0 }}>
             <CoefficientsModule
+              fullTraces={fullTraces}
               coeffTracesData={coeffTracesData}
               currentSubdiv={currentSubdiv}
               showPrototypes={showPrototypes}

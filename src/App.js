@@ -42,6 +42,8 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import MuiSwitch from '@mui/material/Switch';
 
 const drawerWidth = 400;
 
@@ -118,6 +120,7 @@ function App() {
   //When window length is changed, recompute the trace to be visualized
   useEffect(() => {
     let temp = [];
+    let hopSize = windowLen / 2; //50% overlap, window length always multiple of 2
 
     //Check if valid window len
     if (coeffTracesData.length > 0 && coeffTracesData[0].length < windowLen) {
@@ -129,29 +132,38 @@ function App() {
     else {
       coeffTracesData.forEach((trace) => {
         let windowedTrace = [];
-        for (let i = 0; i <= trace.length - windowLen; i++) {
+
+        let cursor = 0;
+        for (; cursor <= trace.length - windowLen; cursor += hopSize) {
           let smoothedPoint = { x: 0, y: 0 };
           for (let j = 0; j < windowLen; j++) {
-            smoothedPoint.x += trace[i + j].x;
-            smoothedPoint.y += trace[i + j].y;
-          }
-
-          //Normalization
-          let magn = Math.sqrt(
-            smoothedPoint.x * smoothedPoint.x +
-              smoothedPoint.y * smoothedPoint.y
-          );
-          if (magn !== 0) {
-            smoothedPoint.x = smoothedPoint.x / magn;
-            smoothedPoint.y = smoothedPoint.y / magn;
+            smoothedPoint.x += trace[cursor + j].x;
+            smoothedPoint.y += trace[cursor + j].y;
           }
           windowedTrace.push(smoothedPoint);
         }
+
+        //Last coeffs that don't fit a full window
+        if (cursor !== trace.length - 1) {
+          let smoothedPoint = { x: 0, y: 0 };
+          for (; cursor < trace.length; cursor++) {
+            smoothedPoint.x += trace[cursor].x;
+            smoothedPoint.y += trace[cursor].y;
+          }
+          windowedTrace.push(smoothedPoint);
+        }
+
+        //Normalization
+        windowedTrace.forEach((smoothedPoint) => {
+          smoothedPoint.x = smoothedPoint.x / windowLen;
+          smoothedPoint.y = smoothedPoint.y / windowLen;
+        });
+
         temp.push(windowedTrace);
       });
-    }
 
-    setWindowedCoeffTraces(temp);
+      setWindowedCoeffTraces(temp);
+    }
   }, [windowLen, coeffTracesData]);
 
   function handleSubmitPitchClass(input) {
@@ -430,28 +442,50 @@ function App() {
             />
           </Box>
           <Divider />
-          <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
+          <Typography
+            sx={{
+              marginLeft: 1,
+              marginTop: 1,
+              marginBottom: 1,
+              fontWeight: 'bold',
+            }}
+          >
             Window Length
           </Typography>
-          <Typography
-            sx={{ marginLeft: 1, fontSize: '18px' }}
-            variant='h5'
-            gutterBottom
-          >{`\u00D7${windowLen} time resolution`}</Typography>
-          <Slider
-            onChangeCommitted={(event, value) => {
-              setWindowLen(value);
-            }}
-            size='small'
-            sx={{ width: '70%', margin: 'auto', marginBottom: 1 }}
-            aria-label='Window Length'
-            defaultValue={1}
-            valueLabelDisplay='auto'
-            step={1}
-            marks
-            min={1}
-            max={10}
+          <FormControlLabel
+            sx={{ marginLeft: '0px' }}
+            control={
+              <MuiSwitch
+                onChange={(event, value) => {
+                  value ? setWindowLen(2) : setWindowLen(1);
+                }}
+              />
+            }
+            label='Smoothing'
           />
+          <Stack sx={{ marginLeft: 2, marginBottom: 1 }} direction='row'>
+            <Slider
+              disabled={windowLen === 1 ? true : false}
+              value={windowLen}
+              onChangeCommitted={(event, value) => {
+                setWindowLen(value);
+              }}
+              size='small'
+              sx={{ width: '40%' }}
+              aria-label='Window Length'
+              defaultValue={1}
+              valueLabelDisplay='auto'
+              step={2}
+              marks
+              min={2}
+              max={10}
+            />
+            <Typography
+              sx={{ marginLeft: 1, fontSize: '18px' }}
+              variant='h5'
+              gutterBottom
+            >{`\u00D7${windowLen} time resolution`}</Typography>
+          </Stack>
           <Divider />
           <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
             Custom pitch-class vectors
@@ -660,8 +694,9 @@ function App() {
                   open={open}
                   setOpen={setOpen}
                   wavescapesData={wavescapesData}
+                  fullTraces={coeffTracesData}
                   coeffTracesData={windowedCoeffTraces}
-                  currentSubdiv={currentSubdiv}
+                  currentSubdiv={Math.floor(currentSubdiv / (windowLen / 2))} //Indexing frames
                   currentWavescapeSubdiv={Math.floor(
                     (currentSubdiv * circleResolution) / wavescapeResolution
                   )}
