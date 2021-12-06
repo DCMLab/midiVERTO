@@ -326,6 +326,8 @@ function App() {
     );
     setCircleResolution(resolution);
     setCoeffTracesData(tracesData);
+    setWindowLen(1);
+    setTextfieldWndLen('1');
     setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
   }
 
