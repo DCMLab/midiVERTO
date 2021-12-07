@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import Paper from '@mui/material/Paper';
-import Markdown from '../Markdown';
+/* import Markdown from '../MarkdownBackup'; */
 import Box from '@mui/material/Box';
 import Footer from '../Footer';
 import HomeMarkdown from '../HomeMarkdown.md';
@@ -24,9 +24,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
   return (
     <>
       <Paper sx={{ margin: 'auto', maxWidth: '1200px' }}>
-        <Box sx={{ padding: 3 }}>
-          <Markdown>{content}</Markdown>
-        </Box>
+        <Box sx={{ padding: 3 }}>{/* <Markdown>{content}</Markdown> */}</Box>
       </Paper>
       <Footer />
     </>

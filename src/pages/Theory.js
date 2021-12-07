@@ -1,10 +1,25 @@
 import { useEffect, useState } from 'react';
 
 import Paper from '@mui/material/Paper';
-import Markdown from '../Markdown';
+
 import Box from '@mui/material/Box';
 import Footer from '../Footer';
 import TheoryMarkdown from '../TheoryMarkdown.md';
+import Markdown from '../Markdown';
+
+const testContent = `
+Given a **formula** below
+$$
+s = ut + \\frac{1}{2}at^{2}
+$$
+Calculate the value of $s$ when $u = 10\\frac{m}{s}$ and $a = 2\\frac{m}{s^{2}}$ at $t = 1s$
+`;
+
+const testRemark = `**Below me will be displayed as a block:**
+$$ 
+Block Math 
+$$
+**Next to me will be displayed as inline ->** $Inline Math$`;
 
 export default function Theory({ setOpen, setInAnalysisPage }) {
   const [content, setContent] = useState(``);
