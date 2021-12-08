@@ -1,11 +1,7 @@
 import Navbar from './Navbar';
 import { HashRouter, Route, Switch } from 'react-router-dom';
-import ReactDOMServer from 'react-dom/server';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, useEffect, useRef } from 'react';
-import JSZip from 'jszip';
-import { DrawCircles } from './DrawCircles';
-import { saveAs } from 'file-saver';
 
 import { setPlayerMidiData } from './Player';
 import {
@@ -44,6 +40,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MuiSwitch from '@mui/material/Switch';
+import SaveDialog from './SaveDialog';
 
 const drawerWidth = 400;
 
@@ -145,8 +142,6 @@ function App() {
 
         temp.push(windowedTrace);
       });
-
-      console.log(temp);
 
       setWindowedCoeffTraces(temp);
     }
@@ -331,21 +326,6 @@ function App() {
     setWindowLen(1);
     setTextfieldWndLen('1');
     setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
-  }
-
-  function generateWavescapeSVG(k) {}
-
-  function generateCircleSVG(k) {
-    let data = (
-      <DrawCircles
-        traceData={coeffTracesData}
-        printablePitchClasses={[]}
-        userPcv={[]}
-        coeffNumber={k}
-      />
-    );
-
-    return ReactDOMServer.renderToStaticMarkup(data);
   }
 
   return (
@@ -661,41 +641,11 @@ function App() {
               </Stack>
             </Paper>
           </Box>
-          <Button
-            variant='contained'
-            size='small'
-            color='primary'
-            sx={{
-              width: '35%',
-              margin: 'auto',
-              marginTop: 1,
-              marginBottom: 1,
-            }}
-            onClick={() => {
-              let zip = new JSZip();
-
-              const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${20}' height='${20}'>
-                          <circle cx='12' cy='12' r='12' fill='black' />
-                        </svg>`;
-
-              [1, 2, 3, 4, 5, 6].forEach((i) => {
-                //Generate SVGs
-                let circleSVG = generateCircleSVG(i);
-                let wavescapeSVG = generateWavescapeSVG(i);
-
-                //Adding files to zip
-                zip.file(`wavescapes/wavescape${i}.svg`, svg);
-                zip.file(`fourier/space${i}.svg`, circleSVG);
-              });
-
-              //Generate zip and save it
-              zip.generateAsync({ type: 'blob' }).then(function (content) {
-                saveAs(content, 'images.zip');
-              });
-            }}
-          >
-            Export images
-          </Button>
+          <SaveDialog
+            traces={windowedCoeffTraces}
+            userPcvs={userPcvs}
+            wavescapesData={wavescapesData}
+          />
         </Drawer>
         <Main open={open}>
           <Switch>
