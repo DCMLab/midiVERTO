@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import Footer from '../Footer';
 import TheoryMarkdown from '../TheoryMarkdown.md';
 import Markdown from '../Markdown';
+import Tex from '@matejmazur/react-katex';
+import 'katex/dist/katex.min.css';
 
 const testContent = `
 Given a **formula** below
@@ -41,6 +43,11 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
       <Paper sx={{ margin: 'auto', maxWidth: '1200px' }}>
         <Box sx={{ padding: 3 }}>
           <Markdown>{content}</Markdown>
+          <Markdown>{`TEST Given a **formula** below`}</Markdown>
+          <Tex math='s = ut + \frac{1}{2}at^{2}' block />
+          <Markdown>{`TEST Given this **inline formula** `}</Markdown>
+          <Tex math=' s = ut + \frac{1}{2}at^{2}' />
+          <Markdown>{` I can continue writing on the same line`}</Markdown>
         </Box>
       </Paper>
       <Footer />
