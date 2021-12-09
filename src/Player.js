@@ -105,6 +105,39 @@ sampler.volume.value = -20;
 export default function Player({ fileName, currentWavescapeSubdiv }) {
   const [playbackSliderProgress, setPlaybackSliderProgress] = useState(0);
 
+  function play() {
+    console.log('play');
+    if (Tone.context.state !== 'running') {
+      console.log('state running');
+      Tone.context.resume();
+    }
+    Tone.Transport.start();
+    if (!intervalID && part)
+      intervalID = setInterval(
+        () => setPlaybackSliderProgress(part.progress),
+        1000
+      );
+  }
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      console.log(e.which);
+      if (e.which === 32) {
+        if (
+          Tone.Transport.state === 'paused' ||
+          Tone.Transport.state === 'stopped'
+        )
+          play();
+        else if (Tone.Transport.state === 'started') {
+          Tone.Transport.pause();
+          stopInterval();
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown.bind(this));
+  }, []);
+
   return (
     <Box
       sx={{
@@ -145,19 +178,7 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
           />
           <IconButton
             sx={{ padding: '0' }}
-            onClick={() => {
-              console.log('play');
-              if (Tone.context.state !== 'running') {
-                console.log('state running');
-                Tone.context.resume();
-              }
-              Tone.Transport.start();
-              if (!intervalID && part)
-                intervalID = setInterval(
-                  () => setPlaybackSliderProgress(part.progress),
-                  1000
-                );
-            }}
+            onClick={() => play()}
             size='large'
             children={<PlayArrowRoundedIcon fontSize='large' />}
           />
