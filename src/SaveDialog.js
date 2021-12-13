@@ -19,15 +19,31 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/system/Box';
+import Popover from '@mui/material/Popover';
 
 function SaveDialog({ traces, userPcvs, wavescapesData }) {
   const [open, setOpen] = useState(false);
   const [subdivUserPcvs, setSubdivUserPcvs] = useState([]);
+  const [canSave, setCanSave] = useState(false);
 
   const [checkNumb, setCheckNumb] = useState(true);
   const [checkTrace, setCheckTrace] = useState(true);
   const [checkProto, setCheckProto] = useState(true);
   const [checkPcvs, setCheckPcvs] = useState(true);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClickPopover = (event) => {
+    if (canSave) saveImages();
+    else setAnchorEl(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+  };
+
+  const openPopover = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,6 +52,10 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    wavescapesData.length > 0 ? setCanSave(true) : setCanSave(false);
+  }, [wavescapesData]);
 
   useEffect(() => {
     //Subdividing the coeffs for each circle
@@ -125,7 +145,7 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
         <DialogContent>
           <DialogContentText>
             <Typography sx={{ color: 'black' }}>
-              Check if you want to include the following elements in the
+              Check the box in order to include the correspondent element in the
               exported images:
             </Typography>
 
@@ -185,9 +205,23 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={saveImages} autoFocus>
+          <Button onClick={handleClickPopover} autoFocus>
             Save
           </Button>
+          <Popover
+            id={id}
+            open={openPopover}
+            anchorEl={anchorEl}
+            onClose={handleClosePopover}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'left',
+            }}
+          >
+            <Typography color='error' sx={{ p: 2 }}>
+              Upload a MIDI file
+            </Typography>
+          </Popover>
         </DialogActions>
       </Dialog>
     </>
