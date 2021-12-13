@@ -110,7 +110,7 @@ function Application({
   useEffect(() => {
     //When analysis data changes, show by default the full trace
     setShowFullTrace(true);
-  }, [coeffTracesData]);
+  }, [fullTraces]);
 
   useEffect(() => {
     changeElementsSize();

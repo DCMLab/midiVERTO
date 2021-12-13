@@ -91,7 +91,7 @@ function Circle({
     }
     ctx.putImageData(savedImage, 0, 0);
 
-    if (traceDataCoeff && showFullTrace) {
+    if (showFullTrace && traceDataCoeff) {
       ctx.save();
       ctx.translate((400 - margin) / 2, (400 - margin) / 2);
       drawTrace();
@@ -121,7 +121,7 @@ function Circle({
       drawTrace();
       ctx.restore();
     }
-  }, [traceDataCoeff]);
+  }, [fullTrace]);
 
   function cartesianToPolar(x, y, norm = false) {
     let phi = (Math.atan2(y, x) * 180) / Math.PI;
