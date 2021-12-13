@@ -14,10 +14,16 @@ export const Wavescape = ({
   let width = wavescapeWidth - margin;
   let height = wavescapeWidth;
   let ticks;
+  const [ticksHeight, setTicksHeight] = useState(3);
 
   useEffect(() => {
     width = wavescapeWidth;
     height = wavescapeWidth;
+    ticksHeight < 1
+      ? setTicksHeight(1)
+      : setTicksHeight(Math.floor(0.01 * wavescapeWidth));
+
+    console.log(ticksHeight);
   }, [wavescapeWidth]);
 
   useEffect(() => {
@@ -92,8 +98,8 @@ export const Wavescape = ({
                 key={`tick${i}`}
                 x1={coord.x}
                 x2={coord.x}
-                y1={coord.y - 3}
-                y2={coord.y + 3}
+                y1={coord.y - ticksHeight}
+                y2={coord.y + ticksHeight}
                 stroke='grey'
                 strokeWidth='1px'
               />

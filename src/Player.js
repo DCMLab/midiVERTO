@@ -121,8 +121,8 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
 
   useEffect(() => {
     function handleKeyDown(e) {
-      e.preventDefault();
       if (e.which === 32) {
+        e.preventDefault();
         if (
           Tone.Transport.state === 'paused' ||
           Tone.Transport.state === 'stopped'
