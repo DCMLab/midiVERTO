@@ -157,7 +157,7 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
       >
         <Stack direction='row' sx={{ flexGrow: 1, paddingLeft: '10%' }}>
           <IconButton
-            disableFocuseRipple={true}
+            disableFocusRipple
             sx={{ padding: '0' }}
             onClick={() => {
               console.log('stop');
@@ -168,7 +168,7 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
             children={<StopRoundedIcon fontSize='large' />}
           />
           <IconButton
-            disableFocuseRipple={true}
+            disableFocusRipple
             sx={{ padding: '0' }}
             onClick={() => {
               console.log('pause');
@@ -179,7 +179,7 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
             children={<PauseRoundedIcon fontSize='large' />}
           />
           <IconButton
-            disableFocuseRipple={true}
+            disableFocusRipple
             sx={{ padding: '0' }}
             onClick={() => play()}
             size='large'
