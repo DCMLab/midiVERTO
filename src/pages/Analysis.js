@@ -77,11 +77,11 @@ function Application({
   //Ref to get the width of the accordion used to computed layout sizes
   const accordionRef = useRef(null);
   const [accordionWidth, setAccordionWidth] = useState(100);
-  const [elemsForEachRow, setElemsForEachRow] = useState(6);
+  const [elemsForEachRow, setElemsForEachRow] = useState(3);
   const [elemsWidth, setElemsWidth] = useState(440);
 
   function changeElementsSize(drawerOffset = 0) {
-    let adjustmentFractSizes = 20;
+    let adjustmentFractSizes = 10;
     if (accordionRef.current) {
       setElemsWidth(
         (accordionRef.current.clientWidth + drawerOffset) / elemsForEachRow -
