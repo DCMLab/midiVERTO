@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.js": "/MIDFT/static/js/main.4c6649be.chunk.js",
-    "main.js.map": "/MIDFT/static/js/main.4c6649be.chunk.js.map",
+    "main.js": "/MIDFT/static/js/main.25088f1f.chunk.js",
+    "main.js.map": "/MIDFT/static/js/main.25088f1f.chunk.js.map",
     "runtime-main.js": "/MIDFT/static/js/runtime-main.b7db8c69.js",
     "runtime-main.js.map": "/MIDFT/static/js/runtime-main.b7db8c69.js.map",
     "static/css/2.216c7db8.chunk.css": "/MIDFT/static/css/2.216c7db8.chunk.css",
-    "static/js/2.711f2cb3.chunk.js": "/MIDFT/static/js/2.711f2cb3.chunk.js",
-    "static/js/2.711f2cb3.chunk.js.map": "/MIDFT/static/js/2.711f2cb3.chunk.js.map",
+    "static/js/2.da26c4ac.chunk.js": "/MIDFT/static/js/2.da26c4ac.chunk.js",
+    "static/js/2.da26c4ac.chunk.js.map": "/MIDFT/static/js/2.da26c4ac.chunk.js.map",
     "index.html": "/MIDFT/index.html",
     "static/css/2.216c7db8.chunk.css.map": "/MIDFT/static/css/2.216c7db8.chunk.css.map",
-    "static/js/2.711f2cb3.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.711f2cb3.chunk.js.LICENSE.txt",
+    "static/js/2.da26c4ac.chunk.js.LICENSE.txt": "/MIDFT/static/js/2.da26c4ac.chunk.js.LICENSE.txt",
     "static/media/HomeMarkdown.4682608b.md": "/MIDFT/static/media/HomeMarkdown.4682608b.md",
     "static/media/katex.min.css": "/MIDFT/static/media/KaTeX_Typewriter-Regular.c5c02d76.ttf",
     "static/media/TheoryMarkdown.26c0a4ee.md": "/MIDFT/static/media/TheoryMarkdown.26c0a4ee.md",
@@ -22,7 +22,7 @@
   "entrypoints": [
     "static/js/runtime-main.b7db8c69.js",
     "static/css/2.216c7db8.chunk.css",
-    "static/js/2.711f2cb3.chunk.js",
-    "static/js/main.4c6649be.chunk.js"
+    "static/js/2.da26c4ac.chunk.js",
+    "static/js/main.25088f1f.chunk.js"
   ]
 }
