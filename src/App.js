@@ -688,9 +688,11 @@ function App() {
                   fullTraces={coeffTracesData}
                   coeffTracesData={windowedCoeffTraces}
                   currentSubdiv={
-                    windowedCoeffTraces.length > 0
-                      ? Math.floor(windowLen / 2) + currentSubdiv
-                      : 0
+                    windowedCoeffTraces.length > 0 &&
+                    Math.floor(windowLen / 2) + currentSubdiv >=
+                      windowedCoeffTraces[0].length
+                      ? windowedCoeffTraces[0].length - 1
+                      : Math.floor(windowLen / 2) + currentSubdiv
                   }
                   currentWavescapeSubdiv={Math.floor(
                     (currentSubdiv * circleResolution) / wavescapeResolution

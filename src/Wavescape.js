@@ -22,8 +22,6 @@ export const Wavescape = ({
     ticksHeight < 1
       ? setTicksHeight(1)
       : setTicksHeight(Math.floor(0.01 * wavescapeWidth));
-
-    console.log(ticksHeight);
   }, [wavescapeWidth]);
 
   useEffect(() => {
