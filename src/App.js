@@ -475,7 +475,13 @@ function App() {
             </Typography>
           </Stack>
           <Slider
-            sx={{ margin: 'auto', width: '80%', marginBottom: 3 }}
+            sx={{
+              margin: 'auto',
+              width: '80%',
+              marginBottom: 3,
+              marginTop: 1,
+              heigth: '10%',
+            }}
             value={windowLen}
             onChange={(event, value) => {
               setWindowLen(value);
