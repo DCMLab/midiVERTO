@@ -52,7 +52,7 @@ function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
               y1={wsCoordinates[0][0].y}
               y2={wsCoordinates[0][wsCoordinates[0].length - 1].y}
               stroke='grey'
-              strokeWidth='2px'
+              strokeWidth='1px'
             />
             <line
               x1={wsCoordinates[0][wsCoordinates[0].length - 1].x}
