@@ -203,43 +203,48 @@ function App() {
   useEffect(() => {
     let input = document.getElementById('file').files[0];
 
-    input ? (fileName = input.name) : (fileName = '');
-
     if (input) {
       let fileReader = new FileReader();
       fileReader.readAsArrayBuffer(input);
       fileReader.onload = (loadedFile) => {
-        let { midiData, midiBpm } = getMidiFileDataObject(
-          loadedFile.target.result
-        );
-        currentSongBPM = midiBpm;
-        currentSongMidiData = midiData;
+        try {
+          let { midiData, midiBpm } = getMidiFileDataObject(
+            loadedFile.target.result
+          );
 
-        //Wavescapes static analysis
-        let subdivsNumberStatic = 50;
-        let staticResolution =
-          currentSongMidiData.duration / subdivsNumberStatic;
-        setWavescapeResolution(staticResolution);
+          currentSongBPM = midiBpm;
+          currentSongMidiData = midiData;
+          fileName = input.name;
 
-        setWavescapesData(
-          getRgbaMatrix(
-            getDftCoeffStatic(currentSongMidiData, staticResolution)
-          )
-        );
+          //Wavescapes static analysis
+          let subdivsNumberStatic = 50;
+          let staticResolution =
+            currentSongMidiData.duration / subdivsNumberStatic;
+          setWavescapeResolution(staticResolution);
 
-        //Circles dynamic analysis
-        let { tracesData, resolution } = getDftCoeffDynamic(
-          midiData,
-          resolutionMode,
-          currentSongBPM
-        );
-        setCircleResolution(resolution);
-        setCoeffTracesData(tracesData);
-        setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
-        setWindowLen(1);
-        setTextfieldWndLen('1');
+          setWavescapesData(
+            getRgbaMatrix(
+              getDftCoeffStatic(currentSongMidiData, staticResolution)
+            )
+          );
 
-        console.log(midiData);
+          //Circles dynamic analysis
+          let { tracesData, resolution } = getDftCoeffDynamic(
+            midiData,
+            resolutionMode,
+            currentSongBPM
+          );
+          setCircleResolution(resolution);
+          setCoeffTracesData(tracesData);
+          setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
+          setWindowLen(1);
+          setTextfieldWndLen('1');
+
+          console.log(midiData);
+        } catch (error) {
+          console.log(error);
+          return;
+        }
       };
     }
   }, [file]);
@@ -379,7 +384,9 @@ function App() {
                   noWrap={true}
                   color={fileName ? 'primary' : 'error'}
                 >
-                  {file ? fileName : 'No midi file uploaded'}
+                  {wavescapesData.length > 0
+                    ? fileName
+                    : 'No midi file uploaded'}
                 </Typography>
               </Stack>
             </Stack>
