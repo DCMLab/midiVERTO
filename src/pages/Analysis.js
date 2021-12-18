@@ -366,6 +366,24 @@ function Application({
         sx={{ top: 'auto', bottom: 0, maxHeight: '74px' }}
       >
         <Toolbar>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl size='small' variant='standard' fullWidth>
+              <InputLabel>Layout</InputLabel>
+              <Select
+                value={elemsForEachRow}
+                label='Layout'
+                onChange={(event) => {
+                  setAccordionWidth(100);
+                  setElemsForEachRow(event.target.value);
+                }}
+              >
+                <MenuItem value={6}>1x6</MenuItem>
+                <MenuItem value={3}>2x3</MenuItem>
+                <MenuItem value={2}>3x2</MenuItem>
+                <MenuItem value={1}>6x1</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
           <Player
             fileName={fileName}
             currentWavescapeSubdiv={currentWavescapeSubdiv}
@@ -432,24 +450,6 @@ function Application({
                 { value: 100, label: '100%' },
               ]}
             />
-          </Box>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl size='small' variant='standard' fullWidth>
-              <InputLabel>Layout</InputLabel>
-              <Select
-                value={elemsForEachRow}
-                label='Layout'
-                onChange={(event) => {
-                  setAccordionWidth(100);
-                  setElemsForEachRow(event.target.value);
-                }}
-              >
-                <MenuItem value={6}>1x6</MenuItem>
-                <MenuItem value={3}>2x3</MenuItem>
-                <MenuItem value={2}>3x2</MenuItem>
-                <MenuItem value={1}>6x1</MenuItem>
-              </Select>
-            </FormControl>
           </Box>
         </Toolbar>
       </AppBar>
