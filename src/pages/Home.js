@@ -1,12 +1,17 @@
+//React
 import { useEffect, useState } from 'react';
 
+//Import material UI components
 import Paper from '@mui/material/Paper';
-import Markdown from '../Markdown';
 import Box from '@mui/material/Box';
 import Footer from '../Footer';
+
+//Markdown tests
+import Markdown from '../Markdown';
 import HomeMarkdown from '../HomeMarkdown.md';
 /* import Markdown from '../Markdown'; */
 
+//Home component
 export default function Home({ setOpen, setInAnalysisPage }) {
   const [content, setContent] = useState(``);
 

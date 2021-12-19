@@ -1,9 +1,12 @@
+//React
 import { useEffect, useState } from 'react';
 
+//Import material UI components
 import Paper from '@mui/material/Paper';
-
 import Box from '@mui/material/Box';
 import Footer from '../Footer';
+
+//Markdown tests
 import TheoryMarkdown from '../TheoryMarkdown.md';
 import Markdown from '../Markdown';
 import Tex from '@matejmazur/react-katex';
