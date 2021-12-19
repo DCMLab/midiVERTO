@@ -1,6 +1,11 @@
+//React and D3
 import * as d3 from 'd3';
 import { useRef, useEffect, useState } from 'react';
+
+//Import functions
 import { pixelColor } from './colorMapping';
+
+//Import material UI components
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -8,9 +13,11 @@ import Box from '@mui/material/Box';
 
 let savedImage = null;
 
-//Minus before every y coordinate due to the fact that svg has positive y
-//downward, meanwhile cartesian plane has positive y upward
+//IMPORTANT NOTE
+//Minus before every y coordinate due to the fact that images have
+//positive y downward, meanwhile cartesian plane has positive y upward.
 
+//Circle component
 function Circle({
   coeffNumber,
   protoDataCoeff,
