@@ -1,18 +1,21 @@
+//Import React
 import React from 'react';
+import { Link } from 'react-router-dom';
+
+//Import material UI components
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import { Link } from 'react-router-dom';
-import { styled, useTheme } from '@mui/material/styles';
-
+import { styled } from '@mui/material/styles';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import IconButton from '@mui/material/IconButton';
 
 const drawerWidth = 400;
 
+//AppBar animation
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -30,7 +33,9 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+//Navbar component
 export default function Navbar({ open, setOpen, inAnalysisPage }) {
+  //Open Drawer on ChevronRightIcon click
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -39,6 +44,7 @@ export default function Navbar({ open, setOpen, inAnalysisPage }) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static' open={open}>
         <Toolbar>
+          {/* Open Drawer button */}
           <IconButton
             disabled={!inAnalysisPage}
             color='inherit'
@@ -49,9 +55,13 @@ export default function Navbar({ open, setOpen, inAnalysisPage }) {
           >
             <ChevronRightIcon />
           </IconButton>
+
+          {/* App name */}
           <Typography variant='h3' component='div' sx={{ flexGrow: 1 }}>
             Mi_DFT
           </Typography>
+
+          {/* Navigation buttons */}
           <ButtonGroup aria-label='outlined button group'>
             <Button
               component={Link}
