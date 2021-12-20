@@ -1,6 +1,14 @@
+//Import libraries
 import * as math from 'mathjs';
 
-// Compute the DFT on the input pcv
+/**
+ * Compute the DFT of a PCV
+ * @param {array} pcv pitch-class vector
+ * @param {boolean} normalize true for normalizing the output value
+ * @param {boolean} round true for rounding the output value
+ * @param {boolean} polar true for changing coordinates to the output value
+ * @returns {array}
+ */
 export default function dft(
   pcv,
   normalize = true,
@@ -47,20 +55,30 @@ export default function dft(
   return coeffs;
 }
 
+/**
+ * Sum the coefficients and normalize the result, used to compute the
+ * rows of the wavescape by expoliting the linearity of the DFT
+ * @param {array} coeffs Array of coefficients
+ * @returns
+ */
 export function sumAndNormalize(coeffs) {
+  //Sum init
   let sum = coeffs[0];
+
   for (let i = 1; i < coeffs.length; i++) {
-    //incremental sum for each coeff
     let temp = [];
-    //coeff per coeff sum
+
+    //incremental sum for each coeff
     for (let j = 0; j < coeffs[i].length; j++) {
       temp.push(math.add(sum[j], coeffs[i][j]));
     }
+    //Clone array
     sum = temp.slice();
   }
 
+  //Normalize
   const norm = sum[0];
-  sum = sum.map((coeff) => math.divide(coeff, norm));
+  if (norm != 0) sum = sum.map((coeff) => math.divide(coeff, norm));
 
   return sum;
 }

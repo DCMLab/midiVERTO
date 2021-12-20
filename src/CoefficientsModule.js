@@ -31,10 +31,6 @@ function CoefficientsModule({
   //divided for each Fourier space (from 1st to 6th).
   const [subdivUserPcvs, setSubdivUserPcvs] = useState([]);
 
-  useEffect(() => {
-    console.log(subdivUserPcvs);
-  }, [subdivUserPcvs]);
-
   //Effect: show/unshow prototypes when showPrototypes is toggled.
   useEffect(() => {
     if (showPrototypes) {
