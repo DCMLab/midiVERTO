@@ -1,8 +1,11 @@
+//Import functions
 import { Midi } from '@tonejs/midi';
 import dft, { sumAndNormalize } from './DFT';
-import { getRgbaFromComplex, pixelColor } from './colorMapping';
+import { getRgbaFromComplex } from './colorMapping';
 
+//Pitch-class vector class
 class Pcv {
+  //"s" is sharp
   constructor() {
     this.C = 0;
     this.Cs = 0;
@@ -18,6 +21,11 @@ class Pcv {
     this.B = 0;
   }
 
+  /**
+   * Add duration in seconds to the specified pitch attribute.
+   * @param {string} targetPitch pitch to which add the duration
+   * @param {number} duration seconds
+   */
   addNoteDuration(targetPitch, duration) {
     switch (targetPitch) {
       case 'C':
@@ -61,6 +69,10 @@ class Pcv {
     }
   }
 
+  /**
+   * Return the object's attributes as an array
+   * @returns array
+   */
   getPcvAsArray() {
     let temp = [
       this.C,
@@ -80,6 +92,10 @@ class Pcv {
     return temp;
   }
 
+  /**
+   * Class addition
+   * @param {object} pcv
+   */
   add(pcv) {
     this.C = pcv.C;
     this.Cs = pcv.Cs;
@@ -96,13 +112,21 @@ class Pcv {
   }
 }
 
+/**
+ * Read the MIDI file, remove percussive tracks and return it as an object
+ * @param {binary} binMidiFile MIDI file in binary code
+ * @returns object
+ */
 export function getMidiFileDataObject(binMidiFile) {
+  //Read file
   let midiData = new Midi(binMidiFile);
 
+  //We assume that song's tempo is the fastest one
+  //(since many picies slow down in some parts)
   let tempos = midiData.header.tempos.map((tempo) => Math.round(tempo.bpm));
-  let midiBpm = Math.max(...tempos); //For quarter-note conversion
+  let midiBpm = Math.max(...tempos); //BPM used for quarter-note conversion
 
-  //Check and delete percussive tracks!
+  //Check and delete percussive tracks
   let nonPercussiveTracks = midiData.tracks.filter(
     (track) => track.instrument.percussion === false
   );
@@ -112,110 +136,150 @@ export function getMidiFileDataObject(binMidiFile) {
   return { midiData, midiBpm };
 }
 
+/**
+ * Compute the first row of the wavescapes (from 0th to 6th).
+ * @param {object} midiFile
+ * @param {number} resolution in seconds
+ * @returns array
+ */
 export function getDftCoeffStatic(midiFile, resolution) {
   let tracksSubdivision = [];
 
+  //Subdivide the tracks by the resolution
   midiFile.tracks.forEach((track) =>
     tracksSubdivision.push(
       getSubdivision(track.notes, resolution, midiFile.duration)
     )
   );
-  //console.log(tracksSubdivision);
 
-  //pcv arrary init
+  //PCV array init
   let pcvSubdivision = [];
 
+  //For each subdivision, create a PCV
   for (let i = 0; i < tracksSubdivision[0].length; i++) {
     pcvSubdivision.push(new Pcv());
   }
 
-  //populating the array for each subdiv with the durations
-  //for each track: i, for each subdiv: j, for each note of the subdiv: k
+  //Compute the PCVs for each subdivision
+  //FOR LOOP:
+  //i --> i-th track
+  //j --> j-th subdivision in the i-th track
+  //k --> k-th note in j-th subdivision
   for (let i = 0; i < tracksSubdivision.length; i++) {
     for (let j = 0; j < tracksSubdivision[i].length; j++) {
       for (let k = 0; k < tracksSubdivision[i][j].length; k++) {
         let { pitch, duration } = tracksSubdivision[i][j][k];
+        //Add note duration/contribution to the PCV
         pcvSubdivision[j].addNoteDuration(pitch, duration);
       }
     }
   }
 
-  //Computing the dft coeffs for of each subdiv
+  //Computing the DFT coefficients for of each subdivision
   let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
     dft(pcv.getPcvAsArray())
   );
 
-  //Computing the dft coeffs matrix
+  //Computing the whole matrix
   let dftCoeffsMatrix = [];
 
-  //adding the first row
+  //Adding the first row
   dftCoeffsMatrix.push(dftCoeffsSubdivision);
+
+  //Computing each row of the matrix as the normalized sum of the
+  //previous row by using a sliding window of incrementing length
+
+  let matrixHeight = dftCoeffsMatrix[0].length;
+  let baseLength = dftCoeffsMatrix[0].length;
+
+  //The second row is composed by segments of length 2, third row is...
+  let wndLenUnits = 2;
+
+  //For each row of the matrix, starting from second row
+  for (let i = 1; i < matrixHeight; i++) {
+    let temp = [];
+
+    //Slinding window of hop size = 1
+    for (let cursor = 0; cursor + wndLenUnits <= baseLength; cursor++) {
+      //Extract the windowed subdivisions
+      let windowed = dftCoeffsMatrix[0].slice(cursor, cursor + wndLenUnits);
+      //The new element of the i-th row is the normalized sum
+      //of segments extracted from the previous row
+      temp.push(sumAndNormalize(windowed));
+    }
+    wndLenUnits++;
+    dftCoeffsMatrix.push(temp);
+  }
 
   return dftCoeffsMatrix;
 }
 
+/**
+ * Compute the traces on the Fourier spaces for the given resolution
+ * @param {object} midiData
+ * @param {object} resolutionMode
+ * @param {number} currentSongBPM
+ * @returns traces and resolution
+ */
 export function getDftCoeffDynamic(midiData, resolutionMode, currentSongBPM) {
   let { noteResolutionValue, seconds, useSeconds } = resolutionMode;
 
   let resolution;
+  //Set resolution depending on which mode is selected
   if (useSeconds) {
+    //Use seconds
     isNaN(seconds) ? (resolution = 1) : (resolution = seconds);
   } else {
-    //Use bpm
+    //Use music values
     resolution = noteResolutionValue * (60 / currentSongBPM);
   }
-
-  //console.log(currentSongBPM);
-  //console.log(resolution);
 
   let duration = midiData.duration;
   let tracksSubdivision = [];
 
-  //TODO: check and delete percussive tracks!
-  let nonPercussiveTracks = midiData.tracks.filter(
-    (track) => track.instrument.percussion === false
-  );
-
-  nonPercussiveTracks.forEach((track) => {
+  //Subdivide the tracks by the resolution
+  midiData.tracks.forEach((track) => {
     tracksSubdivision.push(getSubdivision(track.notes, resolution, duration));
   });
 
-  //pcv arrary init
+  //PCV array init
   let pcvSubdivision = [];
 
+  //For each subdivision, create a PCV
   for (let i = 0; i < tracksSubdivision[0].length; i++) {
     pcvSubdivision.push(new Pcv());
   }
 
-  //populating the array for each subdiv with the durations
-  //for each track: i, for each subdiv: j, for each note of the subdiv: k
+  //Compute the PCVs for each subdivision
+  //FOR LOOP:
+  //i --> i-th track
+  //j --> j-th subdivision in the i-th track
+  //k --> k-th note in j-th subdivision
   for (let i = 0; i < tracksSubdivision.length; i++) {
     for (let j = 0; j < tracksSubdivision[i].length; j++) {
       for (let k = 0; k < tracksSubdivision[i][j].length; k++) {
         let { pitch, duration } = tracksSubdivision[i][j][k];
+        //Add note duration/contribution to the PCV
         pcvSubdivision[j].addNoteDuration(pitch, duration);
       }
     }
   }
 
-  //Computing the dft coeffs for of each subdiv
+  //Computing the DFT coefficients for of each subdivision
   let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
     dft(pcv.getPcvAsArray())
   );
 
-  //Computing the dft coeffs matrix
-  let dftCoeffsMatrix = [];
-
-  //adding the first row
-  dftCoeffsMatrix.push(dftCoeffsSubdivision);
-
-  //Subdividing the first row of the dft coeff matrix to get the trace for each coeff
+  //Generating the traces by subdividing for the coefficient number
   let traces = [];
-  let firstRow = dftCoeffsMatrix[0];
+  //Skipping coefficient zero since it will not be plotted
   for (let i = 1; i < 7; i++) {
     let temp = [];
-    for (let j = 0; j < firstRow.length; j++) {
-      temp.push({ x: firstRow[j][i].re, y: firstRow[j][i].im });
+    for (let j = 0; j < dftCoeffsSubdivision.length; j++) {
+      temp.push({
+        x: dftCoeffsSubdivision[j][i].re,
+        y: dftCoeffsSubdivision[j][i].im,
+      });
     }
     traces.push(temp);
   }
@@ -223,219 +287,29 @@ export function getDftCoeffDynamic(midiData, resolutionMode, currentSongBPM) {
   return { tracesData: traces, resolution: resolution };
 }
 
-//Resolution is in seconds
-export function getDftCoeffFromMidiLinear(
-  midiFile,
-  multiRes = 1,
-  seconds = 1,
-  useSeconds
-) {
-  //For now, we don't take into account tempo changes
-  let midiData = new Midi(midiFile);
-  console.log(midiData);
-
-  let resolution;
-  if (useSeconds) {
-    isNaN(seconds) ? (resolution = 1) : (resolution = seconds);
-  } else {
-    //Use bpm
-    let tempos = midiData.header.tempos.map((tempo) => Math.round(tempo.bpm));
-    let bpm = Math.max(...tempos); //For quarter-note conversion
-    resolution = multiRes * (60 / bpm);
-  }
-
-  console.log(resolution);
-
-  let duration = midiData.duration;
-  let tracksSubdivision = [];
-
-  //TODO: check and delete percussive tracks!
-  let nonPercussiveTracks = midiData.tracks.filter(
-    (track) => track.instrument.percussion === false
-  );
-
-  nonPercussiveTracks.forEach((track) => {
-    tracksSubdivision.push(getSubdivision(track.notes, resolution, duration));
-  });
-
-  //pcv arrary init
-  let pcvSubdivision = [];
-
-  for (let i = 0; i < tracksSubdivision[0].length; i++) {
-    pcvSubdivision.push(new Pcv());
-  }
-
-  //populating the array for each subdiv with the durations
-  //for each track: i, for each subdiv: j, for each note of the subdiv: k
-  for (let i = 0; i < tracksSubdivision.length; i++) {
-    for (let j = 0; j < tracksSubdivision[i].length; j++) {
-      for (let k = 0; k < tracksSubdivision[i][j].length; k++) {
-        let { pitch, duration } = tracksSubdivision[i][j][k];
-        pcvSubdivision[j].addNoteDuration(pitch, duration);
-      }
-    }
-  }
-
-  //Computing the dft coeffs for of each subdiv
-  let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
-    dft(pcv.getPcvAsArray())
-  );
-
-  //Computing the dft coeffs matrix
-  let dftCoeffsMatrix = [];
-
-  //adding the first row
-  dftCoeffsMatrix.push(dftCoeffsSubdivision);
-
-  return { dftCoeffsLinear: dftCoeffsMatrix, resolution: resolution };
-}
-
-//Resolution is in seconds
-export function getDftCoeffFromMidi(midiFile, resolution) {
-  //For now, we don't take into account tempo changes
-  let midiData = new Midi(midiFile);
-  console.log(midiData);
-  //const bpm = midiData.header.tempos[0].bpm; //For quarter-note conversion
-  let duration = midiData.duration;
-  let tracksSubdivision = [];
-
-  //TODO: check and delete percussive tracks!
-  let nonPercussiveTracks = midiData.tracks.filter(
-    (track) => track.instrument.percussion === false
-  );
-
-  /* midiData.tracks.forEach((track) => {
-    let tempMat = [];
-
-    for (let wndLen = resolution; wndLen < duration; wndLen += resolution) {
-      tempMat.push(getRow(track.notes, wndLen, resolution, duration));
-    }
-    //Since wndLen < duration, the for cycle do not include the top vertex of the triangle
-    tempMat.push(getRow(track.notes, duration, duration, duration)); //manually added
-
-    trackMatrices.push(tempMat);
-  }); */
-
-  nonPercussiveTracks.forEach((track) => {
-    tracksSubdivision.push(getSubdivision(track.notes, resolution, duration));
-  });
-
-  //pcv arrary init
-  let pcvSubdivision = [];
-
-  for (let i = 0; i < tracksSubdivision[0].length; i++) {
-    pcvSubdivision.push(new Pcv());
-  }
-
-  //populating the array for each subdiv with the durations
-  //for each track: i, for each subdiv: j, for each note of the subdiv: k
-  for (let i = 0; i < tracksSubdivision.length; i++) {
-    for (let j = 0; j < tracksSubdivision[i].length; j++) {
-      for (let k = 0; k < tracksSubdivision[i][j].length; k++) {
-        let { pitch, duration } = tracksSubdivision[i][j][k];
-        pcvSubdivision[j].addNoteDuration(pitch, duration);
-      }
-    }
-  }
-
-  //Computing the dft coeffs for of each subdiv
-  let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
-    dft(pcv.getPcvAsArray())
-  );
-
-  //Computing the dft coeffs matrix
-  let dftCoeffsMatrix = [];
-
-  //adding the first row
-  dftCoeffsMatrix.push(dftCoeffsSubdivision);
-
-  return dftCoeffsMatrix;
-
-  /* OLD   //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
-  let matrixHeight = dftCoeffsSubdivision.length;
-  let rowsWidth = dftCoeffsSubdivision.length;
-  for (let i = 1; i < matrixHeight; i++) {
-    //starting from second row, first already populated
-    let temp = [];
-    for (let cursor = 1; cursor < rowsWidth; cursor++) {
-      //starting from the second element and backward summing
-      temp.push(
-        //TODO change, sum subdiv only on first row
-        sumAndNormalize(
-          dftCoeffsMatrix[i - 1][cursor - 1],
-          dftCoeffsMatrix[i - 1][cursor]
-        )
-      );
-    }
-    rowsWidth--;
-    dftCoeffsMatrix.push(temp);
-  } */
-}
-
+/**
+ * Map the points of the wavescape to RGBA value and subdivide by
+ * coefficient number
+ * @param {matrix} dftCoeffsMatrix
+ * @returns
+ */
 export function getRgbaMatrix(dftCoeffsMatrix) {
-  //Computing each row of the matrix as the normalized sum of the previous row (dft as linear op)
-  let matrixHeight = dftCoeffsMatrix[0].length;
-  let rowsWidth = dftCoeffsMatrix[0].length;
-  let wndLenUnits = 2;
-  for (let i = 1; i < matrixHeight; i++) {
-    //starting from second row, first already populated
-    let temp = [];
-    for (let cursor = 0; cursor + wndLenUnits <= rowsWidth; cursor++) {
-      let windowed = dftCoeffsMatrix[0].slice(cursor, cursor + wndLenUnits);
-      temp.push(sumAndNormalize(windowed));
-    }
-    wndLenUnits++;
-    dftCoeffsMatrix.push(temp);
-  }
-
-  /* //Computing the pcvs for each subdivision
-  let pcvMatrix = [];
-
-  for (let i = 0; i < trackMatrices[0].length; i++) {
-    let temp = [];
-    for (let k = 0; k < trackMatrices[0][i].length; k++) {
-      temp.push(new Pcv());
-    }
-    pcvMatrix.push(temp);
-  } */
-
-  /* trackMatrices.forEach((track) => {
-    for (let i = 0; i < track.length; i++) {
-      for (let j = 0; j < track[i].length; j++) {
-        for (let k = 0; k < track[i][j].length; k++) {
-          let { pitch, duration } = track[i][j][k];
-          pcvMatrix[i][j].addNoteDuration(pitch, duration);
-        }
-      }
-    }
-  }); */
-
-  /* //Computing the dft coeff matrix
-  let dftCoeffMatrix = [];
-
-  for (let i = 0; i < pcvMatrix.length; i++) {
-    let temp = [];
-    for (let j = 0; j < pcvMatrix[i].length; j++) {
-      temp.push(dft(pcvMatrix[i][j].getPcvAsArray()));
-    }
-    dftCoeffMatrix.push(temp);
-  } */
-
   let rgbaMatrices = [];
 
+  //Subdividing by coefficient number
   for (let i = 0; i < 6; i++) {
-    let matrix = [];
+    let temp = [];
     for (let j = 0; j < dftCoeffsMatrix.length; j++) {
       let subdiv = [];
       for (let k = 0; k < dftCoeffsMatrix[j].length; k++) {
         subdiv.push('');
       }
-      matrix.push(subdiv);
+      temp.push(subdiv);
     }
-    rgbaMatrices.push(matrix);
+    rgbaMatrices.push(temp);
   }
 
-  //Creating a single matrix for each coefficient with rgba values for each diamond
+  //Mapping to the color space
   for (let i = 0; i < dftCoeffsMatrix.length; i++) {
     for (let j = 0; j < dftCoeffsMatrix[i].length; j++) {
       for (let k = 1; k < dftCoeffsMatrix[i][j].length; k++) {
@@ -449,26 +323,52 @@ export function getRgbaMatrix(dftCoeffsMatrix) {
   return rgbaMatrices;
 }
 
+/**
+ * Subdivide pitches in each time window defined by the reslution
+ * @param {array} notes all the notes of a track
+ * @param {number} resolution in seconds
+ * @param {number} duration MIDI file duration in seconds
+ * @returns
+ */
 function getSubdivision(notes, resolution, duration) {
+  //Song's general subdivision
   let subdivision = [];
   let wndLen = resolution;
 
+  //Traverse the song moving with a step of size wndLen (=resolution)
+  //Cursor is the beginning of the current window
   for (let cursor = 0; cursor < duration; cursor += resolution) {
     let temp = [];
+
+    //Assing each note to a window/subdivision
     notes.forEach((note) => {
+      //Extract note's starting time duration
       let { time, duration } = note;
 
-      //Check if note contribute to the current window
+      //Check if a note contribute to the current window
       if (isValidNote(time, duration, cursor, wndLen)) {
+        //Compute the contribution of the note to the current window
         let noteAndDuration = { pitch: note.pitch };
-        //Computation of note contribution in the current window
+
+        //If note starts before the current window
         if (time < cursor) {
+          //If note finishes before the end of the window
           if (time + duration < cursor + wndLen)
+            //Add only the duration that overlap with the current window
             noteAndDuration.duration = time + duration - cursor;
+          //Else, the note continues for the whole duration of the window
+          //Add the window length as duration, since note duration overlap the whole window
           else noteAndDuration.duration = wndLen;
-        } else {
+        }
+
+        //If note start in the current window
+        else {
+          //If note finishes before the end of the window
           if (time + duration <= cursor + wndLen)
+            //Add only the note duration
             noteAndDuration.duration = duration;
+          //Else, the note continues to the next window
+          //Add only the part that overlap with the  current window
           else noteAndDuration.duration = cursor + wndLen - time;
         }
 
@@ -482,7 +382,21 @@ function getSubdivision(notes, resolution, duration) {
   return subdivision;
 }
 
+/**
+ * True if a note contribute to the PCV of the current window
+ * @param {number} time starting time of a note
+ * @param {number} duration duration of a note
+ * @param {number} cursor starting time of the current window
+ * @param {number} wndLen size of the current window
+ * @returns boolean
+ */
 function isValidNote(time, duration, cursor, wndLen) {
+  //A note contribute to the current window if:
+  //1. starting time is in the current window
+  //2. starts before the beginning of the window but
+  //   finishes before the end of the window
+  //3. starts before the beginning of the window
+  //   and continues for the whole duration of the window
   if (
     (time > cursor && time < cursor + wndLen) ||
     (time + duration > cursor && time + duration < cursor + wndLen) ||
@@ -491,33 +405,4 @@ function isValidNote(time, duration, cursor, wndLen) {
     return true;
   }
   return false;
-}
-
-export function getComplementaryColours(coeffs) {
-  let colours = [];
-
-  //Opposite of re and im to get the complementary colour
-  coeffs.forEach((coeff) => {
-    let rho = Math.sqrt(Math.pow(coeff.re, 2) + Math.pow(coeff.im, 2));
-    let rgba = pixelColor(coeff.re, -coeff.im, rho);
-
-    //RGB complementary
-    rgba.r = 255 - rgba.r;
-    rgba.g = 255 - rgba.g;
-    rgba.b = 255 - rgba.b;
-
-    colours.push(rgbaToHexa(rgba));
-  });
-
-  return colours;
-}
-
-function rgbaToHexa(rgba) {
-  let hexa = Object.keys(rgba).map((key) => colorToHex(rgba[key]));
-  return `#${hexa.join('')}`;
-}
-
-function colorToHex(color) {
-  let hexadecimal = color.toString(16);
-  return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal;
 }

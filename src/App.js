@@ -280,9 +280,7 @@ function App() {
           setWavescapeResolution(staticResolution);
 
           setWavescapesData(
-            getRgbaMatrix(
-              getDftCoeffStatic(currentSongMidiData, staticResolution)
-            )
+            getRgbaMatrix(getDftCoeffStatic(midiData, staticResolution))
           );
 
           //Circles "dynamic" analysis --> single traces in the Fourier spaces

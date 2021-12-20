@@ -109,8 +109,12 @@ export function getRgbaFromComplex(complex) {
   let angle = polarComplex.phi; // phi from [-pi, pi], but color mapping defined in [0,2pi]
   let mod = polarComplex.r;
 
-  //negative angle mapped to their positive representation
-  if (angle < 0) angle += 2 * math.pi;
+  //Taking into account rounding errors
+  if (angle < 0 && angle > -1e-5) angle = 0;
+
+  if (angle < 0)
+    //negative angle mapped to their positive representation
+    angle = angle + 2 * Math.PI;
 
   let ris = gradient(angle).slice(3, -1);
 
