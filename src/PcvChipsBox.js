@@ -1,17 +1,21 @@
+//Import material UI components
 import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 
+//Stiled chips
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
+//Chips box component
 export default function PcvChipsBox({ userPcvs, setUserPcvs, rosesMat }) {
   const handleDelete = (chipToDelete) => () => {
-    //on detele, set the rose icon to unused
+    //On detele, set the rose icon to unused
     //matrix coeffs are i = d-1, j=d-1
     rosesMat[chipToDelete.d - 1][chipToDelete.n - 1].used = false;
 
+    //Update
     setUserPcvs((chips) =>
       chips.filter((chip) => chip.label !== chipToDelete.label)
     );
@@ -43,15 +47,7 @@ export default function PcvChipsBox({ userPcvs, setUserPcvs, rosesMat }) {
                   height='24'
                   viewBox='0 0 24 24'
                 >
-                  <g /* fill='none' fill-rule='evenodd' */>
-                    {/* <rect
-                      width='20'
-                      height='20'
-                      x='2'
-                      y='2'
-                      fill='#FFF'
-                      rx='10'
-                    /> */}
+                  <g>
                     <polyline
                       transform={`translate(${12},${12})`}
                       fill='none'

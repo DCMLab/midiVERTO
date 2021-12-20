@@ -9,8 +9,8 @@ export default function parse(input) {
   //Number divider
   const divider = ',';
 
-  let isGroup = false;
-  let isSet = false;
+  let isGroup = false; //True if we are in between valid brackets
+  let isSet = false; //True if set notation detected, false otherwise
 
   for (let i = 0; i < input.length; i++) {
     if (input[i] === openSet || input[i] === openVect) {

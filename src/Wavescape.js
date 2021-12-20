@@ -104,7 +104,7 @@ export const Wavescape = ({
             ))
           : null}
         {/* Contour line */}
-        {wsCoordinates.length > 0 ? (
+        {wsCoordinates.length > 0 && wsCoordinates[0].length > 0 ? (
           <>
             <line
               x1={wsCoordinates[0][0].x}
