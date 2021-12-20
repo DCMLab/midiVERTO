@@ -1,13 +1,17 @@
+//React
 import { useEffect, useState } from 'react';
-
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-import CircleSVG from './CircleSVG';
-import WavescapeSVG from './WavescapeSVG';
 import ReactDOMServer from 'react-dom/server';
 
+//Import libraries
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+
+//Import components
+import CircleSVG from './CircleSVG';
+import WavescapeSVG from './WavescapeSVG';
 import { prototypesData } from './prototypesData';
 
+//Import material UI components
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -21,16 +25,36 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/system/Box';
 import Popover from '@mui/material/Popover';
 
+//Save dialog component
 function SaveDialog({ traces, userPcvs, wavescapesData }) {
+  // ----- DIALOG WINDOW ----- //
+  //State: boolean
+  //True if the dialog window is opened
   const [open, setOpen] = useState(false);
-  const [subdivUserPcvs, setSubdivUserPcvs] = useState([]);
-  const [canSave, setCanSave] = useState(false);
 
+  //States: boolean
+  //True to include the correspondent elements in the exported images
   const [checkNumb, setCheckNumb] = useState(true);
   const [checkTrace, setCheckTrace] = useState(true);
   const [checkProto, setCheckProto] = useState(true);
   const [checkPcvs, setCheckPcvs] = useState(true);
 
+  //State: array
+  //PCVs to be include in the exported images
+  const [subdivUserPcvs, setSubdivUserPcvs] = useState([]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // ----- POPOVER ----- //
+  //State: boolean
+  //If true images can be exported, else there is no MIDI data
+  const [canSave, setCanSave] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClickPopover = (event) => {
@@ -45,18 +69,12 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
   const openPopover = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  //Effect: update canSave if there is data in wavescapes
   useEffect(() => {
     wavescapesData.length > 0 ? setCanSave(true) : setCanSave(false);
   }, [wavescapesData]);
 
+  //Effect: on user PCVs update, subdivide by coefficient number
   useEffect(() => {
     //Subdividing the coeffs for each circle
     let tempSubdivUserPcvs = [];
@@ -77,6 +95,11 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
     setSubdivUserPcvs(tempSubdivUserPcvs);
   }, [userPcvs]);
 
+  /**
+   * Generate the static markup for the exported wavescapes
+   * @param {number} k coefficient number
+   * @returns string
+   */
   function generateWavescapeSVG(k) {
     let data = (
       <WavescapeSVG
@@ -89,6 +112,11 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
     return ReactDOMServer.renderToStaticMarkup(data);
   }
 
+  /**
+   * Generate the static markup for the exported Fourier spaces
+   * @param {number} k coefficient number
+   * @returns string
+   */
   function generateCircleSVG(k) {
     let data = (
       <CircleSVG
@@ -103,9 +131,13 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
     return ReactDOMServer.renderToStaticMarkup(data);
   }
 
+  /**
+   * Export the generated images
+   */
   const saveImages = () => {
     let zip = new JSZip();
 
+    //For each coefficient number
     [1, 2, 3, 4, 5, 6].forEach((i) => {
       //Generate SVGs
       let circleSVG = generateCircleSVG(i);
@@ -121,11 +153,13 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
       saveAs(content, 'images.zip');
     });
 
+    //Close the dialog window
     setOpen(false);
   };
 
   return (
     <>
+      {/* EXPORT BUTTON */}
       <Button
         variant='contained'
         size='small'
@@ -140,6 +174,8 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
       >
         Export images
       </Button>
+
+      {/* DIALOG WINDOW */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{'Saving options'}</DialogTitle>
         <DialogContent>
@@ -149,6 +185,7 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
               exported images:
             </Typography>
 
+            {/* CHECKS */}
             <Box sx={{ marginLeft: 2, marginTop: 1 }}>
               <FormGroup sx={{ color: 'black' }}>
                 <FormControlLabel
@@ -208,6 +245,8 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
           <Button onClick={handleClickPopover} autoFocus>
             Save
           </Button>
+
+          {/* POPOVER */}
           <Popover
             id={id}
             open={openPopover}
