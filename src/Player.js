@@ -1,6 +1,10 @@
-import * as Tone from 'tone';
+//React
 import { useEffect, useState } from 'react';
 
+//Import libraries
+import * as Tone from 'tone';
+
+//Import material UI components
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -11,10 +15,12 @@ import Slider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
+//Song's variables
 let part;
 let currentSongDuration = 0; // seconds
 let intervalID;
 
+//Custom style for player's time information
 const TinyText = styled(Typography)({
   fontSize: '0.75rem',
   opacity: 0.38,
@@ -22,6 +28,7 @@ const TinyText = styled(Typography)({
   letterSpacing: 0.2,
 });
 
+//Format of time information
 function formatDuration(value) {
   const minute = Math.floor(value / 60);
   const secondLeft = Math.floor(value - minute * 60);
@@ -34,8 +41,11 @@ export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
   setCurrentSubdiv(0);
   Tone.Transport.stop();
 
+  //Update
   currentSongDuration = midiData.duration;
 
+  //partNotes represents all the events (notes) that will be scheduled
+  //in the Tone.part
   let partNotes = [];
   midiData.tracks.forEach((track) =>
     track.notes.forEach((note) => {
@@ -43,10 +53,12 @@ export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
     })
   );
 
+  //Assing each note to its subdivision
   partNotes.forEach((note) => {
     note.subdiv = Math.floor(note.time / resolution);
   });
 
+  //Part init --> when a note is palyed, update the current suvdivision index
   part = new Tone.Part(
     (time, note) => {
       sampler.triggerAttackRelease(
@@ -60,10 +72,12 @@ export function setPlayerMidiData(midiData, resolution, setCurrentSubdiv) {
     [...partNotes]
   ).start(0);
 
+  //Loop set to true in order to use progress attribute
   part.loop = true;
   part.loopEnd = currentSongDuration;
 }
 
+//Sampler setup --> Piano
 const sampler = new Tone.Sampler({
   urls: {
     A0: 'A0.mp3',
@@ -100,18 +114,26 @@ const sampler = new Tone.Sampler({
   release: 1,
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
 }).toDestination();
-sampler.volume.value = -20;
+sampler.volume.value = -20; //Sampler volume
 
-export default function Player({ fileName, currentWavescapeSubdiv }) {
+//Player component
+export default function Player({ fileName }) {
+  //State: number
+  //Represent the progress of the playback in the slider, 0 is the beginnign
+  //while 1 is the end.
   const [playbackSliderProgress, setPlaybackSliderProgress] = useState(0);
 
+  /**
+   * Start playback
+   */
   function play() {
-    console.log('play');
     if (Tone.context.state !== 'running') {
       console.log('state running');
       Tone.context.resume();
     }
     Tone.Transport.start();
+
+    //Init interval --> every 1 second, update the slider
     if (!intervalID && part)
       intervalID = setInterval(
         () => setPlaybackSliderProgress(part.progress),
@@ -119,17 +141,21 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
       );
   }
 
+  //Key binding for spacebar stop/play functions
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.which === 32) {
         e.preventDefault();
+        //If part is not playing
         if (
           Tone.Transport.state === 'paused' ||
           Tone.Transport.state === 'stopped'
         )
           play();
+        //If part is playing
         else if (Tone.Transport.state === 'started') {
           Tone.Transport.pause();
+          //Stop updating the slider
           stopInterval();
         }
       }
@@ -147,6 +173,7 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
         width: '60%',
       }}
     >
+      {/* ICONS AND FILE NAME*/}
       <Box
         sx={{
           display: 'flex',
@@ -194,6 +221,8 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
           {fileName ? fileName : 'No midi file uploaded'}
         </Typography>
       </Box>
+
+      {/* SLIDER */}
       <Slider
         aria-label='Playback'
         size='small'
@@ -204,6 +233,8 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
         }}
         sx={{ width: '90%' }}
       />
+
+      {/* TIME INFORMATION */}
       <Box
         sx={{
           display: 'flex',
@@ -225,6 +256,9 @@ export default function Player({ fileName, currentWavescapeSubdiv }) {
   );
 }
 
+/**
+ * Stop updating the slider by clearing the interval ID
+ */
 function stopInterval() {
   clearInterval(intervalID);
   // release our intervalID from the variable
