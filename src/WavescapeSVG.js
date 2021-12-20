@@ -2,6 +2,8 @@ import React from 'react';
 
 const verticalScale = Math.sin(Math.PI / 3);
 
+//Generates SVGs of the wavescapes for the exporting,
+//see Wavescape.js 
 function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
   const margin = 10;
   const width = 400;
@@ -131,29 +133,4 @@ function computeTicks(
   }
 
   return mat;
-}
-
-function drawWavescape(ticks, ctx, wavescapeMatrix) {
-  for (let i = 0; i < ticks.length - 1; i++) {
-    for (let j = 0; j < ticks[i].length - 1; j++) {
-      if (i === 0) {
-        //first row composed by triangles
-        ctx.beginPath();
-        ctx.moveTo(ticks[i][j].x, ticks[i][j].y);
-        ctx.lineTo(ticks[i][j + 1].x, ticks[i][j + 1].y);
-        ctx.lineTo(ticks[i + 1][j].x, ticks[i + 1][j].y);
-        ctx.fillStyle = wavescapeMatrix[i][j];
-        ctx.fill();
-      } else {
-        //other rows composed by diamonds
-        ctx.beginPath();
-        ctx.moveTo(ticks[i][j].x, ticks[i][j].y);
-        ctx.lineTo(ticks[i - 1][j + 1].x, ticks[i - 1][j + 1].y);
-        ctx.lineTo(ticks[i][j + 1].x, ticks[i][j + 1].y);
-        ctx.lineTo(ticks[i + 1][j].x, ticks[i + 1][j].y);
-        ctx.fillStyle = wavescapeMatrix[i][j];
-        ctx.fill();
-      }
-    }
-  }
 }

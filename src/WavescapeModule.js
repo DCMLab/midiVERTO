@@ -1,8 +1,11 @@
+//Import components
 import { Wavescape } from './Wavescape';
 
+//Import material UI components
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 
+//Wavescape module component
 function WavescapeModule({
   wavescapesData,
   currentWavescapeSubdiv,
@@ -16,6 +19,8 @@ function WavescapeModule({
         justifyContent: 'space-around',
       }}
     >
+      {/* If wavescapes' data is present plot the wavescapes, else 
+      notify the user to upload a MIDI file */}
       {wavescapesData.length > 0 ? (
         wavescapesData.map((data, i) => (
           <Wavescape

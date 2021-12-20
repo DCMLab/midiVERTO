@@ -1,9 +1,14 @@
-import Circle from './Circle';
+//React
 import { useEffect, useState } from 'react';
+
+//Import components
+import Circle from './Circle';
 import { prototypesData } from './prototypesData';
 
+//Import material UI components
 import Box from '@mui/material/Box';
 
+//Fourier spaces module component
 function CoefficientsModule({
   fullTraces,
   coeffTracesData,
@@ -15,19 +20,32 @@ function CoefficientsModule({
   elemsWidth,
   showFullTrace,
 }) {
+  //State: array
+  //Array that contains all the prototypes if showPrototypes is true,
+  //empty array if false.
   const [selectedProtoPitchClasses, setSelectedProtoPitchClasses] =
     useState(prototypesData);
 
+  //State: array
+  //Array that contains points of the PCVs inserted by the user
+  //divided for each Fourier space (from 1st to 6th).
   const [subdivUserPcvs, setSubdivUserPcvs] = useState([]);
 
+  useEffect(() => {
+    console.log(subdivUserPcvs);
+  }, [subdivUserPcvs]);
+
+  //Effect: show/unshow prototypes when showPrototypes is toggled.
   useEffect(() => {
     if (showPrototypes) {
       setSelectedProtoPitchClasses(prototypesData);
     } else setSelectedProtoPitchClasses([]);
   }, [showPrototypes]);
 
+  //Effect: when user add or remove PCVs, update subdivUserPcvs
+  //by subdividing for the coefficient number
   useEffect(() => {
-    //Subdividing the coeffs for each circle
+    //Subdividing the coeffs for each Fourier space
     let tempSubdivUserPcvs = [];
     for (let i = 1; i < 7; i++) {
       let temp = [];
@@ -54,6 +72,7 @@ function CoefficientsModule({
         justifyContent: 'space-around',
       }}
     >
+      {/* PLOT THE SPACES FROM 1st TO 6th */}
       {[1, 2, 3, 4, 5, 6].map((coeffNum) => (
         <Circle
           coeffNumber={coeffNum}
@@ -69,49 +88,6 @@ function CoefficientsModule({
           showFullTrace={showFullTrace}
         />
       ))}
-
-      {/* <Circle
-        protoDataCoeff={selectedProtoPitchClasses[0]}
-        traceDataCoeff={coeffTracesData[0]}
-        userPcvsCoeff={subdivUserPcvs[0]}
-        currentSubdiv={currentSubdiv}
-        performanceCoeff={midiDevNotesDftCoeffs[1]}
-      />
-      <Circle
-        protoDataCoeff={selectedProtoPitchClasses[1]}
-        traceDataCoeff={coeffTracesData[1]}
-        userPcvsCoeff={subdivUserPcvs[1]}
-        currentSubdiv={currentSubdiv}
-        performanceCoeff={midiDevNotesDftCoeffs[2]}
-      />
-      <Circle
-        protoDataCoeff={selectedProtoPitchClasses[2]}
-        traceDataCoeff={coeffTracesData[2]}
-        userPcvsCoeff={subdivUserPcvs[2]}
-        currentSubdiv={currentSubdiv}
-        performanceCoeff={midiDevNotesDftCoeffs[3]}
-      />
-      <Circle
-        protoDataCoeff={selectedProtoPitchClasses[3]}
-        traceDataCoeff={coeffTracesData[3]}
-        userPcvsCoeff={subdivUserPcvs[3]}
-        currentSubdiv={currentSubdiv}
-        performanceCoeff={midiDevNotesDftCoeffs[4]}
-      />
-      <Circle
-        protoDataCoeff={selectedProtoPitchClasses[4]}
-        traceDataCoeff={coeffTracesData[4]}
-        userPcvsCoeff={subdivUserPcvs[4]}
-        currentSubdiv={currentSubdiv}
-        performanceCoeff={midiDevNotesDftCoeffs[5]}
-      />
-      <Circle
-        protoDataCoeff={selectedProtoPitchClasses[5]}
-        traceDataCoeff={coeffTracesData[5]}
-        userPcvsCoeff={subdivUserPcvs[5]}
-        currentSubdiv={currentSubdiv}
-        performanceCoeff={midiDevNotesDftCoeffs[6]}
-      /> */}
     </Box>
   );
 }

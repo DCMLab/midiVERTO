@@ -1,11 +1,9 @@
 import * as d3 from 'd3';
 import * as math from 'mathjs';
 import { gradient } from './colorMapping';
-//import { useEffect, useRef } from 'react';
 
-//Minus before every y coordinate due to the fact that svg has positive y
-//downward, meanwhile cartesian plane has positive y upward
-
+//Generates SVGs of the Fourier spaces for the exporting,
+//see Circle.js
 export default ({
   traceData,
   userPcv,
@@ -23,22 +21,6 @@ export default ({
 
   let marksRadiusRatio = 0.01;
   let circleRadius = innerWidth / 2;
-
-  //console.log(traceData);
-
-  /* const canvasRef = useRef(null);
-
-   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    //ctx.setTransform(1, 0, 0, -1, 0, ctx.canvas.height);
-
-    let margins = [100, 100];
-    let innerSize = [canvas.width - margins[0], canvas.height - margins[1]];
-  }, []); */
-
-  /* const outerRadius = (0.9 * height) / 2;
-  const innerRadius = (0.7 * height) / 2; */
 
   const theta = (2 * math.pi) / N;
   const angles = d3.range(0, 2 * math.pi, theta);
@@ -149,13 +131,6 @@ export default ({
       dxOffset = 15;
       dyOffset = 5;
     }
-
-    /* if (Math.sign(pcvData.x) === 1) dxOffset = 22;
-    else if (Math.sign(pcvData.x) === -1) dxOffset = -20; */
-
-    /* 
-    if (Math.sign(-pcvData.y) === 1) dyOffset = 25;
-    else if (Math.sign(-pcvData.y) === -1) dyOffset = -8;*/
 
     return (
       <g
