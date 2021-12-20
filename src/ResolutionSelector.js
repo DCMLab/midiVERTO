@@ -1,30 +1,36 @@
+//React
 import { useRef, useState } from 'react';
 
+//Import material UI components
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
+//Import notes' symbols
 import wholeSvg from './svgNotation/whole.svg';
 import halfSvg from './svgNotation/half.svg';
 import quarterSvg from './svgNotation/quarter.svg';
 import eighthSvg from './svgNotation/eighth.svg';
 import sixteenthSvg from './svgNotation/sixteenth.svg';
 
+//Component resolution selector
 function ResolutionSelector({
   resolutionMode,
   setResolutionMode,
   retriggerAnalysis,
 }) {
-  //State: input error
+  //State: boolean
+  //If true, notify the user that seconds' input is invalid
   const [isInputSecondsInvalid, setIsInputSecondsInvalid] = useState(false);
   const resolutionTextRef = useRef(null);
 
+  /**
+   * On form change, update the new resolution mode
+   */
   function onChangeResolutionSelection(event) {
     let newResolutionMode = { ...resolutionMode };
     newResolutionMode.seconds = parseFloat(resolutionTextRef.current.value);
