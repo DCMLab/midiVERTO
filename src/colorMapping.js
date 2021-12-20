@@ -7,7 +7,11 @@ const contToDiscRGB = d3
   .domain([0, 1])
   .range(d3.range(0, 255, 1));
 
-//Generate the color space using the color mapping suggested in the paper
+/**
+ * Map phase of a complex number with the correspondent Fourier space color
+ * @param {number} angle Phase in radiants
+ * @returns string
+ */
 export const gradient = (angle) => {
   let r, g, b;
 
@@ -44,7 +48,14 @@ export const gradient = (angle) => {
   return `rgb(${r}, ${g}, ${b})`;
 };
 
-//Generate the color space using the color mapping suggested in the paper
+/**
+ * Used to generate the color wheel canvas, map a point of the Fourier space
+ * to an RGBA value
+ * @param {number} x x-coordinate
+ * @param {number} y y-coordinate
+ * @param {number} distance distance of the point from the origin
+ * @returns object
+ */
 export const pixelColor = (x, y, distance) => {
   let r, g, b, a;
   //atan2 out in [-pi, pi]
@@ -87,6 +98,12 @@ export const pixelColor = (x, y, distance) => {
   return { r, g, b, a };
 };
 
+/**
+ * Convert the complex number in polar coordinates and map it to a
+ * RGBA value string
+ * @param {object} complex complex number
+ * @returns string
+ */
 export function getRgbaFromComplex(complex) {
   let polarComplex = complex.toPolar();
   let angle = polarComplex.phi; // phi from [-pi, pi], but color mapping defined in [0,2pi]
