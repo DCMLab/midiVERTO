@@ -2,7 +2,8 @@
 import React from 'react';
 
 //Import images
-import logo from './logos/placeholder.png';
+import dhCenterLogo from './images/dh_center_logo.svg';
+import epflLogo from './images/Logo_EPFL.svg';
 
 //Import material UI components
 import Stack from '@mui/material/Stack';
@@ -12,14 +13,13 @@ import Link from '@mui/material/Link';
 
 //Footer component
 function Footer() {
-  let logoSize = 100;
+  let logoSize = 150;
   return (
     <Box sx={{ marginTop: 1, textAlign: 'center' }}>
       {/* LOGOS */}
-      <Stack sx={{ justifyContent: 'center' }} direction='row'>
-        <img width={logoSize} height={logoSize} src={logo} />
-        <img width={logoSize} height={logoSize} src={logo} />
-        <img width={logoSize} height={logoSize} src={logo} />
+      <Stack spacing={10} sx={{ justifyContent: 'center' }} direction='row'>
+        <img alt='' width={logoSize} height={logoSize} src={epflLogo} />
+        <img alt='' width={logoSize} src={dhCenterLogo} />
       </Stack>
 
       {/* TEXT */}
@@ -51,9 +51,12 @@ function Footer() {
           DCML page
         </Link>
         <span>{`\u2022`}</span>
-        <Typography sx={{ marginLeft: 1 }} href=''>
+        <Link
+          sx={{ marginLeft: 1 }}
+          href='https://github.com/DCMLab/MIDFT/blob/main/LICENSE'
+        >
           Copyright
-        </Typography>
+        </Link>
       </Stack>
     </Box>
   );
