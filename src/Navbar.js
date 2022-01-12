@@ -77,7 +77,7 @@ export default function Navbar({ open, setOpen, inAnalysisPage }) {
               variant='contained'
               disableElevation={true}
             >
-              Theory
+              Docs
             </Button>
             <Button
               component={Link}

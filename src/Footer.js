@@ -30,11 +30,21 @@ function Footer() {
       {/* PEOPLE */}
       <Stack sx={{ justifyContent: 'center' }} direction='row'>
         <Typography sx={{ marginRight: 1 }}>
-          Project lead: Fabian C. Moss; Daniel Harasim
+          Project lead:{' '}
+          <Link target='_blank' href='https://twitter.com/fabianmoss'>
+            Fabian C. Moss
+          </Link>
+          ;{' '}
+          <Link target='_blank' href='https://twitter.com/danielharasim'>
+            Daniel Harasim
+          </Link>
         </Typography>
         <span>{`\u2013`}</span>
         <Typography sx={{ marginLeft: 1 }}>
-          Developer: Giovanni Affatato
+          Developer:{' '}
+          <Link href='mailto:giovanni.affatato97@gmail.com'>
+            Giovanni Affatato
+          </Link>
         </Typography>
       </Stack>
 
