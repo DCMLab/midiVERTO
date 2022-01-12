@@ -497,7 +497,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
           </Box>
 
           {/* Download images */}
-          <Box sx={{ paddingBottom: 5, paddingLeft: 2 }}>
+          <Box sx={{ paddingBottom: 5 }}>
             <Typography ref={ref6} variant='h4' style={{ fontWeight: 'bold' }}>
               Download images
             </Typography>
