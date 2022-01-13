@@ -3,7 +3,7 @@ import React from 'react';
 const verticalScale = Math.sin(Math.PI / 3);
 
 //Generates SVGs of the wavescapes for the exporting,
-//see Wavescape.js 
+//see Wavescape.js
 function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
   const margin = 10;
   const width = 400;
@@ -26,10 +26,10 @@ function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
 
   return (
     <svg
+      xmlns='http://www.w3.org/2000/svg'
       id={`wavescape${wsNumber}`}
       width={width + margin}
       height={height}
-      xmlns='http://www.w3.org/2000/svg'
     >
       {showNumber ? (
         <g transform={`translate(32,20)`}>
@@ -82,7 +82,8 @@ function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
                   points={`${wsCoordinates[i][j].x},${wsCoordinates[i][j].y}
                  ${wsCoordinates[i][j + 1].x},${wsCoordinates[i][j + 1].y} 
                  ${wsCoordinates[i + 1][j].x},${wsCoordinates[i + 1][j].y}`}
-                  fill={elem}
+                  fill={elem.rgb}
+                  fillOpacity={elem.alpha}
                 />
               );
             } else {
@@ -96,7 +97,8 @@ function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
                  ${wsCoordinates[i][j + 1].x},${wsCoordinates[i][j + 1].y} 
                  ${wsCoordinates[i + 1][j].x},${wsCoordinates[i + 1][j].y}
                  `}
-                  fill={elem}
+                  fill={elem.rgb}
+                  fillOpacity={elem.alpha}
                 />
               );
             }

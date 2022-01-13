@@ -43,6 +43,9 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
   //PCVs to be include in the exported images
   const [subdivUserPcvs, setSubdivUserPcvs] = useState([]);
 
+  //HOTFIX RGBA POWERPOINT
+  const [wavescapesRGBA, setWavescapesRGBA] = useState([]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -72,6 +75,24 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
   //Effect: update canSave if there is data in wavescapes
   useEffect(() => {
     wavescapesData.length > 0 ? setCanSave(true) : setCanSave(false);
+    //HOT FIX FOR BLACK TRANSPARENCY IN POWER POINT, INKSCAPE
+    let newWavescapes = [];
+    for (let i = 0; i < wavescapesData.length; i++) {
+      let wavescape = [];
+      for (let j = 0; j < wavescapesData[i].length; j++) {
+        let row = [];
+        for (let k = 0; k < wavescapesData[i][j].length; k++) {
+          let newElem = {};
+          let rgb = wavescapesData[i][j][k].replace(/[^\d,]/g, '').split(',');
+          newElem.rgb = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+          newElem.alpha = `0.${rgb[3].substring(1, rgb[3].length)}`;
+          row.push(newElem);
+        }
+        wavescape.push(row);
+      }
+      newWavescapes.push(wavescape);
+    }
+    setWavescapesRGBA(newWavescapes);
   }, [wavescapesData]);
 
   //Effect: on user PCVs update, subdivide by coefficient number
@@ -103,7 +124,7 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
   function generateWavescapeSVG(k) {
     let data = (
       <WavescapeSVG
-        wavescapeMatrix={wavescapesData.length > 0 ? wavescapesData[k - 1] : []}
+        wavescapeMatrix={wavescapesData.length > 0 ? wavescapesRGBA[k - 1] : []}
         wsNumber={k}
         showNumber={checkNumb}
       />
