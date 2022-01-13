@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/MIDFT/static/js/main.a318db90.chunk.js",
-    "main.js.map": "/MIDFT/static/js/main.a318db90.chunk.js.map",
+    "main.js": "/MIDFT/static/js/main.50b85a18.chunk.js",
+    "main.js.map": "/MIDFT/static/js/main.50b85a18.chunk.js.map",
     "runtime-main.js": "/MIDFT/static/js/runtime-main.b7db8c69.js",
     "runtime-main.js.map": "/MIDFT/static/js/runtime-main.b7db8c69.js.map",
     "static/css/2.216c7db8.chunk.css": "/MIDFT/static/css/2.216c7db8.chunk.css",
@@ -35,6 +35,6 @@
     "static/js/runtime-main.b7db8c69.js",
     "static/css/2.216c7db8.chunk.css",
     "static/js/2.b28b8b60.chunk.js",
-    "static/js/main.a318db90.chunk.js"
+    "static/js/main.50b85a18.chunk.js"
   ]
 }
