@@ -116,6 +116,7 @@ function App() {
   //Current subdivision being played by the MIDI player,
   //second index of coeffTracesData[1:6][currentSubdiv].
   const [currentSubdiv, setCurrentSubdiv] = useState(0);
+  const [mapCurrentSubdiv, setMapCurrentSubdiv] = useState(0);
   //State: integer
   //Multiplicative factor of base time resolution.
   const [windowLen, setWindowLen] = useState(1);
@@ -162,6 +163,21 @@ function App() {
   //Matrix that tracks if with a given index can be used or
   //it is already in use.
   const [rosesMat, setRosesMat] = useState([]);
+
+  //Effect: when currentSubdiv changes map
+  //coeffTracesData's subdivs to windowedCoeffTraces' subdivs --> centerd window
+  useEffect(() => {
+    if (windowedCoeffTraces.length > 0) {
+      let halfWindowLen = Math.floor(windowLen / 2);
+      let mappedSubdiv = 0;
+      if (currentSubdiv >= windowedCoeffTraces[0].length + halfWindowLen)
+        mappedSubdiv = windowedCoeffTraces[0].length - 1;
+      else if (currentSubdiv <= halfWindowLen) mappedSubdiv = 0;
+      else mappedSubdiv = currentSubdiv - halfWindowLen;
+
+      setMapCurrentSubdiv(mappedSubdiv);
+    }
+  }, [currentSubdiv]);
 
   //Effect: when window length is changed,
   //recompute the trace to be visualized
@@ -769,15 +785,7 @@ function App() {
                   wavescapesData={wavescapesData}
                   fullTraces={coeffTracesData}
                   coeffTracesData={windowedCoeffTraces}
-                  currentSubdiv={
-                    //Mapping between coeffTracesData's subdivs
-                    //and windowedCoeffTraces' subdivs --> centerd window
-                    windowedCoeffTraces.length > 0 &&
-                    Math.floor(windowLen / 2) + currentSubdiv >=
-                      windowedCoeffTraces[0].length
-                      ? windowedCoeffTraces[0].length - 1
-                      : Math.floor(windowLen / 2) + currentSubdiv
-                  }
+                  currentSubdiv={mapCurrentSubdiv}
                   currentWavescapeSubdiv={Math.floor(
                     (currentSubdiv * circleResolution) / wavescapeResolution
                   )}
