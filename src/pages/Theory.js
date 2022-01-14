@@ -233,16 +233,16 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
             </Paragraph>
             <Paragraph>
               <b>Wavescapes 3 and 5</b> have the strongest colors, meaning that
-              diatonic scales as well as augmented triads play and important role
-              for the harmonic organization of the piece.
+              diatonic scales as well as augmented triads play and important
+              role for the harmonic organization of the piece.
             </Paragraph>
             <Paragraph>
               <b>On the lower levels of the 3rd wavescape,</b> the colors blue -
               green - yellow - pink ( - green - ) pink change in regular time
               intervals. Tracing this sequence of colors in the corresponding
-              Fourier Coefficient Space (see also below),
-              we observe that these colors correspond to the labels{' '}
-              <Tex math='H_{1,2}' />, <Tex math='H_{2,3}' />
+              Fourier Coefficient Space (see also below), we observe that these
+              colors correspond to the labels <Tex math='H_{1,2}' />,{' '}
+              <Tex math='H_{2,3}' />
               , <Tex math='H_{0, 3}' />
               , and <Tex math='H_{0, 1}' />, respectively (in clockwise
               direction). A label <Tex math='H_{i,j}' /> denotes the hexatonic
@@ -253,16 +253,16 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               <Tex math='i' /> and <Tex math='j' /> (e.g.,{' '}
               <Tex math='H_{1,2}=\{1,2,5,6,9,10\}' />
               ). The overall harmonic trajectory of this piece moves in
-              descending minor thirds, and at the end it briefly moves across the
-              plane to its hexatonic pole.
+              descending minor thirds, and at the end it briefly moves across
+              the plane to its hexatonic pole.
             </Paragraph>
             <Paragraph>
-              <b>On the lower levels of the 5th wavescape,</b> the color
-              pattern is roughly orange/red - green - pink, showing that the
-              initial, middle, and final parts of this piece modulate through
-              different keys. Note that the red and pink areas are adjacent to
-              each other but opposite to the green area, again showing a
-              symmetrical organization in terms of keys.
+              <b>On the lower levels of the 5th wavescape,</b> the color pattern
+              is roughly orange/red - green - pink, showing that the initial,
+              middle, and final parts of this piece modulate through different
+              keys. Note that the red and pink areas are adjacent to each other
+              but opposite to the green area, again showing a symmetrical
+              organization in terms of keys.
             </Paragraph>
             <Paragraph>
               <b>Finally, the 6th wavescape</b> shows that the first half of the
@@ -296,8 +296,8 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               scale='90%'
             ></Image>
             <Paragraph>
-              Change the window length and see how the arrangement of the
-              points changes, too.
+              Change the window length and see how the arrangement of the points
+              changes, too.
             </Paragraph>
             <Image
               alt={' '}
