@@ -1,8 +1,8 @@
 {
-  "name": "midft",
+  "name": "midiVERTO",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://dcmlab.github.io/MIDFT",
+  "homepage": "https://dcmlab.github.io/midiVERTO",
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",

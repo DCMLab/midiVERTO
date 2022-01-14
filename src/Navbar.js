@@ -58,7 +58,7 @@ export default function Navbar({ open, setOpen, inAnalysisPage }) {
 
           {/* App name */}
           <Typography variant='h3' component='div' sx={{ flexGrow: 1 }}>
-            APP NAME
+            midiVERTO
           </Typography>
 
           {/* Navigation buttons */}
