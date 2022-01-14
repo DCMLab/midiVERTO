@@ -188,7 +188,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
 
             <Paragraph>
               Depending on the length of the piece and the chosen time
-              resulution, the app might take a while until the file is
+              resolution, the app might take a while until the file is
               processed. When processing has finished, the app visualizes the
               piece with six triangular plots called <i>Wavescapes</i> (details
               about this analysis method are described{' '}
@@ -233,16 +233,15 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
             </Paragraph>
             <Paragraph>
               <b>Wavescapes 3 and 5</b> have the strongest colors, meaning that
-              diating scales as well as augmented triads play and important role
+              diatonic scales as well as augmented triads play and important role
               for the harmonic organization of the piece.
             </Paragraph>
             <Paragraph>
               <b>On the lower levels of the 3rd wavescape,</b> the colors blue -
               green - yellow - pink ( - green - ) pink change in regular time
               intervals. Tracing this sequence of colors in the corresponding
-              Fourier Coefficient Space (see also below), we observe that these
-              colors corresponding Fourier Coefficient Space (see also below),
-              we observe that these colors correspond to the lables{' '}
+              Fourier Coefficient Space (see also below),
+              we observe that these colors correspond to the labels{' '}
               <Tex math='H_{1,2}' />, <Tex math='H_{2,3}' />
               , <Tex math='H_{0, 3}' />
               , and <Tex math='H_{0, 1}' />, respectively (in clockwise
@@ -254,11 +253,11 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               <Tex math='i' /> and <Tex math='j' /> (e.g.,{' '}
               <Tex math='H_{1,2}=\{1,2,5,6,9,10\}' />
               ). The overall harmonic trajectory of this piece moves in
-              descending minor thirds, and at the end briefly moves across the
+              descending minor thirds, and at the end it briefly moves across the
               plane to its hexatonic pole.
             </Paragraph>
             <Paragraph>
-              <b>On the lowever levels of the 5th wavescape,</b> the color
+              <b>On the lower levels of the 5th wavescape,</b> the color
               pattern is roughly orange/red - green - pink, showing that the
               initial, middle, and final parts of this piece modulate through
               different keys. Note that the red and pink areas are adjacent to
@@ -297,7 +296,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               scale='90%'
             ></Image>
             <Paragraph>
-              Change the window length and see, how the arrangement of the
+              Change the window length and see how the arrangement of the
               points changes, too.
             </Paragraph>
             <Image
@@ -308,7 +307,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
             <Paragraph>
               Very short window lengths tend to distribute the segments of the
               piece more evenly throughout the circles. In contrast, long window
-              lengths collapse the semgents into a small area, and even into a
+              lengths collapse the segments into a small area, and even into a
               single point if the window covers the entire piece (this
               corresponds to the topmost point of the wavescapes). It is
               therefore a good idea to try different window lengths in order to
@@ -402,13 +401,13 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               progressions, harmonic sequences, or voice-leading chains. It can
               also be useful to display interesting pitch-class sets taken from
               a particular piece. Those can be entered in the{' '}
-              <b>Custom pitch-class vectors</b> field and allow for two basic
+              <b>Custom pitch-class vectors</b> field which allows for two basic
               input formats.
             </Paragraph>
             <Typography sx={{ fontSize: 20 }} component={'span'}>
               <ol>
                 <li>
-                  Pitch-class (multi-)sets are enclosed in curyly braces{' '}
+                  Pitch-class (multi-)sets are enclosed in curly braces{' '}
                   <code>&#123;</code> and <code>&#125;</code> and contain pitch
                   classes (integers ranging from 0 to 11). We allow for multiple
                   occurrences of pitch classes, for example you can enter{' '}
@@ -433,7 +432,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               scale='40%'
             ></Image>
             <Info>
-              <b>Note</b>: white spaces in the custom input are ignored.
+              <b>Note</b>: white space is ignored in the custom input field.
             </Info>
             <Paragraph>
               The collection of manually entered pitch-class vectors is
@@ -465,7 +464,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               its pitch-class content can be represented as the pitch-class
               vector <code>(1.5, 0, 1, 0, 1, 1, 0, 0.5, 0, 0, 1.5, 0)</code>.
               The figure below shows with an asterisk where it is mapped to in
-              the respective Fourier coeffient spaces.
+              the respective Fourier coefficient spaces.
             </Paragraph>
             <Image
               alt={' '}
@@ -476,8 +475,8 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               If we count each quarter note as 1 (and eight notes as 0.5), then
               its pitch-class content can be represented as the pitch-class
               vector <code>(1.5, 0, 1, 0, 1, 1, 0, 0.5, 0, 0, 1.5, 0)</code>.
-              The figure below shows with an asterisk where it is mapped to in
-              the respective Fourier coeffient spaces.
+              The figure below uses an asterisk to show where it is mapped to in
+              the respective Fourier coefficient spaces.
             </Paragraph>
             <Paragraph>
               This chord can be understood as a C7/9/11 chord despite the fact
