@@ -432,7 +432,8 @@ function App() {
     let { tracesData, resolution } = getDftCoeffDynamic(
       currentSongMidiData,
       resolutionMode,
-      currentSongBPM
+      currentSongBPM,
+      normalizationType
     );
     setCircleResolution(resolution);
     setCoeffTracesData(tracesData);
