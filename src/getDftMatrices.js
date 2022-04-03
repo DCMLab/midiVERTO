@@ -175,9 +175,11 @@ export function getDftCoeffStatic(midiFile, resolution) {
     }
   }
 
+  pcvSubdivision = sumNorm(pcvSubdivision);
+
   //Computing the DFT coefficients for of each subdivision
   let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
-    dft(pcv.getPcvAsArray())
+    dft(pcv.getPcvAsArray(), false)
   );
 
   //Computing the whole matrix
