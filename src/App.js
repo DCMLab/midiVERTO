@@ -9,6 +9,9 @@ import {
   getMidiFileDataObject,
   getDftCoeffStatic,
   getDftCoeffDynamic,
+  sumCentered,
+  sumIncremental,
+  powerCentered,
 } from './getDftMatrices';
 import dft from './DFT';
 import parse from './parser';
@@ -40,6 +43,10 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 //Change this varible to change the size
 //of the Drawer component on the left
@@ -109,6 +116,9 @@ function App() {
   //Points in the Fourier spaces (from 1st to 6th) related
   //to pcvs extraced from subdivisions with the selected resolution.
   const [coeffTracesData, setCoeffTracesData] = useState([]);
+  //State: PCV[N]]
+  //Unnormalized PC distributions for the current song
+  const [pcDistributions, setPcDistributions] = useState([]);
   //State: points[6][N]
   //Windowed version of coeffTracesData.
   const [windowedCoeffTraces, setWindowedCoeffTraces] = useState([]);
@@ -134,11 +144,19 @@ function App() {
   //Computed in order to have always 50 subdivisions for the wavescape,
   //trade-off between MIDI file duration and minimum resolution since
   //computing wavescapes presents high time complexity.
+  //Initial value of 10 is arbitrary and never used.
   const [wavescapeResolution, setWavescapeResolution] = useState(10);
   //State: number
   //Can be controlled by the user. Resolution used to compute the
   //coefficients in the Fourier spaces without computing the whole wavescape.
   const [circleResolution, setCircleResolution] = useState(1);
+  //State: string
+  //Specify the type of normalization to use for windowing: sum, power
+  const [normalizationType, setNormalizationType] = useState('sum');
+  //State: string
+  //Specify the type of windowing: centered, incremental
+  const [windowingType, setWindowingType] = useState('centered');
+  const [normWindSelectedVal, setNormWindSelectedVal] = useState(0);
 
   //INPUT STATES
 
@@ -168,48 +186,55 @@ function App() {
   //coeffTracesData's subdivs to windowedCoeffTraces' subdivs --> centerd window
   useEffect(() => {
     if (windowedCoeffTraces.length > 0) {
-      let halfWindowLen = Math.floor(windowLen / 2);
-      let mappedSubdiv = 0;
-      if (currentSubdiv >= windowedCoeffTraces[0].length + halfWindowLen)
-        mappedSubdiv = windowedCoeffTraces[0].length - 1;
-      else if (currentSubdiv <= halfWindowLen) mappedSubdiv = 0;
-      else mappedSubdiv = currentSubdiv - halfWindowLen;
+      switch (windowingType) {
+        case 'centered':
+          let halfWindowLen = Math.floor(windowLen / 2);
+          let mappedSubdiv = 0;
+          if (currentSubdiv >= windowedCoeffTraces[0].length + halfWindowLen)
+            mappedSubdiv = windowedCoeffTraces[0].length - 1;
+          else if (currentSubdiv <= halfWindowLen) mappedSubdiv = 0;
+          else mappedSubdiv = currentSubdiv - halfWindowLen;
 
-      setMapCurrentSubdiv(mappedSubdiv);
+          setMapCurrentSubdiv(mappedSubdiv);
+
+          break;
+
+        case 'incremental':
+          if (currentSubdiv >= coeffTracesData[0].length)
+            setMapCurrentSubdiv(coeffTracesData[0].length - 1);
+          else setMapCurrentSubdiv(currentSubdiv);
+          break;
+
+        default:
+          break;
+      }
     }
   }, [currentSubdiv]);
 
   //Effect: when window length is changed,
   //recompute the trace to be visualized
   useEffect(() => {
-    let temp = [];
+    let windowedTraces;
 
     if (windowLen === 1) setWindowedCoeffTraces(coeffTracesData);
     else {
-      coeffTracesData.forEach((trace) => {
-        let windowedTrace = [];
+      switch (normWindSelectedVal) {
+        case 0:
+          windowedTraces = sumCentered(pcDistributions, windowLen);
+          break;
+        case 1:
+          windowedTraces = sumIncremental(pcDistributions, windowLen);
+          break;
+        case 2:
+          windowedTraces = powerCentered(pcDistributions, windowLen);
+          break;
+        default:
+          break;
+      }
 
-        for (let i = 0; i <= trace.length - windowLen; i++) {
-          let smoothedPoint = { x: 0, y: 0 };
-          for (let j = 0; j < windowLen; j++) {
-            smoothedPoint.x += trace[i + j].x;
-            smoothedPoint.y += trace[i + j].y;
-          }
-          windowedTrace.push(smoothedPoint);
-        }
-
-        //Normalization
-        windowedTrace.forEach((smoothedPoint) => {
-          smoothedPoint.x = smoothedPoint.x / windowLen;
-          smoothedPoint.y = smoothedPoint.y / windowLen;
-        });
-
-        temp.push(windowedTrace);
-      });
-
-      setWindowedCoeffTraces(temp);
+      setWindowedCoeffTraces(windowedTraces);
     }
-  }, [windowLen, coeffTracesData]);
+  }, [windowLen, coeffTracesData, normWindSelectedVal]);
 
   //Pitch class vector submit function handler
   function handleSubmitPitchClass(input) {
@@ -300,13 +325,16 @@ function App() {
           );
 
           //Circles "dynamic" analysis --> single traces in the Fourier spaces
-          let { tracesData, resolution } = getDftCoeffDynamic(
-            midiData,
-            resolutionMode,
-            currentSongBPM
-          );
+          let { tracesData, resolution, currPcDistributions } =
+            getDftCoeffDynamic(
+              midiData,
+              resolutionMode,
+              currentSongBPM,
+              normalizationType
+            );
           setCircleResolution(resolution);
           setCoeffTracesData(tracesData);
+          setPcDistributions(currPcDistributions);
           setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
           setWindowLen(1);
           setTextfieldWndLen('1');
@@ -388,6 +416,10 @@ function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    retriggerAnalysis();
+  }, [normWindSelectedVal]);
 
   //Re-compute the analysis when clicking on "Change" button in the Drawer
   function retriggerAnalysis() {
@@ -620,7 +652,6 @@ function App() {
             <TextField
               /* sx={{ minHeight: '5rem' }} */
               fullWidth
-              label={'margin="dense"'}
               error={isInputPcvInvalid}
               helperText={isInputPcvInvalid && 'Invalid input'}
               id='outlined-basic'
@@ -643,6 +674,57 @@ function App() {
               setUserPcvs={setUserPcvs}
               rosesMat={rosesMat}
             />
+          </Box>
+          <Divider />
+
+          {/* NORMALIZATION TYPE */}
+          <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
+            Normalization and Windowing
+          </Typography>
+          <Box sx={{ margin: '3% 5%' }}>
+            <FormControl fullWidth>
+              <InputLabel id='normalization'>Type</InputLabel>
+              <Select
+                labelId='normalization'
+                label='Type'
+                MenuProps={{
+                  disableScrollLock: true, //To disable popup scrollbar when menu is shown
+                }}
+                value={normWindSelectedVal}
+                defaultValue={0}
+                onChange={(e) => {
+                  switch (e.target.value) {
+                    case 0:
+                      setNormalizationType('sum');
+                      setWindowingType('centered');
+                      setNormWindSelectedVal(0);
+                      break;
+                    case 1:
+                      setNormalizationType('sum');
+                      setWindowingType('incremental');
+                      setNormWindSelectedVal(1);
+                      break;
+                    case 2:
+                      setNormalizationType('power');
+                      setWindowingType('centered');
+                      setNormWindSelectedVal(2);
+                      break;
+                    default:
+                      break;
+                  }
+                }}
+              >
+                <MenuItem value={0}>
+                  Sum normalization - Centered window
+                </MenuItem>
+                <MenuItem value={1}>
+                  Sum normalization - Incremental window
+                </MenuItem>
+                <MenuItem value={2}>
+                  Power normalization - Centered window
+                </MenuItem>
+              </Select>
+            </FormControl>
           </Box>
           <Divider />
 

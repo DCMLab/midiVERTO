@@ -97,18 +97,18 @@ class Pcv {
    * @param {object} pcv
    */
   add(pcv) {
-    this.C = pcv.C;
-    this.Cs = pcv.Cs;
-    this.D = pcv.D;
-    this.Ds = pcv.Ds;
-    this.E = pcv.E;
-    this.F = pcv.F;
-    this.Fs = pcv.Fs;
-    this.G = pcv.G;
-    this.Gs = pcv.Gs;
-    this.A = pcv.A;
-    this.As = pcv.As;
-    this.B = pcv.B;
+    this.C += pcv.C;
+    this.Cs += pcv.Cs;
+    this.D += pcv.D;
+    this.Ds += pcv.Ds;
+    this.E += pcv.E;
+    this.F += pcv.F;
+    this.Fs += pcv.Fs;
+    this.G += pcv.G;
+    this.Gs += pcv.Gs;
+    this.A += pcv.A;
+    this.As += pcv.As;
+    this.B += pcv.B;
   }
 }
 
@@ -221,7 +221,12 @@ export function getDftCoeffStatic(midiFile, resolution) {
  * @param {number} currentSongBPM
  * @returns traces and resolution
  */
-export function getDftCoeffDynamic(midiData, resolutionMode, currentSongBPM) {
+export function getDftCoeffDynamic(
+  midiData,
+  resolutionMode,
+  currentSongBPM,
+  normalizationType
+) {
   let { noteResolutionValue, seconds, useSeconds } = resolutionMode;
 
   let resolution;
@@ -265,9 +270,29 @@ export function getDftCoeffDynamic(midiData, resolutionMode, currentSongBPM) {
     }
   }
 
+  //Cloning unnormalized pcvs distribution for normalization with different window lengths
+  let pcDistributions = [...pcvSubdivision].map((pcv) => {
+    let newPcv = new Pcv();
+    newPcv.add(pcv);
+    return newPcv;
+  });
+
+  switch (normalizationType) {
+    case 'sum':
+      pcvSubdivision = sumNorm(pcvSubdivision);
+      break;
+
+    case 'power':
+      pcvSubdivision = powerNorm(pcvSubdivision);
+      break;
+
+    default:
+      break;
+  }
+
   //Computing the DFT coefficients for of each subdivision
   let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>
-    dft(pcv.getPcvAsArray())
+    dft(pcv.getPcvAsArray(), false)
   );
 
   //Generating the traces by subdividing for the coefficient number
@@ -284,7 +309,11 @@ export function getDftCoeffDynamic(midiData, resolutionMode, currentSongBPM) {
     traces.push(temp);
   }
 
-  return { tracesData: traces, resolution: resolution };
+  return {
+    tracesData: traces,
+    resolution: resolution,
+    currPcDistributions: pcDistributions,
+  };
 }
 
 /**
@@ -405,4 +434,178 @@ function isValidNote(time, duration, cursor, wndLen) {
     return true;
   }
   return false;
+}
+
+export function sumCentered(pcDistributions, windowLen) {
+  let windowedPcvs = [];
+
+  windowedPcvs = winCentered(pcDistributions, windowLen);
+
+  //Normalization
+  windowedPcvs = sumNorm(windowedPcvs);
+
+  //Computing the DFT coefficients for of each subdivision
+  let dftCoeffsSubdivision = windowedPcvs.map((pcv) =>
+    dft(pcv.getPcvAsArray(), false)
+  );
+
+  let traces = generateTraces(dftCoeffsSubdivision);
+
+  return traces;
+}
+
+export function sumIncremental(pcDistributions, windowLen) {
+  let windowedPcvs = [];
+
+  windowedPcvs = winIncremental(pcDistributions, windowLen);
+
+  //Normalization
+  windowedPcvs = sumNorm(windowedPcvs);
+
+  //Computing the DFT coefficients for of each subdivision
+  let dftCoeffsSubdivision = windowedPcvs.map((pcv) =>
+    dft(pcv.getPcvAsArray(), false)
+  );
+
+  let traces = generateTraces(dftCoeffsSubdivision);
+
+  return traces;
+}
+
+export function powerCentered(pcDistributions, windowLen) {
+  let windowedPcvs = [];
+
+  windowedPcvs = winCentered(pcDistributions, windowLen);
+
+  //Normalization
+  windowedPcvs = powerNorm(windowedPcvs);
+
+  //Computing the DFT coefficients for of each subdivision
+  let dftCoeffsSubdivision = windowedPcvs.map((pcv) =>
+    dft(pcv.getPcvAsArray(), false)
+  );
+
+  let traces = generateTraces(dftCoeffsSubdivision);
+
+  return traces;
+}
+
+/**
+ * Normalize pc distributions with sum
+ * @param {array} pcDistributions
+ */
+function sumNorm(pcDistributions) {
+  //Cloning unnormalized pcvs distribution for normalization with different window lengths
+  let clonePcDistributions = [...pcDistributions].map((pcv) => {
+    let newPcv = new Pcv();
+    newPcv.add(pcv);
+    return newPcv;
+  });
+
+  clonePcDistributions.forEach((pcv) => {
+    let sum = 0;
+    for (let note in pcv) sum += pcv[note];
+
+    if (sum !== 0) {
+      for (let note in pcv) pcv[note] = pcv[note] / sum;
+    }
+  });
+
+  return clonePcDistributions;
+}
+
+/**
+ * Normalize pc distributions with power
+ * @param {array} pcDistributions
+ */
+function powerNorm(pcDistributions) {
+  //Cloning unnormalized pcvs distribution for normalization with different window lengths
+  let clonePcDistributions = [...pcDistributions].map((pcv) => {
+    let newPcv = new Pcv();
+    newPcv.add(pcv);
+    return newPcv;
+  });
+
+  clonePcDistributions.forEach((pcv) => {
+    let power = 0;
+    for (let note in pcv) power += Math.pow(pcv[note], 2);
+    power = power / 12;
+
+    if (power != 0) {
+      for (let note in pcv) pcv[note] = Math.sqrt(pcv[note] / power);
+    }
+  });
+
+  return clonePcDistributions;
+}
+
+function winCentered(pcDistributions, windowLen) {
+  let windowedPcvs = [];
+  for (let i = 0; i <= pcDistributions.length - windowLen; i++) {
+    let windowedPcv = new Pcv();
+    for (let j = 0; j < windowLen; j++) {
+      windowedPcv.add(pcDistributions[i + j]);
+    }
+    windowedPcvs.push(windowedPcv);
+  }
+
+  return windowedPcvs;
+}
+
+function winIncremental(pcDistributions, windowLen) {
+  let windowedPcvs = [];
+  let halfWndLen = Math.ceil(windowLen / 2);
+  let incrementalWndLen = halfWndLen;
+
+  //First windowLen/2 samples
+  for (let i = 0; i < halfWndLen; i++) {
+    let windowedPcv = new Pcv();
+    for (let j = 0; j < incrementalWndLen; j++) {
+      windowedPcv.add(pcDistributions[j]);
+    }
+    windowedPcvs.push(windowedPcv);
+
+    incrementalWndLen++;
+  }
+
+  //Moving window
+  for (let i = 0; i <= pcDistributions.length - windowLen; i++) {
+    let windowedPcv = new Pcv();
+    for (let j = 0; j < windowLen; j++) {
+      windowedPcv.add(pcDistributions[i + j]);
+    }
+    windowedPcvs.push(windowedPcv);
+  }
+
+  //Last windowLen samples
+  incrementalWndLen = halfWndLen;
+  for (let i = 0; i < halfWndLen; i++) {
+    let windowedPcv = new Pcv();
+    for (let j = 0; j < incrementalWndLen; j++) {
+      windowedPcv.add(pcDistributions[pcDistributions.length - j - 1]);
+    }
+    windowedPcvs.push(windowedPcv);
+
+    incrementalWndLen++;
+  }
+
+  return windowedPcvs;
+}
+
+function generateTraces(dftCoeffsSubdivision) {
+  //Generating the traces by subdividing for the coefficient number
+  let traces = [];
+  //Skipping coefficient zero since it will not be plotted
+  for (let i = 1; i < 7; i++) {
+    let temp = [];
+    for (let j = 0; j < dftCoeffsSubdivision.length; j++) {
+      temp.push({
+        x: dftCoeffsSubdivision[j][i].re,
+        y: dftCoeffsSubdivision[j][i].im,
+      });
+    }
+    traces.push(temp);
+  }
+
+  return traces;
 }
