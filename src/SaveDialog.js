@@ -56,13 +56,14 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
 
   // ----- POPOVER ----- //
   //State: boolean
-  //If true images can be exported, else there is no MIDI data
-  const [canSave, setCanSave] = useState(false);
+  //If true wavescapes can be exported, else there is no MIDI data
+  const [canSaveWs, setcanSaveWs] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClickPopover = (event) => {
-    if (canSave) saveImages();
-    else setAnchorEl(event.currentTarget);
+    /* if (canSaveWs) saveImages();
+    else setAnchorEl(event.currentTarget); */
+    saveImages();
   };
 
   const handleClosePopover = () => {
@@ -72,9 +73,9 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
   const openPopover = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  //Effect: update canSave if there is data in wavescapes
+  //Effect: update canSaveWs if there is data in wavescapes
   useEffect(() => {
-    wavescapesData.length > 0 ? setCanSave(true) : setCanSave(false);
+    wavescapesData.length > 0 ? setcanSaveWs(true) : setcanSaveWs(false);
     //HOT FIX FOR BLACK TRANSPARENCY IN POWER POINT, INKSCAPE
     let newWavescapes = [];
     for (let i = 0; i < wavescapesData.length; i++) {
@@ -162,10 +163,15 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
     [1, 2, 3, 4, 5, 6].forEach((i) => {
       //Generate SVGs
       let circleSVG = generateCircleSVG(i);
-      let wavescapeSVG = generateWavescapeSVG(i);
+      let wavescapeSVG;
+      if (canSaveWs) {
+        wavescapeSVG = generateWavescapeSVG(i);
+      }
 
       //Adding files to zip
-      zip.file(`wavescapes/wavescape${i}.svg`, wavescapeSVG);
+      if (canSaveWs) {
+        zip.file(`wavescapes/wavescape${i}.svg`, wavescapeSVG);
+      }
       zip.file(`fourier/space${i}.svg`, circleSVG);
     });
 
