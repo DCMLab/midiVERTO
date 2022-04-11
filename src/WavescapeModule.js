@@ -10,6 +10,7 @@ function WavescapeModule({
   wavescapesData,
   currentWavescapeSubdiv,
   elemsWidth,
+  wsPhantomCurveHeight,
 }) {
   return (
     <Box
@@ -29,6 +30,7 @@ function WavescapeModule({
             wavescapeMatrix={data}
             currentWavescapeSubdiv={currentWavescapeSubdiv}
             wavescapeWidth={elemsWidth}
+            wsPhantomCurveHeight={wsPhantomCurveHeight}
           />
         ))
       ) : (

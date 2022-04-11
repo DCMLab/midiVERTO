@@ -7,6 +7,7 @@ export const Wavescape = ({
   wavescapeMatrix,
   currentWavescapeSubdiv,
   wavescapeWidth,
+  wsPhantomCurveHeight,
 }) => {
   const canvasRef = useRef(null);
   const [wsCoordinates, setWsCoordinates] = useState([]);
@@ -88,6 +89,16 @@ export const Wavescape = ({
         <foreignObject x={0} y={0} width={width} height={height}>
           <canvas width={width} height={height} ref={canvasRef}></canvas>
         </foreignObject>
+
+        {/* Approximated phantom curve representation on the wavescape */}
+        <line
+          x1={0.5 * wsPhantomCurveHeight * width + margin / 2}
+          y1={(height - 2 * margin) * wsPhantomCurveHeight + margin}
+          x2={-0.5 * wsPhantomCurveHeight * width + width + margin / 2}
+          y2={(height - 2 * margin) * wsPhantomCurveHeight + margin}
+          stroke='black'
+          strokeDasharray='4 2'
+        />
 
         {/* //Line ticks */}
         {wsCoordinates.length > 0

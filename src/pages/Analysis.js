@@ -61,6 +61,7 @@ function Application({
   currentSubdiv,
   currentWavescapeSubdiv,
   userPcvs,
+  wsPhantomCurveHeight,
 }) {
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [showPrototypes, setShowPrototypes] = useState(true);
@@ -332,6 +333,7 @@ function Application({
               wavescapesData={wavescapesData}
               currentWavescapeSubdiv={currentWavescapeSubdiv}
               elemsWidth={elemsWidth}
+              wsPhantomCurveHeight={wsPhantomCurveHeight}
             />
           </AccordionDetails>
         </Accordion>

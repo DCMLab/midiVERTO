@@ -157,6 +157,9 @@ function App() {
   //Specify the type of windowing: centered, incremental
   const [windowingType, setWindowingType] = useState('centered');
   const [normWindSelectedVal, setNormWindSelectedVal] = useState(0);
+  //State: float in [0,1]
+  //Represents the horizontal cut on the wavescapes of the current phantom curves
+  const [wsPhantomCurveHeight, setWsPhantomCurveHeight] = useState(0);
 
   //INPUT STATES
 
@@ -215,6 +218,9 @@ function App() {
   //recompute the trace to be visualized
   useEffect(() => {
     let windowedTraces;
+
+    if (coeffTracesData.length > 0)
+      setWsPhantomCurveHeight(windowLen / coeffTracesData[0].length);
 
     if (windowLen === 1) setWindowedCoeffTraces(coeffTracesData);
     else {
@@ -873,6 +879,7 @@ function App() {
                     (currentSubdiv * circleResolution) / wavescapeResolution
                   )}
                   userPcvs={userPcvs}
+                  wsPhantomCurveHeight={wsPhantomCurveHeight}
                 />
               )}
             ></Route>
