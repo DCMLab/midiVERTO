@@ -21,6 +21,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
   let ref4 = useRef(null);
   let ref5 = useRef(null);
   let ref6 = useRef(null);
+  let ref7 = useRef(null);
 
   useEffect(() => {
     setInAnalysisPage(false);
@@ -114,6 +115,21 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
                   sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
                 >
                   Manual entry of chords
+                </Link>
+              </li>
+              <li>
+                <Link
+                  underline='hover'
+                  onClick={(event) => {
+                    event.preventDefault();
+                    ref7.current.scrollIntoView({
+                      behavior: 'smooth',
+                    });
+                  }}
+                  href={'#Download images'}
+                  sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
+                >
+                  Using midiVERTO with MuseScore
                 </Link>
               </li>
               <li>
@@ -492,6 +508,86 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               vector. It does not need to correspond to standard chords but can
               also, for example, refer to segments (potentially non-contiguous)
               in an atonal composition.
+            </Info>
+          </Box>
+
+          {/* Use midiVERTO with MuseScore */}
+          <Box sx={{ paddingBottom: 5 }}>
+            <Typography ref={ref7} variant='h4' style={{ fontWeight: 'bold' }}>
+              Using midiVERTO with MuseScore
+            </Typography>
+            <Divider sx={{ marginBottom: 2 }} />
+
+            <Paragraph>
+              The application and MuseScore can interact via MIDI messages. In
+              order to communicate, we have to set up a virtual MIDI cable that
+              connects MuseScore to the application:
+              <ul>
+                <li>
+                  <b>Windows</b>
+                  <ul>
+                    <li>
+                      Download and install{' '}
+                      <BlueLink href='http://www.tobias-erichsen.de/software/loopmidi.html'>
+                        loopMIDI
+                      </BlueLink>
+                    </li>
+                    <li>
+                      Open loopMIDI and use the “+” and “-” buttons on the
+                      bottom to add or remove MIDI loopbacks. At least one
+                      loopback must be active
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <b>macOS</b>
+                  <ul>
+                    <li>
+                      Open Audio MIDI Setup in Applications → Utilities
+                      directory
+                    </li>
+                    <li>
+                      Double click on IAC Driver and check the "Device is
+                      online" box
+                    </li>
+                    <li>
+                      Add and remove buses in Ports tab, at least one must be
+                      active
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <b>Linux</b>
+                  <ul>
+                    <li>
+                      One virtual cable activated by default called "Midi
+                      Through Port-0"
+                    </li>
+                    <li>
+                      To add more virtual cables (3 in this example), use the
+                      commands: <br />
+                      <code>sudo modprobe -r snd-seq-dummy</code> <br />
+                      <code>sudo modprobe snd-seq-dummy ports=3</code>
+                    </li>
+                    <li>
+                      To visualize and edit connections, install{' '}
+                      <code>acconectgui</code>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              Now we have to set up MuseScore to send MIDI messages via the
+              virtual MIDI cable. In Edit → Preferences… → I/O → PortAudio →
+              MIDI output, select the just created port. And only at the end
+              open midiVERTO.
+            </Paragraph>
+
+            <Info>
+              <b>Note:</b> Follow the steps in the suggested order. It may
+              happen that MuseScore does not detect the MIDI port if it is
+              already in use (for example by the application itself). Thus, set
+              up the cable first, then open MuseScore and change the preferences
+              and at the end open midiVERTO.
             </Info>
           </Box>
 
