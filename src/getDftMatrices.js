@@ -279,7 +279,10 @@ export function getDftCoeffDynamic(
     return newPcv;
   });
 
-  switch (normalizationType) {
+  pcvSubdivision = sumNorm(pcvSubdivision);
+
+  // REMOVED normalization-windowing functionalities
+  /* switch (normalizationType) {
     case 'sum':
       pcvSubdivision = sumNorm(pcvSubdivision);
       break;
@@ -290,7 +293,7 @@ export function getDftCoeffDynamic(
 
     default:
       break;
-  }
+  } */
 
   //Computing the DFT coefficients for of each subdivision
   let dftCoeffsSubdivision = pcvSubdivision.map((pcv) =>

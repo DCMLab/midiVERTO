@@ -155,8 +155,8 @@ function App() {
   const [normalizationType, setNormalizationType] = useState('sum');
   //State: string
   //Specify the type of windowing: centered, incremental
-  const [windowingType, setWindowingType] = useState('centered');
-  const [normWindSelectedVal, setNormWindSelectedVal] = useState(0);
+  const [windowingType, setWindowingType] = useState('incremental');
+  const [normWindSelectedVal, setNormWindSelectedVal] = useState(1);
   //State: float in [0,1]
   //Represents the horizontal cut on the wavescapes of the current phantom curves
   const [wsPhantomCurveHeight, setWsPhantomCurveHeight] = useState(0);
@@ -189,7 +189,12 @@ function App() {
   //coeffTracesData's subdivs to windowedCoeffTraces' subdivs --> centerd window
   useEffect(() => {
     if (windowedCoeffTraces.length > 0) {
-      switch (windowingType) {
+      if (currentSubdiv >= coeffTracesData[0].length)
+        setMapCurrentSubdiv(coeffTracesData[0].length - 1);
+      else setMapCurrentSubdiv(currentSubdiv);
+
+      // REMOVER normWind functionalities
+      /* switch (windowingType) {
         case 'centered':
           let halfWindowLen = Math.floor(windowLen / 2);
           let mappedSubdiv = 0;
@@ -210,7 +215,7 @@ function App() {
 
         default:
           break;
-      }
+      } */
     }
   }, [currentSubdiv]);
 
@@ -224,7 +229,10 @@ function App() {
 
     if (windowLen === 1) setWindowedCoeffTraces(coeffTracesData);
     else {
-      switch (normWindSelectedVal) {
+      windowedTraces = sumIncremental(pcDistributions, windowLen);
+
+      // REMOVED normalization-windowing functionalities
+      /* switch (normWindSelectedVal) {
         case 0:
           windowedTraces = sumCentered(pcDistributions, windowLen);
           break;
@@ -236,11 +244,11 @@ function App() {
           break;
         default:
           break;
-      }
+      } */
 
       setWindowedCoeffTraces(windowedTraces);
     }
-  }, [windowLen, coeffTracesData, normWindSelectedVal]);
+  }, [windowLen, coeffTracesData]);
 
   //Pitch class vector submit function handler
   function handleSubmitPitchClass(input) {
@@ -423,9 +431,10 @@ function App() {
     setOpen(false);
   };
 
-  useEffect(() => {
+  // REMOVED normalization-windowing functionalities
+  /* useEffect(() => {
     retriggerAnalysis();
-  }, [normWindSelectedVal]);
+  }, [normWindSelectedVal]); */
 
   //Re-compute the analysis when clicking on "Change" button in the Drawer
   function retriggerAnalysis() {
@@ -685,7 +694,8 @@ function App() {
           <Divider />
 
           {/* NORMALIZATION TYPE */}
-          <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
+          {/* REMOVED normalization-windowing functionalities*/}
+          {/* <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
             Normalization and Windowing
           </Typography>
           <Box sx={{ margin: '3% 5%' }}>
@@ -733,7 +743,7 @@ function App() {
               </Select>
             </FormControl>
           </Box>
-          <Divider />
+          <Divider /> */}
 
           {/* LEGEND OF COEFFICIENTS */}
           <Typography sx={{ marginLeft: 1, marginTop: 1, fontWeight: 'bold' }}>
