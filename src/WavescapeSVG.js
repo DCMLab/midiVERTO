@@ -4,7 +4,12 @@ const verticalScale = Math.sin(Math.PI / 3);
 
 //Generates SVGs of the wavescapes for the exporting,
 //see Wavescape.js
-function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
+function WavescapeSVG({
+  wsNumber,
+  wavescapeMatrix,
+  showNumber,
+  wsPhantomCurveHeight,
+}) {
   const margin = 10;
   const width = 400;
   const height = width;
@@ -45,6 +50,16 @@ function WavescapeSVG({ wsNumber, wavescapeMatrix, showNumber }) {
           -height - 2 * margin
         })`}
       >
+        {/* Approximated phantom curve representation on the wavescape */}
+        <line
+          x1={0.5 * wsPhantomCurveHeight * width + margin / 2}
+          y1={(height - 2 * margin) * wsPhantomCurveHeight + margin}
+          x2={-0.5 * wsPhantomCurveHeight * width + width + margin / 2}
+          y2={(height - 2 * margin) * wsPhantomCurveHeight + margin}
+          stroke='black'
+          strokeDasharray='4 2'
+        />
+
         {/* Contour line */}
         {wsCoordinates.length > 0 ? (
           <>

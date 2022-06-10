@@ -26,7 +26,12 @@ import Box from '@mui/system/Box';
 import Popover from '@mui/material/Popover';
 
 //Save dialog component
-function SaveDialog({ traces, userPcvs, wavescapesData }) {
+function SaveDialog({
+  traces,
+  userPcvs,
+  wavescapesData,
+  wsPhantomCurveHeight,
+}) {
   // ----- DIALOG WINDOW ----- //
   //State: boolean
   //True if the dialog window is opened
@@ -128,6 +133,7 @@ function SaveDialog({ traces, userPcvs, wavescapesData }) {
         wavescapeMatrix={wavescapesData.length > 0 ? wavescapesRGBA[k - 1] : []}
         wsNumber={k}
         showNumber={checkNumb}
+        wsPhantomCurveHeight={wsPhantomCurveHeight}
       />
     );
 

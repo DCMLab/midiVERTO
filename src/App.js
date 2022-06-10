@@ -846,6 +846,7 @@ function App() {
             traces={windowedCoeffTraces}
             userPcvs={userPcvs}
             wavescapesData={wavescapesData}
+            wsPhantomCurveHeight={wsPhantomCurveHeight}
           />
         </Drawer>
 
