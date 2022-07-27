@@ -444,7 +444,7 @@ function App() {
     }
 
     //Circles dynamic analysis
-    let { tracesData, resolution } = getDftCoeffDynamic(
+    /*let { tracesData, resolution } = getDftCoeffDynamic(
       currentSongMidiData,
       resolutionMode,
       currentSongBPM,
@@ -454,7 +454,19 @@ function App() {
     setCoeffTracesData(tracesData);
     setWindowLen(1);
     setTextfieldWndLen('1');
+    setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);*/
+    let { tracesData, resolution, currPcDistributions } = getDftCoeffDynamic(
+      currentSongMidiData,
+      resolutionMode,
+      currentSongBPM,
+      normalizationType
+    );
+    setCircleResolution(resolution);
+    setCoeffTracesData(tracesData);
+    setPcDistributions(currPcDistributions);
     setPlayerMidiData(currentSongMidiData, resolution, setCurrentSubdiv);
+    setWindowLen(1);
+    setTextfieldWndLen('1');
   }
 
   return (
