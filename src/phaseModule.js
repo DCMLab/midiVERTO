@@ -41,7 +41,7 @@ function PhaseModule({
   const [coeff3, setCoeff3] = useState(10);
   const [currentProd, setCurrentProd] = useState({ x: 0, y: 0 });
 
-  function complexMult(c1, c2, c3) {
+  function complexMult(c1, c2, c3, conjugate) {
     let ris = { x: 0, y: 0 };
     ris.x = c1.x * c2.x - c1.y * c2.y;
     ris.y = c1.x * c2.y + c1.y * c2.x;
@@ -49,8 +49,8 @@ function PhaseModule({
     let risX = ris.x;
     let risY = ris.y;
 
-    ris.x = risX * c3.x - risY * c3.y;
-    ris.y = risX * c3.y + risY * c3.x;
+    ris.x = risX * c3.x - risY * c3.y * conjugate;
+    ris.y = risX * c3.y * conjugate + risY * c3.x;
 
     return ris;
   }
@@ -60,7 +60,13 @@ function PhaseModule({
 
     if (coeffTracesData[0]) {
       let temp3;
-      coeff3 >= 6 ? (temp3 = 12 - coeff3) : (temp3 = coeff3 - 1);
+      let conjugate = 1;
+      if (coeff3 > 6) {
+        temp3 = 12 - coeff3 - 1;
+        conjugate = -1;
+      } else {
+        temp3 = coeff3 - 1;
+      }
       console.log(coeffTracesData[0][currentSubdiv]);
 
       console.log(coeff1, coeff2, coeff3);
@@ -74,7 +80,8 @@ function PhaseModule({
         complexMult(
           coeffTracesData[coeff1 - 1][currentSubdiv],
           coeffTracesData[coeff2 - 1][currentSubdiv],
-          coeffTracesData[temp3][currentSubdiv]
+          coeffTracesData[temp3][currentSubdiv],
+          conjugate
         )
       );
     }
@@ -284,11 +291,18 @@ function PhaseModule({
                 y2={width / 2}
                 stroke='black'
               ></line>
+
               {/* Product point */}
               <circle
                 cx={currentProd.x * circleRadius}
                 cy={currentProd.y * circleRadius}
-                r='5'
+                r='6'
+              ></circle>
+              <circle
+                cx={currentProd.x * circleRadius}
+                cy={currentProd.y * circleRadius}
+                r='3'
+                fill='white'
               ></circle>
             </g>
           </g>
