@@ -251,7 +251,6 @@ function Circle({
             fill='none'
             stroke='black'
             strokeWidth='1px'
-            fill='#FFF'
             fillOpacity={0}
             points={rosePoints}
           />

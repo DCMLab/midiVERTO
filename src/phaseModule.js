@@ -41,6 +41,8 @@ function PhaseModule({
   const [coeff3, setCoeff3] = useState(10);
   const [currentProd, setCurrentProd] = useState({ x: 0, y: 0 });
 
+  const [fullTraceProd, setFullTraceProd] = useState([]);
+
   function complexMult(c1, c2, c3, conjugate) {
     let ris = { x: 0, y: 0 };
     ris.x = c1.x * c2.x - c1.y * c2.y;
@@ -67,15 +69,18 @@ function PhaseModule({
       } else {
         temp3 = coeff3 - 1;
       }
-      console.log(coeffTracesData[0][currentSubdiv]);
 
+      /*
+      console.log(coeffTracesData[0][currentSubdiv]);
       console.log(coeff1, coeff2, coeff3);
       console.log(coeffTracesData);
-      //console.log('ris: ', coeff1 + coeff2 + coeff3);
+      console.log('ris: ', coeff1 + coeff2 + coeff3);
       console.log(coeffTracesData[coeff1 - 1][currentSubdiv]);
       console.log(coeffTracesData[coeff2 - 1][currentSubdiv]);
       console.log(coeffTracesData[temp3][currentSubdiv]);
+      */
 
+      // Current Point
       setCurrentProd(
         complexMult(
           coeffTracesData[coeff1 - 1][currentSubdiv],
@@ -84,6 +89,21 @@ function PhaseModule({
           conjugate
         )
       );
+
+      // Full trace
+      let tempTrace = [];
+      for (let i = 0; i < fullTraces[0].length; i++) {
+        tempTrace.push(
+          complexMult(
+            coeffTracesData[coeff1 - 1][i],
+            coeffTracesData[coeff2 - 1][i],
+            coeffTracesData[temp3][i],
+            conjugate
+          )
+        );
+      }
+
+      setFullTraceProd(tempTrace);
     }
   }, [coeff1, coeff2, coeffTracesData, currentSubdiv]);
 
@@ -148,7 +168,49 @@ function PhaseModule({
       savedImage = image;
     }
     ctx.putImageData(savedImage, 0, 0);
+
+    //Render the trace
+    if (fullTraceProd.length > 0) {
+      ctx.save();
+      ctx.translate((400 - margin) / 2, (400 - margin) / 2);
+      drawTrace();
+      ctx.restore();
+    }
   }, [width, height, circleRadius]);
+
+  //Re-render trace when trace data changes (a new file is uploaded)
+  useEffect(() => {
+    if (fullTraceProd) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.translate((400 - margin) / 2, (400 - margin) / 2);
+      drawTrace();
+      ctx.restore();
+    }
+  }, [fullTraceProd]);
+
+  //Render the trace in Fourier space
+  function drawTrace() {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+
+    //traceDataCoeff to visualze the windowed version, fullTrace otherwise
+    fullTraceProd.forEach((element) => {
+      ctx.beginPath();
+      ctx.arc(
+        element.x * circleRadius,
+        -element.y * circleRadius,
+        (0.01 * width) / 2,
+        0,
+        Math.PI * 2,
+        true
+      );
+      ctx.fill();
+    });
+  }
 
   return (
     <Box
