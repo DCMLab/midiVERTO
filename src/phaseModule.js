@@ -362,12 +362,12 @@ function PhaseModule({
               {/* Product point */}
               <circle
                 cx={currentProd.x * circleRadius}
-                cy={currentProd.y * circleRadius}
+                cy={-currentProd.y * circleRadius}
                 r='6'
               ></circle>
               <circle
                 cx={currentProd.x * circleRadius}
-                cy={currentProd.y * circleRadius}
+                cy={-currentProd.y * circleRadius}
                 r='3'
                 fill='white'
               ></circle>
