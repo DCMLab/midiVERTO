@@ -105,7 +105,7 @@ function PhaseModule({
 
       setFullTraceProd(tempTrace);
     }
-  }, [coeff1, coeff2, coeffTracesData, currentSubdiv]);
+  }, [coeff1, coeff2, coeff3, coeffTracesData, currentSubdiv, fullTraces]);
 
   //Workaround for chrome bug on canvas overlay in foreignObj SVG
   useEffect(() => {
@@ -184,7 +184,7 @@ function PhaseModule({
   }, [width, height, circleRadius, fullTraceProd]);
 
   //Re-render trace when trace data changes (a new file is uploaded)
-  /*useEffect(() => {
+  useEffect(() => {
     if (fullTraceProd) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
@@ -193,7 +193,7 @@ function PhaseModule({
       drawTrace();
       ctx.restore();
     }
-  }, [fullTraceProd]);*/
+  }, [fullTraceProd]);
 
   //Render the trace in Fourier space
   function drawTrace() {
