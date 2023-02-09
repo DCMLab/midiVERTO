@@ -39,9 +39,12 @@ function PhaseModule({
   const [coeff1, setCoeff1] = useState(1);
   const [coeff2, setCoeff2] = useState(1);
   const [coeff3, setCoeff3] = useState(10);
+
   const [currentProd, setCurrentProd] = useState({ x: 0, y: 0 });
+  const [currentPhPoint, setCurrentPhPoint] = useState({ x: 0, y: 0 });
 
   const [fullTraceProd, setFullTraceProd] = useState([]);
+  const [phaseTrace, setPhaseTrace] = useState([]);
 
   const [checkedNorm, setCheckedNorm] = useState(false);
 
@@ -84,6 +87,20 @@ function PhaseModule({
           )
         );
       }
+
+      //Compute phases and phase trace
+      let tempPhTrace = [];
+      for (let i = 0; i < fullTraces[0].length; i++) {
+        let c1 = coeffTracesData[coeff1 - 1][i];
+        let c2 = coeffTracesData[coeff2 - 1][i];
+
+        let phase1 = (Math.atan(c1.y / c1.x) * 2) / Math.PI;
+        let phase2 = (Math.atan(c2.y / c2.x) * 2) / Math.PI;
+
+        tempPhTrace.push({ x: phase1, y: phase2 });
+      }
+      setPhaseTrace(tempPhTrace);
+
       //Normalization
       let sum = 0;
       if (checkedNorm) {
@@ -132,6 +149,13 @@ function PhaseModule({
       setCurrentProd(fullTraceProd[currentSubdiv]);
     }
   }, [currentSubdiv, fullTraceProd]);
+
+  useEffect(() => {
+    // Current Point (phase space)
+    if (fullTraceProd.length > 0) {
+      setCurrentPhPoint(phaseTrace[currentSubdiv]);
+    }
+  }, [currentSubdiv, phaseTrace]);
 
   //Workaround for chrome bug on canvas overlay in foreignObj SVG
   useEffect(() => {
@@ -425,7 +449,7 @@ function PhaseModule({
           viewBox={`0 0 ${width} ${height}`}
           xmlns='http://www.w3.org/2000/svg'
         >
-          {/* FOURIER SPACE */}
+          {/* PHASE SPACE */}
           <g transform={`translate(0,${headerOffset})`}>
             <g transform={`translate(${width / 2},${width / 2})`}>
               {/* Cartesian plane */}
@@ -443,11 +467,29 @@ function PhaseModule({
                 y2={width / 2}
                 stroke='black'
               ></line>
-              {/* Product point */}
+              {/* Phase trace */}
+              {phaseTrace.map((element) => {
+                return (
+                  <circle
+                    cx={element.x * circleRadius}
+                    cy={-element.y * circleRadius}
+                    r='5'
+                    fill='black'
+                  ></circle>
+                );
+              })}
+
+              {/* Current phase */}
               <circle
-                cx={currentProd.x * circleRadius}
-                cy={currentProd.y * circleRadius}
-                r='5'
+                cx={currentPhPoint.x * circleRadius}
+                cy={-currentPhPoint.y * circleRadius}
+                r='6'
+              ></circle>
+              <circle
+                cx={currentPhPoint.x * circleRadius}
+                cy={-currentPhPoint.y * circleRadius}
+                r='3'
+                fill='white'
               ></circle>
             </g>
           </g>
