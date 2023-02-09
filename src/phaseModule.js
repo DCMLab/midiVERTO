@@ -122,7 +122,7 @@ function PhaseModule({
         setFullTraceProd(tempTrace);
       }
 
-      console.log(sum);
+      //console.log(sum);
     }
   }, [coeff1, coeff2, coeff3, coeffTracesData, checkedNorm]);
 
