@@ -8,7 +8,7 @@ import { prototypesData } from './prototypesData';
 
 //Import material UI components
 import Box from '@mui/material/Box';
-import { FormControl } from '@mui/material';
+import { FormControl, Switch } from '@mui/material';
 import { InputLabel } from '@mui/material';
 import { Select } from '@mui/material';
 import { MenuItem } from '@mui/material';
@@ -43,6 +43,8 @@ function PhaseModule({
 
   const [fullTraceProd, setFullTraceProd] = useState([]);
 
+  const [checkedNorm, setCheckedNorm] = useState(false);
+
   function complexMult(c1, c2, c3, conjugate) {
     let ris = { x: 0, y: 0 };
     ris.x = c1.x * c2.x - c1.y * c2.y;
@@ -70,26 +72,6 @@ function PhaseModule({
         temp3 = coeff3 - 1;
       }
 
-      /*
-      console.log(coeffTracesData[0][currentSubdiv]);
-      console.log(coeff1, coeff2, coeff3);
-      console.log(coeffTracesData);
-      console.log('ris: ', coeff1 + coeff2 + coeff3);
-      console.log(coeffTracesData[coeff1 - 1][currentSubdiv]);
-      console.log(coeffTracesData[coeff2 - 1][currentSubdiv]);
-      console.log(coeffTracesData[temp3][currentSubdiv]);
-      */
-
-      // Current Point
-      setCurrentProd(
-        complexMult(
-          coeffTracesData[coeff1 - 1][currentSubdiv],
-          coeffTracesData[coeff2 - 1][currentSubdiv],
-          coeffTracesData[temp3][currentSubdiv],
-          conjugate
-        )
-      );
-
       // Full trace
       let tempTrace = [];
       for (let i = 0; i < fullTraces[0].length; i++) {
@@ -102,10 +84,54 @@ function PhaseModule({
           )
         );
       }
+      //Normalization
+      let sum = 0;
+      if (checkedNorm) {
+        for (let i = 0; i < tempTrace.length; i++) {
+          let currentNorm;
+          let currentCoef = tempTrace[i];
 
-      setFullTraceProd(tempTrace);
+          currentNorm = Math.sqrt(
+            Math.pow(currentCoef.x, 2) + Math.pow(currentCoef.y, 2)
+          );
+
+          sum += Math.pow(currentNorm, 2);
+        }
+
+        sum = Math.sqrt(sum);
+
+        let normTrace = [];
+        for (let i = 0; i < tempTrace.length; i++) {
+          let currentNorm;
+          let currentCoef = tempTrace[i];
+
+          currentNorm = Math.sqrt(
+            Math.pow(currentCoef.x, 2) + Math.pow(currentCoef.y, 2)
+          );
+
+          let normCoeff = { x: 0, y: 0 };
+          let phase = Math.atan(currentCoef.y / currentCoef.x);
+          normCoeff.x = (currentNorm / sum) * Math.cos(phase);
+          normCoeff.y = (currentNorm / sum) * Math.sin(phase);
+
+          normTrace.push(normCoeff);
+        }
+
+        setFullTraceProd(normTrace);
+      } else {
+        setFullTraceProd(tempTrace);
+      }
+
+      console.log(sum);
     }
-  }, [coeff1, coeff2, coeff3, coeffTracesData, currentSubdiv, fullTraces]);
+  }, [coeff1, coeff2, coeff3, coeffTracesData, checkedNorm]);
+
+  useEffect(() => {
+    // Current Point
+    if (fullTraceProd.length > 0) {
+      setCurrentProd(fullTraceProd[currentSubdiv]);
+    }
+  }, [currentSubdiv, fullTraceProd]);
 
   //Workaround for chrome bug on canvas overlay in foreignObj SVG
   useEffect(() => {
@@ -293,10 +319,28 @@ function PhaseModule({
 
           <TextField
             inputProps={{ style: { textAlign: 'center' } }}
-            sx={{ width: '30px', marginTop: 2 }}
+            sx={{ minWidth: '30px', width: '30px', marginTop: 2 }}
             value={coeff3}
             variant='standard'
           />
+
+          <Switch
+            sx={{ marginTop: 2, marginLeft: 5 }}
+            checked={checkedNorm}
+            onChange={(event) => {
+              setCheckedNorm(event.target.checked);
+            }}
+          ></Switch>
+          <Typography
+            sx={{
+              marginTop: 3,
+              fontSize: '18px',
+            }}
+            variant='h5'
+            gutterBottom
+          >
+            {'Normalization'}
+          </Typography>
         </Stack>
       </Box>
 
