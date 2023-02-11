@@ -480,6 +480,116 @@ function PhaseModule({
                 y2={width / 2}
                 stroke='black'
               ></line>
+              <text
+                fontSize='16'
+                textAnchor='middle'
+                x='200'
+                y='-3'
+                fill='black'
+              >
+                {`Ph${coeff1}`}
+              </text>
+              <text
+                fontSize='16'
+                textAnchor='start'
+                x='3'
+                y='-200'
+                fill='black'
+              >
+                {`Ph${coeff2}`}
+              </text>
+
+              {[1, 2, 3, 4, 5, 6].map((el) => {
+                return (
+                  <>
+                    {/* Grid */}
+                    <line
+                      x1={(-circleRadius * el) / 6}
+                      y1={circleRadius}
+                      x2={(-circleRadius * el) / 6}
+                      y2={-circleRadius}
+                      stroke='grey'
+                      strokeOpacity={0.5}
+                      stroke-dasharray='5'
+                    />
+
+                    <line
+                      x1={(-circleRadius * -el) / 6}
+                      y1={circleRadius}
+                      x2={(-circleRadius * -el) / 6}
+                      y2={-circleRadius}
+                      stroke='grey'
+                      strokeOpacity={0.5}
+                      stroke-dasharray='5'
+                    />
+
+                    <line
+                      x1={circleRadius}
+                      y1={(-circleRadius * -el) / 6}
+                      x2={-circleRadius}
+                      y2={(-circleRadius * -el) / 6}
+                      stroke='grey'
+                      strokeOpacity={0.5}
+                      stroke-dasharray='5'
+                    />
+
+                    <line
+                      x1={circleRadius}
+                      y1={(-circleRadius * el) / 6}
+                      x2={-circleRadius}
+                      y2={(-circleRadius * el) / 6}
+                      stroke='grey'
+                      strokeOpacity={0.5}
+                      stroke-dasharray='5'
+                    />
+
+                    {/* Numbers */}
+                    <text
+                      fontSize='13'
+                      textAnchor='middle'
+                      x={(el / 6) * circleRadius}
+                      y='12'
+                      fill='black'
+                    >
+                      {el}
+                    </text>
+
+                    <text
+                      fontSize='13'
+                      textAnchor='middle'
+                      x={(-el / 6) * circleRadius}
+                      y='12'
+                      fill='black'
+                    >
+                      {-el}
+                    </text>
+                    <text fontSize='13' textAnchor='middle' x='5' y='12'>
+                      {0}
+                    </text>
+
+                    <text
+                      fontSize='13'
+                      textAnchor='middle'
+                      x='7'
+                      y={-(el / 6) * circleRadius + 5}
+                      fill='black'
+                    >
+                      {el}
+                    </text>
+
+                    <text
+                      fontSize='13'
+                      textAnchor='middle'
+                      x='7'
+                      y={(el / 6) * circleRadius + 5}
+                      fill='black'
+                    >
+                      {-el}
+                    </text>
+                  </>
+                );
+              })}
+
               {/* Phase trace */}
               {phaseTrace.map((element, i) => {
                 return (
@@ -487,8 +597,9 @@ function PhaseModule({
                     key={`phase${i}`}
                     cx={element.x * circleRadius}
                     cy={-element.y * circleRadius}
-                    r='5'
+                    r='3'
                     fill='black'
+                    fill-opacity='0.3'
                   ></circle>
                 );
               })}
@@ -497,13 +608,13 @@ function PhaseModule({
               <circle
                 cx={currentPhPoint.x * circleRadius}
                 cy={-currentPhPoint.y * circleRadius}
-                r='6'
+                r='4'
               ></circle>
               <circle
                 cx={currentPhPoint.x * circleRadius}
                 cy={-currentPhPoint.y * circleRadius}
-                r='3'
-                fill='white'
+                r='2'
+                fill='red'
               ></circle>
             </g>
           </g>
