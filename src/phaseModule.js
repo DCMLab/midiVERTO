@@ -62,6 +62,18 @@ function PhaseModule({
     return ris;
   }
 
+  function computeNorm(c) {
+    return Math.sqrt(Math.pow(c.x, 2) + Math.pow(c.y, 2));
+  }
+
+  function multScalar(c, scalar) {
+    let res = { x: 0, y: 0 };
+    res.x = c.x * scalar;
+    res.y = c.y * scalar;
+
+    return res;
+  }
+
   useEffect(() => {
     setCoeff3(12 - coeff1 - coeff2);
 
@@ -78,15 +90,56 @@ function PhaseModule({
       // Full trace
       let tempTrace = [];
       for (let i = 0; i < fullTraces[0].length; i++) {
-        tempTrace.push(
-          complexMult(
+        let resProduct = { x: 0, y: 0 };
+
+        // Normalization
+        if (checkedNorm) {
+          let a_x = coeffTracesData[coeff1 - 1][i];
+          let a_y = coeffTracesData[coeff2 - 1][i];
+          let a_z = coeffTracesData[temp3][i];
+
+          //Norms
+          let n_x = computeNorm(a_x);
+          let n_y = computeNorm(a_y);
+          let n_z = computeNorm(a_z);
+
+          //Versors
+          let v_x = multScalar(a_x, 1 / n_x);
+          let v_y = multScalar(a_y, 1 / n_y);
+          let v_z = multScalar(a_z, 1 / n_z);
+
+          let prodVersor = complexMult(v_x, v_y, v_z, conjugate);
+
+          let sum = 0;
+          for (let j = 0; j < 5; j++) {
+            sum += 2 * Math.pow(computeNorm(coeffTracesData[j][i]), 2);
+          }
+          sum += Math.pow(computeNorm(coeffTracesData[5][i]), 2); //6th coeff
+
+          let prodMag =
+            Math.sqrt((2 * Math.pow(n_x, 2)) / sum) *
+            Math.sqrt((2 * Math.pow(n_y, 2)) / sum);
+
+          if (coeff3 == 6) prodMag *= Math.sqrt(Math.pow(n_z, 2) / sum);
+          else prodMag *= Math.sqrt((2 * Math.pow(n_z, 2)) / sum);
+
+          prodMag *= Math.sqrt(27);
+
+          resProduct = multScalar(prodVersor, prodMag);
+        } else {
+          //No normalization
+          resProduct = complexMult(
             coeffTracesData[coeff1 - 1][i],
             coeffTracesData[coeff2 - 1][i],
             coeffTracesData[temp3][i],
             conjugate
-          )
-        );
+          );
+        }
+
+        tempTrace.push(resProduct);
       }
+
+      setFullTraceProd(tempTrace);
 
       //Compute phases and phase trace
       let tempPhTrace = [];
@@ -100,46 +153,6 @@ function PhaseModule({
         tempPhTrace.push({ x: phase1, y: phase2 });
       }
       setPhaseTrace(tempPhTrace);
-
-      //Normalization
-      let sum = 0;
-      if (checkedNorm) {
-        for (let i = 0; i < tempTrace.length; i++) {
-          let currentNorm;
-          let currentCoef = tempTrace[i];
-
-          currentNorm = Math.sqrt(
-            Math.pow(currentCoef.x, 2) + Math.pow(currentCoef.y, 2)
-          );
-
-          sum += Math.pow(currentNorm, 2);
-        }
-
-        sum = Math.sqrt(sum);
-
-        let normTrace = [];
-        for (let i = 0; i < tempTrace.length; i++) {
-          let currentNorm;
-          let currentCoef = tempTrace[i];
-
-          currentNorm = Math.sqrt(
-            Math.pow(currentCoef.x, 2) + Math.pow(currentCoef.y, 2)
-          );
-
-          let normCoeff = { x: 0, y: 0 };
-          let phase = Math.atan(currentCoef.y / currentCoef.x);
-          normCoeff.x = (currentNorm / sum) * Math.cos(phase);
-          normCoeff.y = (currentNorm / sum) * Math.sin(phase);
-
-          normTrace.push(normCoeff);
-        }
-
-        setFullTraceProd(normTrace);
-      } else {
-        setFullTraceProd(tempTrace);
-      }
-
-      //console.log(sum);
     }
   }, [coeff1, coeff2, coeff3, coeffTracesData, checkedNorm]);
 
@@ -468,9 +481,10 @@ function PhaseModule({
                 stroke='black'
               ></line>
               {/* Phase trace */}
-              {phaseTrace.map((element) => {
+              {phaseTrace.map((element, i) => {
                 return (
                   <circle
+                    key={`phase${i}`}
                     cx={element.x * circleRadius}
                     cy={-element.y * circleRadius}
                     r='5'
