@@ -147,8 +147,8 @@ function PhaseModule({
         let c1 = coeffTracesData[coeff1 - 1][i];
         let c2 = coeffTracesData[coeff2 - 1][i];
 
-        let phase1 = Math.atan2(c1.x, c1.y) / Math.PI;
-        let phase2 = Math.atan2(c2.x, c2.y) / Math.PI;
+        let phase1 = Math.atan2(c1.y, c1.x) / Math.PI;
+        let phase2 = Math.atan2(c2.y, c2.x) / Math.PI;
 
         tempPhTrace.push({ x: phase1, y: phase2 });
       }
