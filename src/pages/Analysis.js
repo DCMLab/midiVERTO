@@ -367,7 +367,9 @@ function Application({
             aria-controls='panel2a-content'
             id='panel2a-header'
           >
-            <Typography variant='h6'>Phase</Typography>
+            <Typography variant='h6'>
+              Coefficient Products and Phase Space
+            </Typography>
           </AccordionSummary>
           <AccordionDetails sx={{ padding: 0 }}>
             <PhaseModule

@@ -147,8 +147,8 @@ function PhaseModule({
         let c1 = coeffTracesData[coeff1 - 1][i];
         let c2 = coeffTracesData[coeff2 - 1][i];
 
-        let phase1 = (Math.atan(c1.y / c1.x) * 2) / Math.PI;
-        let phase2 = (Math.atan(c2.y / c2.x) * 2) / Math.PI;
+        let phase1 = Math.atan2(c1.x, c1.y) / Math.PI;
+        let phase2 = Math.atan2(c2.x, c2.y) / Math.PI;
 
         tempPhTrace.push({ x: phase1, y: phase2 });
       }
@@ -499,9 +499,9 @@ function PhaseModule({
                 {`Ph${coeff2}`}
               </text>
 
-              {[1, 2, 3, 4, 5, 6].map((el) => {
+              {[1, 2, 3, 4, 5, 6].map((el, i) => {
                 return (
-                  <>
+                  <g key={`grid${i}`}>
                     {/* Grid */}
                     <line
                       x1={(-circleRadius * el) / 6}
@@ -510,7 +510,7 @@ function PhaseModule({
                       y2={-circleRadius}
                       stroke='grey'
                       strokeOpacity={0.5}
-                      stroke-dasharray='5'
+                      strokeDasharray='5'
                     />
 
                     <line
@@ -520,7 +520,7 @@ function PhaseModule({
                       y2={-circleRadius}
                       stroke='grey'
                       strokeOpacity={0.5}
-                      stroke-dasharray='5'
+                      strokeDasharray='5'
                     />
 
                     <line
@@ -530,7 +530,7 @@ function PhaseModule({
                       y2={(-circleRadius * -el) / 6}
                       stroke='grey'
                       strokeOpacity={0.5}
-                      stroke-dasharray='5'
+                      strokeDasharray='5'
                     />
 
                     <line
@@ -540,7 +540,7 @@ function PhaseModule({
                       y2={(-circleRadius * el) / 6}
                       stroke='grey'
                       strokeOpacity={0.5}
-                      stroke-dasharray='5'
+                      strokeDasharray='5'
                     />
 
                     {/* Numbers */}
@@ -586,7 +586,7 @@ function PhaseModule({
                     >
                       {-el}
                     </text>
-                  </>
+                  </g>
                 );
               })}
 
@@ -599,7 +599,7 @@ function PhaseModule({
                     cy={-element.y * circleRadius}
                     r='3'
                     fill='black'
-                    fill-opacity='0.3'
+                    fillOpacity='0.3'
                   ></circle>
                 );
               })}
