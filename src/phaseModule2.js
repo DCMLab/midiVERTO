@@ -22,7 +22,7 @@ import { pixelColor } from './colorMapping';
 let savedImage = null;
 
 //Phase space module component
-function PhaseModule({
+function PhaseModule2({
   fullTraces,
   coeffTracesData,
   showPrototypes,
@@ -36,9 +36,12 @@ function PhaseModule({
   //Color wheel canvas
   const canvasRef = useRef(null);
 
+  const [x, setX] = useState(1);
+  const [y, setY] = useState(2);
+
   const [coeff1, setCoeff1] = useState(1);
-  const [coeff2, setCoeff2] = useState(1);
-  const [coeff3, setCoeff3] = useState(10);
+  const [coeff2, setCoeff2] = useState(2);
+  const [coeff3, setCoeff3] = useState(1);
 
   const [currentProd, setCurrentProd] = useState({ x: 0, y: 0 });
   const [currentPhPoint, setCurrentPhPoint] = useState({ x: 0, y: 0 });
@@ -48,16 +51,10 @@ function PhaseModule({
 
   const [checkedNorm, setCheckedNorm] = useState(false);
 
-  function complexMult(c1, c2, c3, conjugate) {
+  function complexMult(c1, c2) {
     let ris = { x: 0, y: 0 };
     ris.x = c1.x * c2.x - c1.y * c2.y;
     ris.y = c1.x * c2.y + c1.y * c2.x;
-
-    let risX = ris.x;
-    let risY = ris.y;
-
-    ris.x = risX * c3.x - risY * c3.y * conjugate;
-    ris.y = risX * c3.y * conjugate + risY * c3.x;
 
     return ris;
   }
@@ -74,37 +71,82 @@ function PhaseModule({
     return res;
   }
 
-  function normalize(a1, a2, a3) {
-    let result = { a1_norm: 0, a2_norm: 0, a3_norm: 0 };
+  function conjIndex(coeff) {
+    let ris = { coeffNumber: 0, conjugate: false };
+    if (coeff > 6) {
+      ris.coeffNumber = 12 - coeff - 1;
+      ris.conjugate = true;
+    } else {
+      ris.coeffNumber = coeff - 1;
+    }
 
-    //Norms
-    let n_x = computeNorm(a1);
-    let n_y = computeNorm(a2);
-    let n_z = computeNorm(a3);
-
-    return result;
+    return ris;
   }
 
   useEffect(() => {
-    setCoeff3(12 - coeff1 - coeff2);
+    if (y <= x) {
+      setCoeff1(y - 1);
+      setX(y - 1);
+    } else {
+      setCoeff1(x);
+    }
+    setCoeff2(12 - y);
+    setCoeff3(y - x);
 
     if (coeffTracesData[0]) {
-      let temp3;
-      let conjugate = 1;
-      if (coeff3 > 6) {
-        temp3 = 12 - coeff3 - 1;
-        conjugate = -1;
-      } else {
-        temp3 = coeff3 - 1;
-      }
-
       // Full trace
       let tempTrace = [];
       for (let i = 0; i < fullTraces[0].length; i++) {
         let resProduct = { x: 0, y: 0 };
 
-        // Normalization
+        let currentCoeffsIndexes = [coeff1, coeff2, coeff3];
+
+        console.log(currentCoeffsIndexes);
+
+        let currentCoeffs = [];
+        let currentConjIndex;
+        for (let j = 0; j < 3; j++) {
+          currentConjIndex = conjIndex(currentCoeffsIndexes[j]);
+
+          if (currentConjIndex.conjugate) {
+            let currentCoeff = coeffTracesData[currentConjIndex.coeffNumber][i];
+            let newCoeff = { x: 0, y: 0 };
+            newCoeff.x = currentCoeff.x;
+            newCoeff.y = currentCoeff.y * -1;
+            currentCoeffs.push(newCoeff);
+          } else {
+            currentCoeffs.push(
+              coeffTracesData[currentConjIndex.coeffNumber][i]
+            );
+          }
+        }
+
+        resProduct = complexMult(currentCoeffs[0], currentCoeffs[1]);
+        resProduct = complexMult(resProduct, currentCoeffs[2]);
+
         if (checkedNorm) {
+          let versProd = multScalar(resProduct, 1 / computeNorm(resProduct));
+
+          let sum = 0;
+          for (let j = 0; j < 5; j++) {
+            sum += 2 * Math.pow(computeNorm(coeffTracesData[j][i]), 2);
+          }
+          sum += Math.pow(computeNorm(coeffTracesData[5][i]), 2); //6th coeff
+
+          let prodMag = 1;
+          for (let k = 0; k < currentCoeffs.length; k++) {
+            prodMag *= Math.sqrt(
+              (2 * Math.pow(computeNorm(currentCoeffs[k]), 2)) / sum
+            );
+          }
+
+          prodMag *= Math.sqrt(27);
+
+          resProduct = multScalar(versProd, prodMag);
+        }
+
+        // Normalization
+        /*if (checkedNorm) {
           let a_x = coeffTracesData[coeff1 - 1][i];
           let a_y = coeffTracesData[coeff2 - 1][i];
           let a_z = coeffTracesData[temp3][i];
@@ -121,6 +163,7 @@ function PhaseModule({
 
           let prodVersor = complexMult(v_x, v_y, v_z, conjugate);
 
+          // CHECK
           let sum = 0;
           for (let j = 0; j < 5; j++) {
             sum += 2 * Math.pow(computeNorm(coeffTracesData[j][i]), 2);
@@ -131,7 +174,7 @@ function PhaseModule({
             Math.sqrt((2 * Math.pow(n_x, 2)) / sum) *
             Math.sqrt((2 * Math.pow(n_y, 2)) / sum);
 
-          if (coeff3 === 6) prodMag *= Math.sqrt(Math.pow(n_z, 2) / sum);
+          if (coeff3 == 6) prodMag *= Math.sqrt(Math.pow(n_z, 2) / sum);
           else prodMag *= Math.sqrt((2 * Math.pow(n_z, 2)) / sum);
 
           prodMag *= Math.sqrt(27);
@@ -145,7 +188,7 @@ function PhaseModule({
             coeffTracesData[temp3][i],
             conjugate
           );
-        }
+        }*/
 
         tempTrace.push(resProduct);
       }
@@ -155,17 +198,41 @@ function PhaseModule({
       //Compute phases and phase trace
       let tempPhTrace = [];
       for (let i = 0; i < fullTraces[0].length; i++) {
-        let c1 = coeffTracesData[coeff1 - 1][i];
-        let c2 = coeffTracesData[coeff2 - 1][i];
+        let resProduct = { x: 0, y: 0 };
 
-        let phase1 = Math.atan2(c1.y, c1.x) / Math.PI;
-        let phase2 = Math.atan2(c2.y, c2.x) / Math.PI;
+        let currentCoeffsIndexes = [x, y, 12 - x - y];
+
+        let currentCoeffs = [];
+        let currentConjIndex;
+        for (let j = 0; j < 3; j++) {
+          currentConjIndex = conjIndex(currentCoeffsIndexes[j]);
+
+          if (currentConjIndex.conjugate) {
+            let currentCoeff = coeffTracesData[currentConjIndex.coeffNumber][i];
+            let newCoeff = { x: 0, y: 0 };
+            newCoeff.x = currentCoeff.x;
+            newCoeff.y = currentCoeff.y * -1;
+            currentCoeffs.push(newCoeff);
+          } else {
+            currentCoeffs.push(
+              coeffTracesData[currentConjIndex.coeffNumber][i]
+            );
+          }
+
+          console.log(currentConjIndex.coeffNumber);
+        }
+
+        resProduct = complexMult(currentCoeffs[0], currentCoeffs[1]);
+        resProduct = complexMult(resProduct, currentCoeffs[2]);
+
+        let phase1 = Math.atan2(resProduct.y, resProduct.x) / Math.PI;
+        let phase2 = Math.atan2(tempTrace[i].y, tempTrace[i].x) / Math.PI;
 
         tempPhTrace.push({ x: phase1, y: phase2 });
       }
       setPhaseTrace(tempPhTrace);
     }
-  }, [coeff1, coeff2, coeff3, coeffTracesData, checkedNorm]);
+  }, [x, y, coeff1, coeff2, coeff3, coeffTracesData, checkedNorm]);
 
   useEffect(() => {
     // Current Point
@@ -187,11 +254,11 @@ function PhaseModule({
   }, []);
 
   const handleChangeCoeff1 = (event) => {
-    setCoeff1(event.target.value);
+    setX(event.target.value);
   };
 
   const handleChangeCoeff2 = (event) => {
-    setCoeff2(event.target.value);
+    setY(event.target.value);
   };
 
   //Image parameters
@@ -318,13 +385,17 @@ function PhaseModule({
           </Typography>
           <FormControl variant='standard' sx={{ minWidth: '20px' }}>
             <InputLabel>First</InputLabel>
-            <Select value={coeff1} label='Age' onChange={handleChangeCoeff1}>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={6}>6</MenuItem>
+            <Select value={x} label='Age' onChange={handleChangeCoeff1}>
+              {Array(y - 1)
+                .fill(null)
+                .map((_, i) => i + 1)
+                .map((item) => {
+                  return (
+                    <MenuItem key={`first_${item}`} value={item}>
+                      {item}
+                    </MenuItem>
+                  );
+                })}
             </Select>
           </FormControl>
 
@@ -338,17 +409,19 @@ function PhaseModule({
             variant='h5'
             gutterBottom
           >
-            {' \u00D7 '}
+            {' , '}
           </Typography>
 
           <FormControl variant='standard' sx={{ minWidth: '50px' }}>
             <InputLabel>Second</InputLabel>
-            <Select value={coeff2} label='Age' onChange={handleChangeCoeff2}>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
+            <Select value={y} label='Age' onChange={handleChangeCoeff2}>
+              {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item) => {
+                return (
+                  <MenuItem key={`second_${item}`} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
 
@@ -362,15 +435,21 @@ function PhaseModule({
             variant='h5'
             gutterBottom
           >
-            {' \u00D7 '}
+            {' \u2192 '}
           </Typography>
 
-          <TextField
-            inputProps={{ style: { textAlign: 'center' } }}
-            sx={{ minWidth: '30px', width: '30px', marginTop: 2 }}
-            value={coeff3}
-            variant='standard'
-          />
+          <Typography
+            sx={{
+              marginLeft: 1,
+              marginRight: 1,
+              paddingTop: '20px',
+              fontSize: '18px',
+            }}
+            variant='h5'
+            gutterBottom
+          >
+            {`${coeff1}, 12-${y}=${coeff2},  ${y}-${x}=${coeff3}`}
+          </Typography>
 
           <Switch
             sx={{ marginTop: 2, marginLeft: 5 }}
@@ -491,7 +570,7 @@ function PhaseModule({
                 y2={width / 2}
                 stroke='black'
               ></line>
-              <text
+              {/* <text
                 fontSize='16'
                 textAnchor='middle'
                 x='200'
@@ -508,7 +587,7 @@ function PhaseModule({
                 fill='black'
               >
                 {`Ph${coeff2}`}
-              </text>
+              </text> */}
 
               {[1, 2, 3, 4, 5, 6].map((el, i) => {
                 return (
@@ -635,4 +714,4 @@ function PhaseModule({
   );
 }
 
-export default PhaseModule;
+export default PhaseModule2;

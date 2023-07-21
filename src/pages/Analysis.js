@@ -3,6 +3,7 @@ import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
 import CoefficientsModule from '../CoefficientsModule';
 import PhaseModule from '../phaseModule';
+import PhaseModule2 from '../phaseModule2';
 
 import Player from '../Player';
 
@@ -373,6 +374,17 @@ function Application({
           </AccordionSummary>
           <AccordionDetails sx={{ padding: 0 }}>
             <PhaseModule
+              fullTraces={fullTraces}
+              coeffTracesData={coeffTracesData}
+              currentSubdiv={currentSubdiv}
+              showPrototypes={showPrototypes}
+              showMagAndPhase={showMagAndPhase}
+              showFullTrace={showFullTrace}
+              userPcvs={userPcvs}
+              midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
+              elemsWidth={elemsWidth}
+            />
+            <PhaseModule2
               fullTraces={fullTraces}
               coeffTracesData={coeffTracesData}
               currentSubdiv={currentSubdiv}
