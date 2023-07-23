@@ -3,7 +3,6 @@ import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
 import CoefficientsModule from '../CoefficientsModule';
 import PhaseModule from '../phaseModule';
-import PhaseModule2 from '../phaseModule2';
 
 import Player from '../Player';
 
