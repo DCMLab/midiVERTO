@@ -217,12 +217,6 @@ function PhaseModule({
       for (let i = 0; i < fullTraces[0].length; i++) {
         let resProduct = { x: 0, y: 0 };
 
-        console.log(
-          conjIndex(currentCoeffsIndexes[0]).coeffNumber,
-          conjIndex(currentCoeffsIndexes[1]).coeffNumber,
-          conjIndex(currentCoeffsIndexes[2]).coeffNumber
-        );
-
         let currentCoeffs = [];
         let currentConjIndex;
         for (let j = 0; j < 3; j++) {
