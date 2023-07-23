@@ -101,7 +101,7 @@ function PhaseModule2({
 
         let currentCoeffsIndexes = [coeff1, coeff2, coeff3];
 
-        console.log(currentCoeffsIndexes);
+        //console.log(currentCoeffsIndexes);
 
         let currentCoeffs = [];
         let currentConjIndex;
@@ -219,7 +219,7 @@ function PhaseModule2({
             );
           }
 
-          console.log(currentConjIndex.coeffNumber);
+          //console.log(currentConjIndex.coeffNumber);
         }
 
         resProduct = complexMult(currentCoeffs[0], currentCoeffs[1]);
