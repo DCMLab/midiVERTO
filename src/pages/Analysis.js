@@ -384,17 +384,6 @@ function Application({
               midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
               elemsWidth={elemsWidth}
             />
-            {/* <PhaseModule2
-              fullTraces={fullTraces}
-              coeffTracesData={coeffTracesData}
-              currentSubdiv={currentSubdiv}
-              showPrototypes={showPrototypes}
-              showMagAndPhase={showMagAndPhase}
-              showFullTrace={showFullTrace}
-              userPcvs={userPcvs}
-              midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
-              elemsWidth={elemsWidth}
-            /> */}
           </AccordionDetails>
         </Accordion>
       </Box>
