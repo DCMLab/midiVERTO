@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/midiVERTO/static/js/main.c1b13783.chunk.js",
-    "main.js.map": "/midiVERTO/static/js/main.c1b13783.chunk.js.map",
+    "main.js": "/midiVERTO/static/js/main.6fd7ca4f.chunk.js",
+    "main.js.map": "/midiVERTO/static/js/main.6fd7ca4f.chunk.js.map",
     "runtime-main.js": "/midiVERTO/static/js/runtime-main.99d3de79.js",
     "runtime-main.js.map": "/midiVERTO/static/js/runtime-main.99d3de79.js.map",
     "static/css/2.a82512d5.chunk.css": "/midiVERTO/static/css/2.a82512d5.chunk.css",
-    "static/js/2.fc6dd6a0.chunk.js": "/midiVERTO/static/js/2.fc6dd6a0.chunk.js",
-    "static/js/2.fc6dd6a0.chunk.js.map": "/midiVERTO/static/js/2.fc6dd6a0.chunk.js.map",
+    "static/js/2.4ba3ab29.chunk.js": "/midiVERTO/static/js/2.4ba3ab29.chunk.js",
+    "static/js/2.4ba3ab29.chunk.js.map": "/midiVERTO/static/js/2.4ba3ab29.chunk.js.map",
     "index.html": "/midiVERTO/index.html",
     "static/css/2.a82512d5.chunk.css.map": "/midiVERTO/static/css/2.a82512d5.chunk.css.map",
-    "static/js/2.fc6dd6a0.chunk.js.LICENSE.txt": "/midiVERTO/static/js/2.fc6dd6a0.chunk.js.LICENSE.txt",
+    "static/js/2.4ba3ab29.chunk.js.LICENSE.txt": "/midiVERTO/static/js/2.4ba3ab29.chunk.js.LICENSE.txt",
     "static/media/katex.min.css": "/midiVERTO/static/media/KaTeX_Typewriter-Regular.c5c02d76.ttf",
-    "static/media/Logo_EPFL.654485f4.svg": "/midiVERTO/static/media/Logo_EPFL.654485f4.svg",
+    "static/media/Logo_EPFL.1808649a.svg": "/midiVERTO/static/media/Logo_EPFL.1808649a.svg",
     "static/media/dh_center_logo.b01c2668.svg": "/midiVERTO/static/media/dh_center_logo.b01c2668.svg",
     "static/media/eighth.f964a835.svg": "/midiVERTO/static/media/eighth.f964a835.svg",
     "static/media/half.7f42e3ea.svg": "/midiVERTO/static/media/half.7f42e3ea.svg",
@@ -23,18 +23,18 @@
     "static/media/space4.054806a8.svg": "/midiVERTO/static/media/space4.054806a8.svg",
     "static/media/space5.77046a5c.svg": "/midiVERTO/static/media/space5.77046a5c.svg",
     "static/media/space6.8a2b4e79.svg": "/midiVERTO/static/media/space6.8a2b4e79.svg",
-    "static/media/wavescape1.18ed9789.svg": "/midiVERTO/static/media/wavescape1.18ed9789.svg",
-    "static/media/wavescape2.64a2be59.svg": "/midiVERTO/static/media/wavescape2.64a2be59.svg",
-    "static/media/wavescape3.b4d3de99.svg": "/midiVERTO/static/media/wavescape3.b4d3de99.svg",
-    "static/media/wavescape4.4561a9d9.svg": "/midiVERTO/static/media/wavescape4.4561a9d9.svg",
-    "static/media/wavescape5.508bf720.svg": "/midiVERTO/static/media/wavescape5.508bf720.svg",
-    "static/media/wavescape6.c7103b5f.svg": "/midiVERTO/static/media/wavescape6.c7103b5f.svg",
+    "static/media/wavescape1.cf71d93b.svg": "/midiVERTO/static/media/wavescape1.cf71d93b.svg",
+    "static/media/wavescape2.8f5fabf1.svg": "/midiVERTO/static/media/wavescape2.8f5fabf1.svg",
+    "static/media/wavescape3.0faf025f.svg": "/midiVERTO/static/media/wavescape3.0faf025f.svg",
+    "static/media/wavescape4.aad0e8c0.svg": "/midiVERTO/static/media/wavescape4.aad0e8c0.svg",
+    "static/media/wavescape5.f91b1139.svg": "/midiVERTO/static/media/wavescape5.f91b1139.svg",
+    "static/media/wavescape6.df672271.svg": "/midiVERTO/static/media/wavescape6.df672271.svg",
     "static/media/whole.bc0fb0be.svg": "/midiVERTO/static/media/whole.bc0fb0be.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.99d3de79.js",
     "static/css/2.a82512d5.chunk.css",
-    "static/js/2.fc6dd6a0.chunk.js",
-    "static/js/main.c1b13783.chunk.js"
+    "static/js/2.4ba3ab29.chunk.js",
+    "static/js/main.6fd7ca4f.chunk.js"
   ]
 }
