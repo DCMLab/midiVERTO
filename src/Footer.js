@@ -4,6 +4,7 @@ import React from 'react';
 //Import images
 import dhCenterLogo from './images/dh_center_logo.svg';
 import epflLogo from './images/Logo_EPFL.svg';
+import Wurzburg_Logo from './images/Wurzburg_Logo.png';
 
 //Import material UI components
 import Stack from '@mui/material/Stack';
@@ -20,6 +21,9 @@ function Footer() {
       <Stack spacing={10} sx={{ justifyContent: 'center' }} direction='row'>
         <img alt='' width={logoSize} height={logoSize} src={epflLogo} />
         <img alt='' width={logoSize} src={dhCenterLogo} />
+        <Box sx={{ paddingTop: '45px' }}>
+          <img alt='' width={2.28 * 63} height={63} src={Wurzburg_Logo} />
+        </Box>
       </Stack>
 
       {/* TEXT */}
