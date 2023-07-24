@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/midiVERTO/static/js/main.ed44a8bd.chunk.js",
-    "main.js.map": "/midiVERTO/static/js/main.ed44a8bd.chunk.js.map",
+    "main.js": "/midiVERTO/static/js/main.0a24bf10.chunk.js",
+    "main.js.map": "/midiVERTO/static/js/main.0a24bf10.chunk.js.map",
     "runtime-main.js": "/midiVERTO/static/js/runtime-main.99d3de79.js",
     "runtime-main.js.map": "/midiVERTO/static/js/runtime-main.99d3de79.js.map",
     "static/css/2.a82512d5.chunk.css": "/midiVERTO/static/css/2.a82512d5.chunk.css",
@@ -12,6 +12,7 @@
     "static/js/2.4ba3ab29.chunk.js.LICENSE.txt": "/midiVERTO/static/js/2.4ba3ab29.chunk.js.LICENSE.txt",
     "static/media/katex.min.css": "/midiVERTO/static/media/KaTeX_Typewriter-Regular.c5c02d76.ttf",
     "static/media/Logo_EPFL.1808649a.svg": "/midiVERTO/static/media/Logo_EPFL.1808649a.svg",
+    "static/media/Wurzburg_Logo.4a2ce121.png": "/midiVERTO/static/media/Wurzburg_Logo.4a2ce121.png",
     "static/media/dh_center_logo.b01c2668.svg": "/midiVERTO/static/media/dh_center_logo.b01c2668.svg",
     "static/media/eighth.f964a835.svg": "/midiVERTO/static/media/eighth.f964a835.svg",
     "static/media/half.7f42e3ea.svg": "/midiVERTO/static/media/half.7f42e3ea.svg",
@@ -35,6 +36,6 @@
     "static/js/runtime-main.99d3de79.js",
     "static/css/2.a82512d5.chunk.css",
     "static/js/2.4ba3ab29.chunk.js",
-    "static/js/main.ed44a8bd.chunk.js"
+    "static/js/main.0a24bf10.chunk.js"
   ]
 }
