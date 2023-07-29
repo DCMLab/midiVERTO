@@ -38,9 +38,9 @@ function PhaseModule({
   const canvasRef = useRef(null);
   const canvasRef2 = useRef(null);
 
-  const [x, setX] = useState(1);
-  const [y, setY] = useState(2);
-  const [z, setZ] = useState(9); // 12 - x - y
+  const [x, setX] = useState(3);
+  const [y, setY] = useState(5);
+  const [z, setZ] = useState(4); // 12 - x - y
 
   const [j, setJ] = useState(11); // 12 - y
   const [k, setK] = useState(0); // y - x
@@ -52,7 +52,7 @@ function PhaseModule({
   const [fullTraceProd, setFullTraceProd] = useState([]);
   const [phaseTrace, setPhaseTrace] = useState([]);
 
-  const [checkedNorm, setCheckedNorm] = useState(false);
+  const [checkedNorm, setCheckedNorm] = useState(true);
 
   // Second visualization
   const [currentProd2, setCurrentProd2] = useState({ x: 0, y: 0 });
@@ -705,6 +705,24 @@ function PhaseModule({
                 y2={width / 2}
                 stroke='black'
               ></line>
+              <text
+                fontSize='16'
+                textAnchor='middle'
+                x='200'
+                y='-3'
+                fill='black'
+              >
+                {`Re`}
+              </text>
+              <text
+                fontSize='16'
+                textAnchor='start'
+                x='3'
+                y='-200'
+                fill='black'
+              >
+                {`Im`}
+              </text>
 
               {/* Product point */}
               <circle
@@ -958,6 +976,24 @@ function PhaseModule({
                 y2={width / 2}
                 stroke='black'
               ></line>
+              <text
+                fontSize='16'
+                textAnchor='middle'
+                x='200'
+                y='-3'
+                fill='black'
+              >
+                {`Re`}
+              </text>
+              <text
+                fontSize='16'
+                textAnchor='start'
+                x='3'
+                y='-200'
+                fill='black'
+              >
+                {`Im`}
+              </text>
 
               {/* Product point */}
               <circle
@@ -1006,7 +1042,7 @@ function PhaseModule({
                 y='-3'
                 fill='black'
               >
-                {`Ph${x}+Ph${y}+Ph${z}`}
+                {`Ph${x}+Ph${j}+Ph${k}`}
               </text>
               <text
                 fontSize='16'
@@ -1015,7 +1051,7 @@ function PhaseModule({
                 y='-200'
                 fill='black'
               >
-                {`Ph${x}+Ph${j}+Ph${k}`}
+                {`Ph${x}+Ph${y}+Ph${z}`}
               </text>
 
               {[1, 2, 3, 4, 5, 6].map((el, i) => {
