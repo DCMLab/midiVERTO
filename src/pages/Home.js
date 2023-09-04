@@ -31,6 +31,8 @@ export default function Home({ setOpen, setInAnalysisPage }) {
   const ref2 = useRef(null);
   const ref3 = useRef(null);
   const ref4 = useRef(null);
+  const ref5 = useRef(null);
+  const ref6 = useRef(null);
 
   const imgSize = 170;
 
@@ -201,6 +203,38 @@ export default function Home({ setOpen, setInAnalysisPage }) {
             under a GPL3 licence.
           </Paragraph>
 
+          <Paragraph>
+            The capacities of midiVERTO have been described in{' '}
+            <Link
+              underline='hover'
+              onClick={(event) => {
+                event.preventDefault();
+                ref5.current.scrollIntoView({
+                  behavior: 'smooth',
+                });
+              }}
+              href={'#Manual entry of chords'}
+              sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
+            >
+              <sup>[5]</sup>
+            </Link>
+            ,{' '}
+            <Link
+              underline='hover'
+              onClick={(event) => {
+                event.preventDefault();
+                ref6.current.scrollIntoView({
+                  behavior: 'smooth',
+                });
+              }}
+              href={'#Manual entry of chords'}
+              sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
+            >
+              <sup>[6]</sup>
+            </Link>
+            .
+          </Paragraph>
+
           <Typography variant='h5' sx={{ marginBottom: 1 }}>
             <b>References</b>
           </Typography>
@@ -225,11 +259,34 @@ export default function Home({ setOpen, setInAnalysisPage }) {
             </BlueLink>
           </Typography>
           <Typography ref={ref4}>
-            4: Viaccoz, Harasim, Moss, & Rohrmeier (in press). Wavescapes: A
-            Visual Hierarchical Analysis of Tonality using the Discrete Fourier
-            Transformation. <i>Musicae Scientiae</i>.{' '}
+            4: Viaccoz, C., Harasim, D., Moss, F. C., &amp; Rohrmeier, M.
+            (2022). Wavescapes: A visual hierarchical analysis of tonality using
+            the discrete Fourier transform. Musicae Scientiae, 27(2), 390–427.{' '}
             <BlueLink href={'https://doi.org/10.1177/10298649211034906'}>
               https://doi.org/10.1177/10298649211034906
+            </BlueLink>
+          </Typography>
+          <Typography ref={ref5}>
+            5: Harasim, D., Affatato, G., &amp; Moss, F. C. (2022). midiVERTO: A
+            Web Application to Visualize Tonality in Real Time. In M. Montiel,
+            O. A. Agustín-Aquino, F. Gómez, J. Kastine, E. Lluis-Puebla, &amp;
+            B. Milam (Eds.), <i>Mathematics and Computation in Music</i> (pp.
+            363–368). Springer International Publishing.{' '}
+            <BlueLink href={'https://doi.org/10.1007/978-3-031-07015-0_31'}>
+              https://doi.org/10.1007/978-3-031-07015-0_31
+            </BlueLink>
+          </Typography>
+
+          <Typography ref={ref6}>
+            6: Moss, F. C., Affatato, G., &amp; Harasim, D. (2022). Phantom
+            Curves: Scientific Discovery through Interactive Music
+            Visualization. In L. Pugin (Ed.),{' '}
+            <i>
+              9th International Conference on Digital Libraries for Musicology
+            </i>{' '}
+            (pp. 60–64). Association for Computing Machinery.{' '}
+            <BlueLink href={'https://doi.org/10.1145/3543882.3543886'}>
+              https://doi.org/10.1145/3543882.3543886
             </BlueLink>
           </Typography>
         </Box>

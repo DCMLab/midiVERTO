@@ -22,6 +22,8 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
   let ref5 = useRef(null);
   let ref6 = useRef(null);
   let ref7 = useRef(null);
+  let ref8 = useRef(null);
+  let ref9 = useRef(null);
 
   useEffect(() => {
     setInAnalysisPage(false);
@@ -39,7 +41,6 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
             Manual
           </Typography>
           <Divider />
-
           <Typography component='span'>
             <ul>
               <li>
@@ -55,6 +56,21 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
                   sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
                 >
                   File upload
+                </Link>
+              </li>
+              <li>
+                <Link
+                  underline='hover'
+                  onClick={(event) => {
+                    event.preventDefault();
+                    ref8.current.scrollIntoView({
+                      behavior: 'smooth',
+                    });
+                  }}
+                  href={'#DFT'}
+                  sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
+                >
+                  Discrete Fourier Transform of Pitch-Class Vectors
                 </Link>
               </li>
               <li>
@@ -122,6 +138,21 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
                   underline='hover'
                   onClick={(event) => {
                     event.preventDefault();
+                    ref9.current.scrollIntoView({
+                      behavior: 'smooth',
+                    });
+                  }}
+                  href={'#Download images'}
+                  sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
+                >
+                  Coefficient Products and Phase Spaces
+                </Link>
+              </li>
+              <li>
+                <Link
+                  underline='hover'
+                  onClick={(event) => {
+                    event.preventDefault();
                     ref7.current.scrollIntoView({
                       behavior: 'smooth',
                     });
@@ -149,7 +180,6 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               </li>
             </ul>
           </Typography>
-
           {/* FILE UPLOAD */}
           <Box sx={{ paddingBottom: 5, paddingTop: 5 }}>
             <Typography ref={ref1} variant='h4' style={{ fontWeight: 'bold' }}>
@@ -194,7 +224,68 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               scale='45%'
             ></Image>
           </Box>
+          {/* Discrete Fourier Transform of Pitch-Class Vectors */}
+          <Box sx={{ paddingBottom: 5 }}>
+            <Typography ref={ref8} variant='h4' style={{ fontWeight: 'bold' }}>
+              Discrete Fourier Transform of Pitch-Class Vectors
+            </Typography>
+            <Divider sx={{ marginBottom: 2 }} />
 
+            <Paragraph>
+              The analyses performed by midiVERTO are all based on the discrete
+              Fourier transform (DFT) of pitch-class vectors (pc vectors). A pc
+              vector is a 12-dimensional vector where each entry contains a
+              weighting for a specific pitch class, starting with C and going up
+              chromatically. In midiVERTO, these entries correspond to
+              duration-weighted counts of occurrences of the pitch class within
+              some time window of the MIDI file.
+            </Paragraph>
+            <Paragraph>
+              The DFT converts these pc vectors to a different 12-D vector where
+              the entries (called <i>coefficients</i>) represent periodic
+              functions over the octave rather than individual pitch classes. We
+              ignore the zeroeth coefficient (which is a constant representing
+              the sum of all weights) and entries beyond the sixth, which
+              reproduce information from coefficients 1 through 6. The number of
+              a coefficient corresponds to a division of the octave.
+              Coefficients have a <i>magnitude</i>, which indicates how similar
+              that pc vector is to a simple periodic function with that division
+              of the octave, and a <i>phase</i>, which indicates where that
+              function is centered on the pitch-class circle.
+            </Paragraph>
+            <Paragraph>
+              Thus, the <i>first</i> coefficient reflects how concentrated the
+              pitch-class vector is at one place in the pitch-class circle. The
+              <i>second</i> coefficient reflects how concentrated it is on two
+              points a tritone apart. The <i>third</i> coefficient shows how
+              concentrated it is on three points on the pitch-class circle
+              separated by major thirds, i.e., how triad-like it is, and the
+              <i>fourth</i> coefficient on four points separated by minor
+              thirds, how much it resembles a diminished seventh chord. A
+              periodic function for the <i>fifth</i> coefficient does not divide
+              the 12 pitch-classes evenly, but the peaks of this function
+              arrange the pitch classes in circle-of-fifths order, which means
+              that the fifth coefficient reflects how concentrated the pc vector
+              is on the circle of fifths, or its <i>diatonicity</i>. Finally,
+              the <i>sixth</i> coefficient splits the pitch classes into two
+              whole tone scales and shows how much the pc vector is weighted to
+              one or the other.
+            </Paragraph>
+            <Paragraph>
+              Phase values for all coefficients are set to 0 = C and go
+              clockwise as the pitch-class value ascends. For instance a phase
+              value of 0 on coefficient 1 means that the pc vector is balanced
+              around C on the pitch-class circle, a phase value of{' '}
+              <Tex math='\pi / 6' /> would mean it is balanced around C#, and so
+              on. For coefficient 2, a phase value of 0 means that the pc vector
+              is balanced around C and F#, a phase value of{' '}
+              <Tex math='\pi / 3' /> means it's balanced around C# and G, and so
+              on.
+            </Paragraph>
+            <Paragraph>
+              For more on the DFT on pc vectors, see [links].
+            </Paragraph>
+          </Box>
           {/* WAVESCAPES */}
           <Box sx={{ paddingBottom: 5 }}>
             <Typography ref={ref2} variant='h4' style={{ fontWeight: 'bold' }}>
@@ -219,28 +310,14 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               scale='90%'
             ></Image>
             <Paragraph>
-              In short, wavescapes use a mathematical formalism called the{' '}
-              <BlueLink
-                sx={{ fontStyle: 'italic' }}
-                href='https://en.wikipedia.org/wiki/Discrete_Fourier_transform'
-              >
-                Discrete Fourier Transform
-              </BlueLink>{' '}
-              (DFT), to display regularities with respect to scales that divide
-              the octave into equal parts. Concretely, the wavescapes from 1 to
-              6 correspond to specific divisions of the octave: into 12
-              semitones, 6 tritones, 4 augmented triads, 3 diminished-seventh
-              chords, 12 diatonic/pentatonic scales, and two whole-tone scales.
-              If a part of a piece predominantly uses pitches from such a
-              collection, the corresponding areas in the wavescapes will be
-              relatively homogeneous in color. For example, if the notes of the
-              B diminished triad <code>B° = (11, 2, 5, 8)</code> are used
-              recurrently then this is shown in green in the fourth wavescape.
-              For more details, see{' '}
-              <BlueLink href={'https://doi.org/10.1177/10298649211034906'}>
-                this paper
-              </BlueLink>
-              .
+              Wavescapes display the DFT on pc vectors, described in the
+              previous section, at all possible different segmentations of the
+              MIDI file. The bottom rows of the wavescapes show DFTs at the
+              minimal time resolution set by the user, and the top points show
+              DFTs for the pc content of entire piece. The intensity values at
+              each point reflect the magnitude of the given coefficient while
+              the colors indicate the phase values (using a color wheel with red
+              set to zero).
             </Paragraph>
             <Paragraph>
               Back to the <i>Phantom</i> example: there are a number of
@@ -292,7 +369,6 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               and form.
             </Paragraph>
           </Box>
-
           {/* Fourier Coefficient Spaces */}
           <Box sx={{ paddingBottom: 5 }}>
             <Typography ref={ref3} variant='h4' style={{ fontWeight: 'bold' }}>
@@ -304,7 +380,13 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               Below the wavescapes you see the respective{' '}
               <b>Fourier Coefficient Spaces</b>. Each point in one of these
               spaces corresponds to the value of that Fourier coefficient for
-              one of the MIDI file's segments.
+              one of the MIDI file&#39;s segments at the specified resolution.
+              The color and intensity coding is the same as for the wavescapes
+              described above. Distances from the center correspond to
+              magnitudes, and angles correspond to phases. (Fourier coefficients
+              can also be defined as <i>complex numbers</i>, and in these spaces
+              the real value is given by the x-coordinate and the imaginary
+              value by the y-coordinate.)
             </Paragraph>
             <Image
               alt={' '}
@@ -348,7 +430,6 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               segmentation is too fine-grained.
             </Info>
           </Box>
-
           {/* MIDI playback and overall layout */}
           <Box sx={{ paddingBottom: 5 }}>
             <Typography ref={ref4} variant='h4' style={{ fontWeight: 'bold' }}>
@@ -402,7 +483,6 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               scale='90%'
             ></Image>
           </Box>
-
           {/* Manual entry of chords */}
           <Box sx={{ paddingBottom: 5 }}>
             <Typography ref={ref5} variant='h4' style={{ fontWeight: 'bold' }}>
@@ -511,6 +591,142 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
             </Info>
           </Box>
 
+          {/* Coefficient Products and Phase Spaces */}
+          <Box sx={{ paddingBottom: 5 }}>
+            <Typography ref={ref9} variant='h4' style={{ fontWeight: 'bold' }}>
+              Coefficient Products and Phase Spaces
+            </Typography>
+            <Divider sx={{ marginBottom: 2 }} />
+
+            <Paragraph>
+              At the bottom of the results is a section that can do analyses
+              involving multiple DFT coefficients at the same time. Dropdown
+              menus allow users to select two coefficients (x and y). midiVERTO
+              produces uses these selections to produce four visualizations: two
+              coefficient product spaces, a phase space, and a phase space for
+              the two coefficient products.
+            </Paragraph>
+            <Paragraph>
+              The coefficient products multiply three DFT coefficients as
+              complex numbers, where the indexes of these three coefficients
+              must add up to 12. The user chooses the first coefficient, x,
+              (index from 1 to 6) and the second, y, (from 1 to 5), and the
+              third is given by the difference <Tex math='12 – x – y' />. For
+              instance if the user chooses coefficients 3 and 5, the third
+              coefficient index is <Tex math='12 – 3 – 5 = 4' />. Interesting
+              properties of coefficient products include:
+              <ul>
+                <li>
+                  They are transposition invariant (the phases in addition to
+                  the magnitudes). This means if you transpose a set the
+                  coefficient product does not change.
+                </li>
+                <li>
+                  Inversion reverses the imaginary part but does not affect the
+                  real part. In other words, inversion is a reflection over the
+                  real axis.
+                </li>
+                <li>
+                  Complementation reverse both the real and imaginary parts. In
+                  other words, complementation (or, subtracting all the values
+                  in the pc vector from a constant) is a 180° rotation.
+                </li>
+                <li>A single pitch class is always positive real.</li>
+              </ul>
+              These are discussed in more detail in{' '}
+              <BlueLink href='https://link.springer.com/chapter/10.1007/978-3-031-07015-0_23'>
+                Yust &amp; Amiot 2022
+              </BlueLink>{' '}
+              [
+              <BlueLink
+                href={
+                  'https://sites.bu.edu/jyust/files/2022/09/nonSpectralrevFin.pdf'
+                }
+              >
+                PDF
+              </BlueLink>
+              ].
+            </Paragraph>
+            <Paragraph>
+              The magnitude of a coefficient product is a product of the
+              magnitudes and its phase is the sum of phases mod{' '}
+              <Tex math='2\pi' />. The transposition invariance of the
+              magnitudes of coefficient products is therefore unremarkable,
+              since magnitudes of individual coefficients are transposition
+              invariant. On the other hand, the transposition invariance of the
+              phases <i>is</i> remarkable, since individual phases are
+              determined by transposition.
+            </Paragraph>
+            <Paragraph>
+              The lower of the two coefficient product spaces uses the same
+              first coefficient entered by the user, but takes the complement of
+              the second coefficient entered by the user, which can lead to a
+              different product. For instance the default setting of{' '}
+              <Tex math='x = 3' /> and <Tex math='y = 5' /> results in a product
+              of coefficients 3, 5, and 4, and a compementary product of 3, 7,
+              and 2. Coefficient 7 is the complex conjugate of coefficient 5,
+              meaning it has the same magnitude but negative phase. Coefficients
+              4 and 2, however, are completely different and effected by the
+              constraint that factors of coefficient products must sum to 12.
+            </Paragraph>
+            <Paragraph>
+              The right side of the lower panel has two phase spaces, meaning
+              spaces that take phase values as coordinates, and ignore
+              magnitudes. The one on top uses the individual phases for the
+              coefficients selected by the user. This kind of phase space is
+              discussed in{' '}
+              <BlueLink
+                href={
+                  'https://read.dukeupress.edu/journal-of-music-theory/article-abstract/59/1/121/14499/Schubert-s-Harmonic-Language-and-Fourier-Phase'
+                }
+              >
+                Yust 2015
+              </BlueLink>{' '}
+              [
+              <BlueLink
+                href={'https://people.bu.edu/jyust/revFinal_SchubertDFT.pdf'}
+              >
+                PDF
+              </BlueLink>
+              ] and{' '}
+              <BlueLink
+                href={
+                  'https://read.dukeupress.edu/journal-of-music-theory/article-abstract/60/2/213/14521/Special-CollectionsRenewing-Set-Theory'
+                }
+              >
+                Yust 2016
+              </BlueLink>{' '}
+              [
+              <BlueLink href={'https://open.bu.edu/handle/2144/39071'}>
+                PDF
+              </BlueLink>
+              ] . The second phase space uses the phase values for the two
+              coefficient product spaces to the left.
+            </Paragraph>
+            <Paragraph>
+              The default setting of coefficients 3 and 5 produces spaces that
+              are of interest for music based on major and minor keys and
+              functional harmony. Specifically, for sufficiently large windows,
+              regions in the phase space on coefficients 3 and 5 correspond to
+              keys. Vertical positions (coefficient 5) correspond to key
+              signatures, while horizontal positions (coefficient 3) indicate a
+              triadic balance and distinguish modes. The coefficient product on
+              3, 7, and 2 (lower left) is typically large and positive-real for
+              triadic harmony and major/minor keys. Smaller values and negative
+              real values may indicate harmonic ambiguity or chromaticism.
+            </Paragraph>
+            <Paragraph>
+              The coefficient product spaces are normalized to make the
+              visualization as useful as possible, by setting 1 (the outer rim
+              of the circle) to a maximum possible value given the total pc
+              weighting (or zeroeth coefficient). This maximum varies depending
+              on the kind of product the user enters. Larger maxima are possible
+              if the product includes duplicates of a single coefficient (or a
+              coefficient and its complement), and they are also larger if
+              coefficient 6 (which has no complement) is included.
+            </Paragraph>
+          </Box>
+
           {/* Use midiVERTO with MuseScore */}
           <Box sx={{ paddingBottom: 5 }}>
             <Typography ref={ref7} variant='h4' style={{ fontWeight: 'bold' }}>
@@ -590,7 +806,6 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               and at the end open midiVERTO.
             </Info>
           </Box>
-
           {/* Download images */}
           <Box sx={{ paddingBottom: 5 }}>
             <Typography ref={ref6} variant='h4' style={{ fontWeight: 'bold' }}>

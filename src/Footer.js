@@ -44,9 +44,16 @@ function Footer() {
           </Link>
         </Typography>
         <span>{`\u2013`}</span>
+        <Typography sx={{ marginLeft: 1, marginRight: 1 }}>
+          Scientific advisor:{' '}
+          <Link target='_blank' href='https://people.bu.edu/jyust/index.html'>
+            Jason Yust
+          </Link>
+        </Typography>
+        <span>{`\u2013`}</span>
         <Typography sx={{ marginLeft: 1 }}>
           Developer:{' '}
-          <Link href='mailto:giovanni.affatato97@gmail.com'>
+          <Link target='_blank' href='https://github.com/heyGio'>
             Giovanni Affatato
           </Link>
         </Typography>
