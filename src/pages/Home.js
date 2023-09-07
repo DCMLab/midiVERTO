@@ -111,7 +111,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
                   behavior: 'smooth',
                 });
               }}
-              href={'#Manual entry of chords'}
+              href={''}
               sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
             >
               <sup>[1]</sup>
@@ -125,7 +125,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
                   behavior: 'smooth',
                 });
               }}
-              href={'#Manual entry of chords'}
+              href={''}
               sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
             >
               <sup>[2]</sup>
@@ -139,7 +139,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
                   behavior: 'smooth',
                 });
               }}
-              href={'#Manual entry of chords'}
+              href={''}
               sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
             >
               <sup>[3]</sup>
@@ -153,7 +153,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
                   behavior: 'smooth',
                 });
               }}
-              href={'#Manual entry of chords'}
+              href={''}
               sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
             >
               <sup>[4]</sup>
@@ -213,7 +213,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
                   behavior: 'smooth',
                 });
               }}
-              href={'#Manual entry of chords'}
+              href={''}
               sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
             >
               <sup>[5]</sup>
@@ -227,7 +227,7 @@ export default function Home({ setOpen, setInAnalysisPage }) {
                   behavior: 'smooth',
                 });
               }}
-              href={'#Manual entry of chords'}
+              href={''}
               sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
             >
               <sup>[6]</sup>

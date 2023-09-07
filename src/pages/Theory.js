@@ -157,7 +157,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
                       behavior: 'smooth',
                     });
                   }}
-                  href={'#Download images'}
+                  href={'#Using midiVERTO with MuseScore'}
                   sx={{ color: '#1976d2', textDecorationColor: '#1976d266' }}
                 >
                   Using midiVERTO with MuseScore
@@ -283,7 +283,61 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               on.
             </Paragraph>
             <Paragraph>
-              For more on the DFT on pc vectors, see [links].
+              For more on the DFT on pc vectors, see:{' '}
+              <ul>
+                <li>
+                  <BlueLink href='https://www.jstor.org/stable/25164642'>
+                    General Equal-Tempered Harmony: Parts 2 and 3
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://link.springer.com/book/10.1007/978-3-319-45581-5'>
+                    Music Through Fourier Space
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://sites.bu.edu/jyust/files/2022/09/JNMRsub-pcdistRev.pdf'>
+                    Stylistic Information in Pitch-Class Distributions
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://open.bu.edu/handle/2144/39069'>
+                    Harmonic qualities in Debussy's{' '}
+                    <i>"Les sons et les parfums tournent dans l'air du soir"</i>
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://hal.archives-ouvertes.fr/JIM/hal-03362929'>
+                    Fourier Methods For Computational Analysis Of Enharmonicism
+                    And Other Harmonic Properties
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://mtosmt.org/issues/mto.21.27.3/mto.21.27.3.chiu.html'>
+                    Macroharmonic Progressions through the Discrete Fourier
+                    Transform: An Analysis from Maurice Duruflé's Requiem
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://hcommons.org/deposits/item/hc:31937/'>
+                    Computer-Aided Analysis Across the Tonal Divide:
+                    Cross-Stylistic Applications of the Discrete Fourier
+                    Transform
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://link.springer.com/chapter/10.1007/978-3-319-46282-0_15'>
+                    Conchord: An Application for Generating Musical Harmony by
+                    Navigating in the Tonal Interval Space
+                  </BlueLink>
+                </li>
+                <li>
+                  <BlueLink href='https://www.tandfonline.com/doi/full/10.1080/09298215.2016.1182192'>
+                    A multi-level tonal interval space for modelling pitch
+                    relatedness and musical consonance
+                  </BlueLink>
+                </li>
+              </ul>
             </Paragraph>
           </Box>
           {/* WAVESCAPES */}
@@ -568,13 +622,6 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               scale='90%'
             ></Image>
             <Paragraph>
-              If we count each quarter note as 1 (and eight notes as 0.5), then
-              its pitch-class content can be represented as the pitch-class
-              vector <code>(1.5, 0, 1, 0, 1, 1, 0, 0.5, 0, 0, 1.5, 0)</code>.
-              The figure below uses an asterisk to show where it is mapped to in
-              the respective Fourier coefficient spaces.
-            </Paragraph>
-            <Paragraph>
               This chord can be understood as a C7/9/11 chord despite the fact
               that the key signature indicates B major / G <span>&#9839;</span>{' '}
               minor. Being a dominant, it strongly points to the F-major
@@ -614,7 +661,7 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               third is given by the difference <Tex math='12 – x – y' />. For
               instance if the user chooses coefficients 3 and 5, the third
               coefficient index is <Tex math='12 – 3 – 5 = 4' />. Interesting
-              properties of coefficient products include:
+              properties of this type of coefficient product include:
               <ul>
                 <li>
                   They are transposition invariant (the phases in addition to
@@ -665,9 +712,9 @@ export default function Theory({ setOpen, setInAnalysisPage }) {
               <Tex math='x = 3' /> and <Tex math='y = 5' /> results in a product
               of coefficients 3, 5, and 4, and a compementary product of 3, 7,
               and 2. Coefficient 7 is the complex conjugate of coefficient 5,
-              meaning it has the same magnitude but negative phase. Coefficients
-              4 and 2, however, are completely different and effected by the
-              constraint that factors of coefficient products must sum to 12.
+              meaning it has the same magnitude but negative phase. Yet
+              coefficients 4 and 2, which arise from the constraint that factors
+              of coefficient products must sum to 12, are completely different.
             </Paragraph>
             <Paragraph>
               The right side of the lower panel has two phase spaces, meaning
