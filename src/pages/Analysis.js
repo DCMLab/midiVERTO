@@ -3,6 +3,7 @@ import * as Tone from 'tone';
 import WavescapeModule from '../WavescapeModule';
 import CoefficientsModule from '../CoefficientsModule';
 import PhaseModule from '../phaseModule';
+import QualiaModule from '../qualiaModule';
 
 import Player from '../Player';
 
@@ -381,6 +382,24 @@ function Application({
               showFullTrace={showFullTrace}
               userPcvs={userPcvs}
               midiDevNotesDftCoeffs={midiDevNotesDftCoeffs}
+              elemsWidth={elemsWidth}
+            />
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel2a-content'
+            id='panel2a-header'
+          >
+            <Typography variant='h6'>Fourier Qualia Space</Typography>
+          </AccordionSummary>
+          <AccordionDetails sx={{ padding: 0 }}>
+            <QualiaModule
+              fullTraces={fullTraces}
+              coeffTracesData={coeffTracesData}
+              currentSubdiv={currentSubdiv}
               elemsWidth={elemsWidth}
             />
           </AccordionDetails>
