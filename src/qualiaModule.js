@@ -43,7 +43,7 @@ function QualiaModule({
       for (let i = 0; i < fullTraces[0].length; i++) {
         let order = [1, 5, 3, 4, 6, 2];
         let angle = (2 * Math.PI) / 6;
-        let anchors = order.map((index) => {
+        let anchors = [1, 2, 3, 4, 5, 6].map((index) => {
           return {
             x: Math.cos((index - 1) * angle),
             y: Math.sin((index - 1) * angle),
@@ -150,7 +150,7 @@ function QualiaModule({
           data[index] = (rgba.r * distance) / radius; // Distance/radius in [0,1] can be used as a parameter of blackness
           data[index + 1] = (rgba.g * distance) / radius;
           data[index + 2] = (rgba.b * distance) / radius;
-          data[index + 3] = 255; // No transparency
+          data[index + 3] = rgba.a; // No transparency
         }
       }
       savedImage = image;
@@ -183,7 +183,7 @@ function QualiaModule({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
 
     //traceDataCoeff to visualze the windowed version, fullTrace otherwise
     qualiaTrace.forEach((element) => {
