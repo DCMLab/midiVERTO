@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import { pixelColor } from './colorMapping';
 
 let savedImage = null;
+const verticalScale = Math.sin(Math.PI / 3);
 
 let labelsCoordinates = [
   [1, 0],
@@ -28,6 +29,7 @@ function QualiaModule({
 }) {
   //Color wheel canvas
   const canvasRef = useRef(null);
+  const canvasRefWavescape = useRef(null);
 
   const [qualiaTrace, setQualiaTrace] = useState([]);
   const [currentQualia, setCurrentQualia] = useState([]);
@@ -199,6 +201,30 @@ function QualiaModule({
       ctx.fill();
     });
   }
+
+  // Wavescape
+  let ticks;
+  const [wsCoordinates, setWsCoordinates] = useState([]);
+  const [ticksHeight, setTicksHeight] = useState(3);
+
+  useEffect(() => {
+    const canvas = canvasRefWavescape.current;
+    const ctx = canvas.getContext('2d');
+
+    let margins = [margin, margin];
+    let innerSize = [canvas.width - margins[0], canvas.height - margins[1]];
+    let baseSubdivision = 10;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ticks = computeTicks(
+      innerSize[0],
+      innerSize[1],
+      baseSubdivision,
+      margins[0],
+      margins[1]
+    );
+
+    setWsCoordinates(ticks);
+  }, [width, height]);
 
   return (
     <Box
@@ -374,9 +400,101 @@ function QualiaModule({
             </g>
           </g>
         </svg>
+
+        {/* Wavescape */}
+        <svg
+          width={elemsWidth}
+          height={elemsWidth}
+          viewBox={`0 0 ${width} ${height}`}
+          xmlns='http://www.w3.org/2000/svg'
+        >
+          <g transform={`translate(${-25},${width * 0.15})`}>
+            <g
+              transform={`scale(${1}, ${-verticalScale}) translate(${0},${-height})`} // TODO check height
+            >
+              <foreignObject x={0} y={0} width={width} height={height}>
+                <canvas
+                  width={width}
+                  height={height}
+                  ref={canvasRefWavescape}
+                ></canvas>
+              </foreignObject>
+
+              {/* //Line ticks */}
+              {wsCoordinates.length > 0
+                ? wsCoordinates[0].map((coord, i) => (
+                    <line
+                      key={`tick${i}`}
+                      x1={coord.x}
+                      x2={coord.x}
+                      y1={coord.y - ticksHeight}
+                      y2={coord.y + ticksHeight}
+                      stroke='grey'
+                      strokeWidth='1px'
+                    />
+                  ))
+                : null}
+              {/* Contour line */}
+              {wsCoordinates.length > 0 && wsCoordinates[0].length > 0 ? (
+                <>
+                  <line
+                    x1={wsCoordinates[0][0].x}
+                    x2={wsCoordinates[0][wsCoordinates[0].length - 1].x}
+                    y1={wsCoordinates[0][0].y}
+                    y2={wsCoordinates[0][wsCoordinates[0].length - 1].y}
+                    stroke='grey'
+                    strokeWidth='2px'
+                  />
+                  <line
+                    x1={wsCoordinates[0][wsCoordinates[0].length - 1].x}
+                    x2={wsCoordinates[wsCoordinates.length - 1][0].x}
+                    y1={wsCoordinates[0][wsCoordinates[0].length - 1].y}
+                    y2={wsCoordinates[wsCoordinates.length - 1][0].y}
+                    stroke='grey'
+                    strokeWidth='1px'
+                  />
+                  <line
+                    x1={wsCoordinates[0][0].x}
+                    x2={wsCoordinates[wsCoordinates.length - 1][0].x}
+                    y1={wsCoordinates[0][0].y}
+                    y2={wsCoordinates[wsCoordinates.length - 1][0].y}
+                    stroke='grey'
+                    strokeWidth='1px'
+                  />
+                </>
+              ) : null}
+            </g>
+          </g>
+        </svg>
       </Box>
     </Box>
   );
+}
+
+function computeTicks(
+  innerWidth,
+  innerHeight,
+  baseSubdivision,
+  marginLeft,
+  marginTop
+) {
+  //Actually, it is a square matrix
+  let unit = innerWidth / baseSubdivision;
+  let mat = [];
+
+  for (let i = 0; i < baseSubdivision + 1; i++) {
+    let temp = [];
+    for (let j = 0; j < baseSubdivision + 1; j++) {
+      if (i <= j)
+        temp.push({
+          x: (j - i) * unit + (i * unit) / 2 + marginLeft,
+          y: i * unit + marginTop,
+        });
+    }
+    mat.push(temp);
+  }
+
+  return mat;
 }
 
 export default QualiaModule;
