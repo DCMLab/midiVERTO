@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/midiVERTO/static/js/main.bfe417f3.chunk.js",
-    "main.js.map": "/midiVERTO/static/js/main.bfe417f3.chunk.js.map",
+    "main.js": "/midiVERTO/static/js/main.87453b37.chunk.js",
+    "main.js.map": "/midiVERTO/static/js/main.87453b37.chunk.js.map",
     "runtime-main.js": "/midiVERTO/static/js/runtime-main.99d3de79.js",
     "runtime-main.js.map": "/midiVERTO/static/js/runtime-main.99d3de79.js.map",
     "static/css/2.a82512d5.chunk.css": "/midiVERTO/static/css/2.a82512d5.chunk.css",
@@ -36,6 +36,6 @@
     "static/js/runtime-main.99d3de79.js",
     "static/css/2.a82512d5.chunk.css",
     "static/js/2.cbafb000.chunk.js",
-    "static/js/main.bfe417f3.chunk.js"
+    "static/js/main.87453b37.chunk.js"
   ]
 }
