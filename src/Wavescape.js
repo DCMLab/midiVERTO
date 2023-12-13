@@ -58,6 +58,8 @@ export const Wavescape = ({
 
       setWsCoordinates(ticks);
 
+      console.log(wavescapeMatrix);
+
       //Vertical scaling to make the triangle equilateral
       //ctx.scale(1, verticalScale);
       drawWavescape(ticks, ctx, wavescapeMatrix);

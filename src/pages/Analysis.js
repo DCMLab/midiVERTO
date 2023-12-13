@@ -171,7 +171,7 @@ function Application({
       release: 1,
       baseUrl: 'https://tonejs.github.io/audio/salamander/',
     }).toDestination();
-    sampler.volume.value = -30;
+    sampler.volume.value = 5;
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(success, failure);
@@ -406,6 +406,7 @@ function Application({
               elemsWidth={elemsWidth}
               dftCoeffsMatrix={dftCoeffsMatrix}
               wsPhantomCurveHeight={wsPhantomCurveHeight}
+              currentWavescapeSubdiv={currentWavescapeSubdiv}
             />
           </AccordionDetails>
         </Accordion>

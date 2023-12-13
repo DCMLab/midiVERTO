@@ -114,7 +114,7 @@ const sampler = new Tone.Sampler({
   release: 1,
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
 }).toDestination();
-sampler.volume.value = -20; //Sampler volume
+sampler.volume.value = 5; //Sampler volume
 
 //Player component
 export default function Player({ fileName }) {

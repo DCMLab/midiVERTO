@@ -37,6 +37,7 @@ function QualiaModule({
   elemsWidth,
   dftCoeffsMatrix,
   wsPhantomCurveHeight,
+  currentWavescapeSubdiv,
 }) {
   //Color wheel canvas
   const canvasRef = useRef(null);
@@ -138,12 +139,16 @@ function QualiaModule({
           let adjustedY = y + radius; // convert y from [-50, 50] to [0, 100] (the coordinates of the image data array)
           let pixelWidth = 4; // each pixel requires 4 slots in the data array
           let index = (adjustedX + adjustedY * rowLength) * pixelWidth;
+
           let rgba = pixelColor(-x, y, distance / radius); // -x, y is a reflection given by the definition of the color map in the Qualia space
+
+          // With black gradient
           /* data[index] = (rgba.r * distance) / radius; // Distance/radius in [0,1] can be used as a parameter of blackness
           data[index + 1] = (rgba.g * distance) / radius;
           data[index + 2] = (rgba.b * distance) / radius;
-          data[index + 3] = rgba.a; // No transparency */
+          data[index + 3] = 255; // No transparency */
 
+          // Without gradient
           data[index] = rgba.r; // Distance/radius in [0,1] can be used as a parameter of blackness
           data[index + 1] = rgba.g;
           data[index + 2] = rgba.b;
@@ -237,8 +242,19 @@ function QualiaModule({
         centroid.x = centroid.x / sumMag;
         centroid.y = centroid.y / sumMag;
 
-        let rgba = pixelColor(-centroid.x, -centroid.y, 1);
-        let stringRGBA = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
+        let radius = Math.floor(circleRadius * devicePixelRatio);
+
+        //console.log(computeNorm(centroid));
+        let distance = computeNorm(centroid);
+        let rgba = pixelColor(-centroid.x, -centroid.y, distance);
+
+        // With  black gradient
+        /* let stringRGBA = `rgba(${rgba.r * distance}, ${rgba.g * distance}, ${
+          rgba.b * distance
+        }, ${1})`; */
+
+        // Without black gradient
+        let stringRGBA = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${1})`;
 
         centroidSegments.push(stringRGBA);
       }
@@ -539,6 +555,36 @@ function QualiaModule({
                   y2={wsCoordinates[wsCoordinates.length - 1][0].y}
                   stroke='grey'
                   strokeWidth='1px'
+                />
+                <circle
+                  cx={
+                    (wsCoordinates[0][currentWavescapeSubdiv].x +
+                      wsCoordinates[0][currentWavescapeSubdiv + 1].x) /
+                    2
+                  }
+                  cy={
+                    (wsCoordinates[0][currentWavescapeSubdiv].y +
+                      wsCoordinates[0][currentWavescapeSubdiv + 1].y) /
+                    2
+                  }
+                  r={0.01 * widthWs}
+                  fill='white'
+                />
+                <circle
+                  cx={
+                    (wsCoordinates[0][currentWavescapeSubdiv].x +
+                      wsCoordinates[0][currentWavescapeSubdiv + 1].x) /
+                    2
+                  }
+                  cy={
+                    (wsCoordinates[0][currentWavescapeSubdiv].y +
+                      wsCoordinates[0][currentWavescapeSubdiv + 1].y) /
+                    2
+                  }
+                  r={0.01 * widthWs}
+                  stroke='black'
+                  strokeWidth={1}
+                  fill='transparent'
                 />
               </>
             ) : null}
