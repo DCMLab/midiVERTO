@@ -112,6 +112,9 @@ function App() {
   //State: string[6][50]
   //RGBA data of the wavescapes, from 1st to 6th coefficient.
   const [wavescapesData, setWavescapesData] = useState([]);
+  //State: complex[6][50]
+  //Complex coefficients of the wavescapes, from 1st to 6th coefficient, used for Qualia Space
+  const [dftCoeffsMatrix, setDftCoeffsMatrix] = useState([]);
   //State: points[6][N]
   //Points in the Fourier spaces (from 1st to 6th) related
   //to pcvs extraced from subdivisions with the selected resolution.
@@ -334,9 +337,12 @@ function App() {
             currentSongMidiData.duration / subdivsNumberStatic;
           setWavescapeResolution(staticResolution);
 
-          setWavescapesData(
-            getRgbaMatrix(getDftCoeffStatic(midiData, staticResolution))
+          let tempDftCoeffsMatrix = getDftCoeffStatic(
+            midiData,
+            staticResolution
           );
+          setDftCoeffsMatrix(tempDftCoeffsMatrix); // For Qualia space
+          setWavescapesData(getRgbaMatrix(tempDftCoeffsMatrix));
 
           //Circles "dynamic" analysis --> single traces in the Fourier spaces
           let { tracesData, resolution, currPcDistributions } =
@@ -903,6 +909,7 @@ function App() {
                   )}
                   userPcvs={userPcvs}
                   wsPhantomCurveHeight={wsPhantomCurveHeight}
+                  dftCoeffsMatrix={dftCoeffsMatrix}
                 />
               )}
             ></Route>

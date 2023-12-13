@@ -64,6 +64,7 @@ function Application({
   currentWavescapeSubdiv,
   userPcvs,
   wsPhantomCurveHeight,
+  dftCoeffsMatrix,
 }) {
   //State: represents the selected row on the wavescape (by default the first row) for each coeff
   const [showPrototypes, setShowPrototypes] = useState(true);
@@ -393,7 +394,9 @@ function Application({
             aria-controls='panel2a-content'
             id='panel2a-header'
           >
-            <Typography variant='h6'>Fourier Qualia Space</Typography>
+            <Typography variant='h6'>
+              Fourier Qualia Space (UNDER CONSTRUCTION)
+            </Typography>
           </AccordionSummary>
           <AccordionDetails sx={{ padding: 0 }}>
             <QualiaModule
@@ -401,6 +404,8 @@ function Application({
               coeffTracesData={coeffTracesData}
               currentSubdiv={currentSubdiv}
               elemsWidth={elemsWidth}
+              dftCoeffsMatrix={dftCoeffsMatrix}
+              wsPhantomCurveHeight={wsPhantomCurveHeight}
             />
           </AccordionDetails>
         </Accordion>
